@@ -288,7 +288,7 @@ const Request = ({ activePage }) => {
           {activePage === 'requests' && (
             <div>
               {evaluators.filter(ev => !approvedEvaluators.includes(ev) && !declinedEvaluators.includes(ev)).map(evaluator => (
-                <div key={evaluator.id} className="border p-4 mb-4 rounded bg-blue-100">
+                <div key={evaluator.id} className="border p-4 mb-4 rounded bg-blue-200">
                   <p>
                     <strong>{evaluator.name}</strong> has applied for the role of <strong>{evaluator.role}</strong>.
                   </p>

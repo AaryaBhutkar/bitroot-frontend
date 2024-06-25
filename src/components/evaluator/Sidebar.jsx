@@ -11,7 +11,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="w-64 bg-blue-50 h-screen p-4 flex flex-col">
+    <aside className="w-64 bg-blue-200 h-screen p-4 flex flex-col">
       <div className="mb-8">
         <img src="logo.svg" alt="Bitroot" className="h-8" />
       </div>

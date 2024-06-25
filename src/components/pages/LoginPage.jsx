@@ -5,7 +5,7 @@ const LoginPage = () => {
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Left side */}
-      <div className="w-1/2 bg-blue-50 p-12 flex flex-col justify-between">
+      <div className="w-1/2 bg-blue-200 p-12 flex flex-col justify-between">
         <div>
           <h1 className="text-4xl font-bold text-gray-800 mb-4">
             Need webdesign<br />
