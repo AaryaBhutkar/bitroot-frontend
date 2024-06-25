@@ -1,45 +1,4 @@
-// import React, { useState } from 'react';
-
-// const Sidebar = ({ setActivePage }) => {
-//   const [activeItem, setActiveItem] = useState('createTask');
-
-//   const menuItems = [
-//     { name: 'Create Task', id: 'createTask' },
-//     { name: 'Requests', id: 'requests' },
-//     { name: 'Approved', id: 'approved' },
-//     { name: 'Analytics', id: 'analytics' },
-//   ];
-
-//   const handleItemClick = (id) => {
-//     setActiveItem(id);
-//     setActivePage(id);
-//   };
-
-//   return (
-//     <div className="bg-blue-100 w-1/4 h-screen p-6">
-//       <div className="flex items-center mb-8">
-//         <img src="logo.svg" alt="Bitroot Logo" className="w-40 h-30" />
-
-//       </div>
-//       <ul>
-//         {menuItems.map(item => (
-//           <li
-//             key={item.id}
-//             className={`p-2 my-2 cursor-pointer rounded ${activeItem === item.id ? 'bg-blue-500 text-white' : 'text-gray-700'}`}
-//             onClick={() => handleItemClick(item.id)}
-//           >
-//             {item.name}
-//           </li>
-//         ))}
-//       </ul>
-//       <div className="absolute bottom-6 left-6">
-//         <button className="text-blue-500">Logout</button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Sidebar;
+import { Link } from 'react-router-dom';
 import React from 'react';
 
 const Sidebar = ({ setActivePage }) => {
@@ -63,9 +22,9 @@ const Sidebar = ({ setActivePage }) => {
           ANALYTICS
         </button>
       </nav>
-      <button className="mt-8 w-full text-left p-2 rounded hover:bg-blue-100">
+      <Link to="/login" className="mt-8 w-full text-left p-2 rounded hover:bg-blue-100">
         LOGOUT
-      </button>
+      </Link>
     </div>
   );
 };

@@ -33,12 +33,12 @@ const SignUp = () => {
               placeholder="Password"
               className="w-full p-2 mb-4 border border-gray-300 rounded-md"
             />
-            <button type="submit" className="w-full bg-blue-500 text-white px-4 py-2 rounded-md">
+            <Link to="/login" type="submit" className="w-full bg-blue-500 text-white px-4 py-2 rounded-md">
               Sign Up
-            </button>
+            </Link>
           </form>
           <div className="text-center mt-4">
-            <a href="#" className="text-blue-500">Already have an account? Login</a>
+            <p>Already have an account? <Link to="/login" className='text-blue-500'>Login</Link></p>
           </div>
         </div>
       </div>
