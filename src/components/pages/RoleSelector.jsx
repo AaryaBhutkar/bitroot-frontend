@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const RoleSelector = () => {
   return (
@@ -7,12 +8,12 @@ const RoleSelector = () => {
         ARE YOU A EVALUATOR OR ADMIN ?
       </h1>
       <div className="flex justify-between gap-4">
-        <button className="flex-1 py-2 px-4 border border-blue-500 rounded-md text-blue-500 hover:bg-blue-50 transition-colors">
+        <Link to="/profile" className="flex-1 py-2 px-4 border border-blue-500 rounded-md text-blue-500 hover:bg-blue-50 transition-colors">
           EVALUATOR
-        </button>
-        <button className="flex-1 py-2 px-4 border border-blue-500 rounded-md text-blue-500 hover:bg-blue-50 transition-colors">
+        </Link>
+        <Link  to="/adminDashboard" className="flex-1 py-2 px-4 border border-blue-500 rounded-md text-blue-500 hover:bg-blue-50 transition-colors">
           ADMIN
-        </button>
+        </Link>
       </div>
     </div>
   );

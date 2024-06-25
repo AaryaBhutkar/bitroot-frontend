@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const Sidebar = () => {
   const [activeButton, setActiveButton] = useState('TASKS');
@@ -34,10 +35,9 @@ const Sidebar = () => {
         </ul>
       </nav>
       <div className="mt-auto">
-        <button className="flex items-center space-x-2 text-gray-600 hover:text-gray-800">
+        <Link to="/login" className="flex items-center space-x-2 text-gray-600 hover:text-gray-800">
           <span>LOGOUT</span>
-          <span>↪️</span>
-        </button>
+        </Link>
       </div>
     </aside>
   );

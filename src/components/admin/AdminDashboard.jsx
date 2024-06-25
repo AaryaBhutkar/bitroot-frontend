@@ -20,7 +20,7 @@ import React, { useState } from 'react';
 import Sidebar from './Sidebar';
 import Request from './Request';
 
-const EvaluatorDashboard = () => {
+const AdminDashboard = () => {
   const [activePage, setActivePage] = useState('createTask');
 
   return (
@@ -31,4 +31,4 @@ const EvaluatorDashboard = () => {
   );
 };
 
-export default EvaluatorDashboard;
+export default AdminDashboard;

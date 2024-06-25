@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 const ProfileForm = () => {
   const [tags, setTags] = useState([
@@ -69,12 +70,12 @@ const ProfileForm = () => {
             </div>
           </div>
           <div className="mt-6">
-            <button
+            <Link to="/dashboard"
               type="submit"
               className="w-full px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
               Submit
-            </button>
+            </Link>
           </div>
         </form>
       </div>
