@@ -6,7 +6,7 @@ const Sidebar = () => {
 
   const buttons = [
     { name: 'TASKS', icon: '✏️' },
-    { name: 'COMPLETED', icon: '🔒' },
+    { name: 'MY PROJECTS', icon: '🔒' },
     { name: 'EXISTING', icon: '📚' },
   ];
 

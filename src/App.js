@@ -12,6 +12,7 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+import ProjectList from './components/evaluator/pages/ProjectList';
 
 const router = createBrowserRouter([
   {
@@ -44,9 +45,9 @@ const router = createBrowserRouter([
 function App() {
   return (
     <div className="App">
-      <RouterProvider router={router} />      
+      {/* <RouterProvider router={router} />       */}
       {/* <AdminDashboard /> */}
-      {/* <EvaluatorDashboard /> */}
+      <ProjectList />
     </div>
   );
 }
