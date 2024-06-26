@@ -1,87 +1,45 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
+import CreateTaskForm from "./adminPages/CreateTaskForm";
+import ProfileInfo from "./adminPages/ProfileInfo";
+import { UserOutlined } from "@ant-design/icons";
+import { Avatar } from "antd";
 
 const MainContent = ({ activePage }) => {
+  const [showProfileInfo, setShowProfileInfo] = useState(false);
+
+  const handleProfileClick = () => {
+    setShowProfileInfo(!showProfileInfo);
+  };
+
+  useEffect(() => {
+    // Close profile info when the activePage changes
+    setShowProfileInfo(false);
+  }, [activePage]);
+
   return (
     <div className="flex-1 p-8">
-      <div className="flex justify-between items-center mb-8">
-        <h2 className="text-xl font-bold">HELLO, ADMIN</h2>
-        <input
-          type="text"
-          placeholder="Search"
-          className="border p-2 rounded w-1/3"
-        />
-      </div>
-      {activePage === 'createTask' && (
-        <div>
-          <form>
-            <div className="mb-4">
-              <label className="block text-gray-700">Project Name:</label>
-              <input
-                type="text"
-                className="w-full p-2 border rounded"
-                placeholder="Enter project name"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700">Brief:</label>
-              <input
-                type="text"
-                className="w-full p-2 border rounded"
-                placeholder="Placeholder"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700">Tags:</label>
-              <input
-                type="text"
-                className="w-full p-2 border rounded"
-                placeholder="Placeholder"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700">Git Links:</label>
-              <input
-                type="text"
-                className="w-full p-2 border rounded"
-                placeholder="Placeholder"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700">Guidelines:</label>
-              <input
-                type="text"
-                className="w-full p-2 border rounded"
-                placeholder="Placeholder"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700">Price Range:</label>
-              <div className="flex items-center">
-                <input
-                  type="text"
-                  className="w-1/2 p-2 border rounded mr-2"
-                  placeholder="Placeholder"
-                />
-                <span className="mx-2">TO</span>
-                <input
-                  type="text"
-                  className="w-1/2 p-2 border rounded"
-                  placeholder="Placeholder"
-                />
-              </div>
-            </div>
-            <button
-              type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded"
-            >
-              Submit
-            </button>
-          </form>
+      <header className="flex justify-between items-center mb-8">
+        <h1 className="text-2xl font-bold">HELLO, ADMIN</h1>
+        <div className="flex items-center space-x-4">
+          <input
+            type="text"
+            placeholder="Search"
+            className="border rounded-md px-3 py-1"
+          />
+          <button onClick={handleProfileClick} className="text-gray-600">
+            <Avatar size="large" icon={<UserOutlined />} />
+          </button>
         </div>
+      </header>
+      {showProfileInfo ? (
+        <ProfileInfo />
+      ) : (
+        <>
+          {activePage === "tasks" && <CreateTaskForm />}
+          {activePage === "requests" && <div>Requests Page Content</div>}
+          {activePage === "analytics" && <div>Analytics Page Content</div>}
+        </>
       )}
-      {activePage === 'requests' && <div>Requests Page Content</div>}
-      {activePage === 'approved' && <div>Approved Page Content</div>}
-      {activePage === 'analytics' && <div>Analytics Page Content</div>}
     </div>
   );
 };

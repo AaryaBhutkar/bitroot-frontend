@@ -1,53 +1,49 @@
-import React from 'react';
-import SignUp from './components/pages/SignUp';
-import RoleSelector from './components/pages/RoleSelector';
-import ProfileForm from './components/pages/ProfileForm';
-import Layout from './components/pages/MainContent';
-import LoginPage from './components/pages/LoginPage';
-import AdminDashboard from './components/admin/AdminDashboard';
-import Dashboard from './components/pages/Dashboard';
-import EvaluatorDashboard from './components/evaluator/EvaluatorDashboard';
+import React from "react";
+import SignUp from "./components/pages/SignUp";
+import RoleSelector from "./components/pages/RoleSelector";
+import ProfileForm from "./components/pages/ProfileForm";
+import Layout from "./components/pages/MainContent";
+import LoginPage from "./components/pages/LoginPage";
+import AdminDashboard from "./components/admin/AdminDashboard";
+import Dashboard from "./components/pages/Dashboard";
+import EvaluatorDashboard from "./components/evaluator/EvaluatorDashboard";
 
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
-import ProjectList from './components/evaluator/pages/ProjectList';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import ProjectList from "./components/evaluator/pages/ProjectList";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <SignUp />
-  }, 
+    element: <SignUp />,
+  },
   {
     path: "/login",
-    element: <LoginPage />
-  }, 
+    element: <LoginPage />,
+  },
   {
     path: "/role",
-    element: <RoleSelector />
+    element: <RoleSelector />,
   },
   {
     path: "/profile",
-    element: <ProfileForm />
+    element: <ProfileForm />,
   },
   {
     path: "/dashboard",
-    element: <EvaluatorDashboard />
+    element: <EvaluatorDashboard />,
   },
   {
     path: "/adminDashboard",
-    element: <AdminDashboard />
-  }
-])
-
+    element: <AdminDashboard />,
+  },
+]);
 
 function App() {
   return (
     <div className="App">
-      {/* <RouterProvider router={router} />       */}
+      <RouterProvider router={router} />
       {/* <AdminDashboard /> */}
-      <ProjectList />
+      {/* <ProjectList /> */}
     </div>
   );
 }
