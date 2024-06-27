@@ -19,7 +19,7 @@ const Sidebar = ({ onSidebarClick }) => {
 
   const handleButtonClick = (name) => {
     setActiveButton(name);
-    onSidebarClick(name.toLowerCase());
+    onSidebarClick(name.toLowerCase()); // Make sure this matches the case in MainContent
   };
 
   return (
