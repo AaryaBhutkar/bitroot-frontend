@@ -1,0 +1,500 @@
+// import React, { useState } from "react";
+// import CreateNewTask from "./CreateNewTask";
+
+// const TasksContent = () => {
+//   const [showCreateTask, setShowCreateTask] = useState(false);
+
+//   const handleCreateTask = (newTaskData) => {
+//     // Here you would typically send this data to your backend API
+//     // For now, we'll just add it to the tasks array
+//     const newTask = {
+//       id: tasks.length + 1,
+//       projectName: newTaskData.projectName,
+//       date: new Date().toLocaleDateString(),
+//       tags: newTaskData.tags.split(",").map((tag) => tag.trim()),
+//       priceRange: `$${newTaskData.priceRangeMin} - $${newTaskData.priceRangeMax}`,
+//       status: "Assigned",
+//     };
+//     setTasks([...tasks, newTask]);
+//   };
+
+//   const [tasks, setTasks] = useState([
+//     {
+//       id: 1,
+//       projectName: "Frontend Developer",
+//       date: "2/19/21",
+//       tags: ["Agile", "Git", "Flutter", "API"],
+//       priceRange: 500.0,
+//       status: "Approved",
+//     },
+//     {
+//       id: 2,
+//       projectName: "Backend Developer",
+//       date: "5/7/16",
+//       tags: ["Agile", "Git", "Flutter", "API"],
+//       priceRange: 500.0,
+//       status: "Complete",
+//     },
+//   ]);
+
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [filters, setFilters] = useState({
+//     status: "",
+//     minPrice: "",
+//     maxPrice: "",
+//     tags: [],
+//   });
+//   const [showFilters, setShowFilters] = useState(false);
+
+//   const handleSearch = (e) => {
+//     setSearchTerm(e.target.value);
+//   };
+
+//   const handleFilterChange = (e) => {
+//     const { name, value } = e.target;
+//     setFilters((prevFilters) => ({
+//       ...prevFilters,
+//       [name]: value,
+//     }));
+//   };
+
+//   const handleTagFilter = (tag) => {
+//     setFilters((prevFilters) => ({
+//       ...prevFilters,
+//       tags: prevFilters.tags.includes(tag)
+//         ? prevFilters.tags.filter((t) => t !== tag)
+//         : [...prevFilters.tags, tag],
+//     }));
+//   };
+
+//   const filteredTasks = tasks.filter((task) => {
+//     const matchesSearch =
+//       task.projectName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+//       task.tags.some((tag) =>
+//         tag.toLowerCase().includes(searchTerm.toLowerCase())
+//       );
+
+//     const matchesStatus =
+//       filters.status === "" || task.status === filters.status;
+//     const matchesPrice =
+//       (filters.minPrice === "" ||
+//         task.priceRange >= Number(filters.minPrice)) &&
+//       (filters.maxPrice === "" || task.priceRange <= Number(filters.maxPrice));
+//     const matchesTags =
+//       filters.tags.length === 0 ||
+//       filters.tags.every((tag) => task.tags.includes(tag));
+
+//     return matchesSearch && matchesStatus && matchesPrice && matchesTags;
+//   });
+
+//   const allTags = [...new Set(tasks.flatMap((task) => task.tags))];
+
+//   return (
+//     <div className="p-6">
+//       <div className="flex justify-between items-center mb-6">
+//         <h1 className="text-2xl font-bold">Tasks</h1>
+//         <button
+//           className="bg-blue-500 text-white px-4 py-2 rounded-md"
+//           onClick={() => setShowCreateTask(true)}
+//         >
+//           Create New Task
+//         </button>
+//       </div>
+
+//       {showCreateTask ? (
+//         <CreateNewTask
+//           onClose={() => setShowCreateTask(false)}
+//           onSubmit={handleCreateTask}
+//         />
+//       ) : (
+//         <>
+//           <div className="bg-blue-50 p-4 rounded-lg mb-6">
+//             <div className="flex justify-between mb-4">
+//               <input
+//                 type="text"
+//                 placeholder="Search by project name, tags..."
+//                 className="w-full mr-4 p-2 rounded-md border border-gray-300"
+//                 value={searchTerm}
+//                 onChange={handleSearch}
+//               />
+//               <button
+//                 className="bg-white px-4 py-2 rounded-md border border-gray-300"
+//                 onClick={() => setShowFilters(!showFilters)}
+//               >
+//                 {showFilters ? "Hide Filters" : "Show Filters"}
+//               </button>
+//             </div>
+
+//             {showFilters && (
+//               <div className="grid grid-cols-2 gap-4">
+//                 <div>
+//                   <label className="block mb-2">Status:</label>
+//                   <select
+//                     name="status"
+//                     value={filters.status}
+//                     onChange={handleFilterChange}
+//                     className="w-full p-2 rounded-md border border-gray-300"
+//                   >
+//                     <option value="">All</option>
+//                     <option value="Assigned">Assigned</option>
+//                     <option value="Complete">Complete</option>
+//                     <option value="Approved">Approved</option>
+//                   </select>
+//                 </div>
+//                 <div>
+//                   <label className="block mb-2">Price Range:</label>
+//                   <div className="flex">
+//                     <input
+//                       type="number"
+//                       name="minPrice"
+//                       placeholder="Min"
+//                       value={filters.minPrice}
+//                       onChange={handleFilterChange}
+//                       className="w-1/2 mr-2 p-2 rounded-md border border-gray-300"
+//                     />
+//                     <input
+//                       type="number"
+//                       name="maxPrice"
+//                       placeholder="Max"
+//                       value={filters.maxPrice}
+//                       onChange={handleFilterChange}
+//                       className="w-1/2 p-2 rounded-md border border-gray-300"
+//                     />
+//                   </div>
+//                 </div>
+//                 <div className="col-span-2">
+//                   <label className="block mb-2">Tags:</label>
+//                   <div className="flex flex-wrap">
+//                     {allTags.map((tag) => (
+//                       <button
+//                         key={tag}
+//                         onClick={() => handleTagFilter(tag)}
+//                         className={`mr-2 mb-2 px-2 py-1 rounded-md ${
+//                           filters.tags.includes(tag)
+//                             ? "bg-blue-500 text-white"
+//                             : "bg-gray-200 text-gray-700"
+//                         }`}
+//                       >
+//                         {tag}
+//                       </button>
+//                     ))}
+//                   </div>
+//                 </div>
+//               </div>
+//             )}
+//           </div>
+
+//           <table className="w-full">
+//             <thead>
+//               <tr className="text-left text-gray-500">
+//                 <th className="pb-4">PROJECT NAME</th>
+//                 <th className="pb-4">DATE</th>
+//                 <th className="pb-4">TAGS</th>
+//                 <th className="pb-4">PRICE RANGE</th>
+//                 <th className="pb-4">STATUS</th>
+//                 <th className="pb-4"></th>
+//               </tr>
+//             </thead>
+//             <tbody>
+//               {filteredTasks.map((task) => (
+//                 <tr key={task.id} className="border-t border-gray-200">
+//                   <td className="py-4">{task.projectName}</td>
+//                   <td className="py-4">{task.date}</td>
+//                   <td className="py-4">
+//                     {task.tags.map((tag, index) => (
+//                       <span
+//                         key={index}
+//                         className="bg-blue-100 text-blue-800 px-2 py-1 rounded-md text-sm mr-1"
+//                       >
+//                         {tag}
+//                       </span>
+//                     ))}
+//                   </td>
+//                   <td className="py-4">${task.priceRange.toFixed(2)}</td>
+//                   <td className="py-4">
+//                     <span
+//                       className={`px-2 py-1 rounded-md ${
+//                         task.status === "Approved"
+//                           ? "bg-green-100 text-green-800"
+//                           : task.status === "Complete"
+//                           ? "bg-blue-100 text-blue-800"
+//                           : "bg-yellow-100 text-yellow-800"
+//                       }`}
+//                     >
+//                       {task.status}
+//                     </span>
+//                   </td>
+//                   <td className="py-4">
+//                     <button className="bg-blue-100 text-blue-800 px-4 py-1 rounded-md">
+//                       View
+//                     </button>
+//                   </td>
+//                 </tr>
+//               ))}
+//             </tbody>
+//           </table>
+//         </>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default TasksContent;
+
+import React, { useState } from "react";
+import CreateNewTask from "./CreateNewTask";
+import TaskDetailsPopup from "./TaskDetailsPopup";
+
+const TasksContent = () => {
+  const [showCreateTask, setShowCreateTask] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
+
+  const handleCreateTask = (newTaskData) => {
+    const newTask = {
+      id: tasks.length + 1,
+      projectName: newTaskData.projectName,
+      date: new Date().toLocaleDateString(),
+      tags: newTaskData.tags.split(",").map((tag) => tag.trim()),
+      priceRange: `$${newTaskData.priceRangeMin} - $${newTaskData.priceRangeMax}`,
+      status: "Assigned",
+    };
+    setTasks([...tasks, newTask]);
+  };
+
+  const [tasks, setTasks] = useState([
+    {
+      id: 1,
+      projectName: "Frontend Developer",
+      date: "2/19/21",
+      tags: ["Agile", "Git", "Flutter", "API"],
+      priceRange: 500.0,
+      status: "Approved",
+    },
+    {
+      id: 2,
+      projectName: "Backend Developer",
+      date: "5/7/16",
+      tags: ["Agile", "Git", "Flutter", "API"],
+      priceRange: 500.0,
+      status: "Complete",
+    },
+  ]);
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filters, setFilters] = useState({
+    status: "",
+    minPrice: "",
+    maxPrice: "",
+    tags: [],
+  });
+  const [showFilters, setShowFilters] = useState(false);
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [name]: value,
+    }));
+  };
+
+  const handleTagFilter = (tag) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      tags: prevFilters.tags.includes(tag)
+        ? prevFilters.tags.filter((t) => t !== tag)
+        : [...prevFilters.tags, tag],
+    }));
+  };
+
+  const handleViewTask = (task) => {
+    setSelectedTask(task);
+  };
+
+  const handleClosePopup = () => {
+    setSelectedTask(null);
+  };
+
+  const filteredTasks = tasks.filter((task) => {
+    const matchesSearch =
+      task.projectName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      task.tags.some((tag) =>
+        tag.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+
+    const matchesStatus =
+      filters.status === "" || task.status === filters.status;
+    const matchesPrice =
+      (filters.minPrice === "" ||
+        task.priceRange >= Number(filters.minPrice)) &&
+      (filters.maxPrice === "" || task.priceRange <= Number(filters.maxPrice));
+    const matchesTags =
+      filters.tags.length === 0 ||
+      filters.tags.every((tag) => task.tags.includes(tag));
+
+    return matchesSearch && matchesStatus && matchesPrice && matchesTags;
+  });
+
+  const allTags = [...new Set(tasks.flatMap((task) => task.tags))];
+
+  return (
+    <div className="p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Tasks</h1>
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded-md"
+          onClick={() => setShowCreateTask(true)}
+        >
+          Create New Task
+        </button>
+      </div>
+
+      {showCreateTask ? (
+        <CreateNewTask
+          onClose={() => setShowCreateTask(false)}
+          onSubmit={handleCreateTask}
+        />
+      ) : (
+        <>
+          <div className="bg-blue-50 p-4 rounded-lg mb-6">
+            <div className="flex justify-between mb-4">
+              <input
+                type="text"
+                placeholder="Search by project name, tags..."
+                className="w-full mr-4 p-2 rounded-md border border-gray-300"
+                value={searchTerm}
+                onChange={handleSearch}
+              />
+              <button
+                className="bg-white px-4 py-2 rounded-md border border-gray-300"
+                onClick={() => setShowFilters(!showFilters)}
+              >
+                {showFilters ? "Hide Filters" : "Show Filters"}
+              </button>
+            </div>
+
+            {showFilters && (
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block mb-2">Status:</label>
+                  <select
+                    name="status"
+                    value={filters.status}
+                    onChange={handleFilterChange}
+                    className="w-full p-2 rounded-md border border-gray-300"
+                  >
+                    <option value="">All</option>
+                    <option value="Assigned">Assigned</option>
+                    <option value="Complete">Complete</option>
+                    <option value="Approved">Approved</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block mb-2">Price Range:</label>
+                  <div className="flex">
+                    <input
+                      type="number"
+                      name="minPrice"
+                      placeholder="Min"
+                      value={filters.minPrice}
+                      onChange={handleFilterChange}
+                      className="w-1/2 mr-2 p-2 rounded-md border border-gray-300"
+                    />
+                    <input
+                      type="number"
+                      name="maxPrice"
+                      placeholder="Max"
+                      value={filters.maxPrice}
+                      onChange={handleFilterChange}
+                      className="w-1/2 p-2 rounded-md border border-gray-300"
+                    />
+                  </div>
+                </div>
+                <div className="col-span-2">
+                  <label className="block mb-2">Tags:</label>
+                  <div className="flex flex-wrap">
+                    {allTags.map((tag) => (
+                      <button
+                        key={tag}
+                        onClick={() => handleTagFilter(tag)}
+                        className={`mr-2 mb-2 px-2 py-1 rounded-md ${
+                          filters.tags.includes(tag)
+                            ? "bg-blue-500 text-white"
+                            : "bg-gray-200 text-gray-700"
+                        }`}
+                      >
+                        {tag}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <table className="w-full">
+            <thead>
+              <tr className="text-left text-gray-500">
+                <th className="pb-4">PROJECT NAME</th>
+                <th className="pb-4">DATE</th>
+                <th className="pb-4">TAGS</th>
+                <th className="pb-4">PRICE RANGE</th>
+                <th className="pb-4">STATUS</th>
+                <th className="pb-4"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredTasks.map((task) => (
+                <tr key={task.id} className="border-t border-gray-200">
+                  <td className="py-4">{task.projectName}</td>
+                  <td className="py-4">{task.date}</td>
+                  <td className="py-4">
+                    {task.tags.map((tag, index) => (
+                      <span
+                        key={index}
+                        className="bg-blue-100 text-blue-800 px-2 py-1 rounded-md text-sm mr-1"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </td>
+                  <td className="py-4">{task.priceRange}</td>
+                  <td className="py-4">
+                    <span
+                      className={`px-2 py-1 rounded-md ${
+                        task.status === "Approved"
+                          ? "bg-green-100 text-green-800"
+                          : task.status === "Complete"
+                          ? "bg-blue-100 text-blue-800"
+                          : "bg-yellow-100 text-yellow-800"
+                      }`}
+                    >
+                      {task.status}
+                    </span>
+                  </td>
+                  <td className="py-4">
+                    <button
+                      className="bg-blue-100 text-blue-800 px-4 py-1 rounded-md"
+                      onClick={() => handleViewTask(task)}
+                    >
+                      View
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
+
+      {selectedTask && (
+        <TaskDetailsPopup task={selectedTask} onClose={handleClosePopup} />
+      )}
+    </div>
+  );
+};
+
+export default TasksContent;

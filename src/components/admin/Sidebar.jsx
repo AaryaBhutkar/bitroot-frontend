@@ -49,7 +49,7 @@ const Sidebar = ({ onSidebarClick }) => {
       </div>
       <div className="mt-auto">
         <Link
-          to="/login"
+          to="/role"
           className="flex items-center space-x-2 p-2 rounded transition-colors hover:bg-white/50"
         >
           <span className="flex-shrink-0">

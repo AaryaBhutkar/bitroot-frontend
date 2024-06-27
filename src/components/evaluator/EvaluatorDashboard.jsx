@@ -1,12 +1,18 @@
-import React from 'react';
-import Sidebar from './Sidebar';
-import MainContent from './MainContent';
+import React, {useState} from "react";
+import Sidebar from "./Sidebar";
+import MainContent from "./MainContent";
 
 const EvaluatorDashboard = () => {
+  const [activePage, setActivePage] = useState("tasks");
+
+  const handleSidebarClick = (page) => {
+    setActivePage(page);
+  };
+
   return (
-    <div className="flex h-screen">
-      <Sidebar />
-      <MainContent />
+    <div className="flex ">
+      <Sidebar onSidebarClick={handleSidebarClick} />
+      <MainContent activePage={activePage} />
     </div>
   );
 };

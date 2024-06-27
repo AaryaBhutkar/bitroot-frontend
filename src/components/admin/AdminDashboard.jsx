@@ -1,26 +1,9 @@
-// import React, { useState } from "react";
-// import Sidebar from "./Sidebar";
-// import MainContent from "./MainContent";
-
-// const AdminDashboard = () => {
-//   const [activePage, setActivePage] = useState("createTask");
-
-//   return (
-//     <div className="flex min-h-screen">
-//       <Sidebar setActivePage={setActivePage} />
-//       <MainContent activePage={activePage} />
-//     </div>
-//   );
-// };
-
-// export default AdminDashboard;
-
 import React, { useState } from "react";
 import MainContent from "./MainContent";
 import Sidebar from "./Sidebar";
 
 const Dashboard = () => {
-  const [activePage, setActivePage] = useState("createTask");
+  const [activePage, setActivePage] = useState("tasks");
 
   const handleSidebarClick = (page) => {
     setActivePage(page);

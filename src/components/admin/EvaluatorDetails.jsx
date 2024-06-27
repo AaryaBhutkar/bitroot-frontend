@@ -1,17 +1,14 @@
 import React from "react";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 
 const EvaluatorDetails = ({ evaluator, onBack }) => {
-  // const evaluator = {
-  //   name: "Evaluator A",
-  //   linkedin: "https://linkedin.com/in/evaluatorA",
-  //   experience: "5 years",
-  //   price: "$5000",
-  //   tags: ["Frontend Developer"],
-  //   contact: "8454545454",
-  // };
   return (
     <div className="flex-1 p-8">
-      <button onClick={onBack} className="mb-4 text-blue-500 hover:underline">
+      <button
+        onClick={onBack}
+        className="mb-4 text-white-500 hover:underline border rounded p-2 bg-blue-300"
+      >
+        <ArrowLeftOutlined />
         Back
       </button>
       <h2 className="text-xl font-bold mb-4">Evaluator Details</h2>

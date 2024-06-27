@@ -1,7 +1,13 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const RoleSelector = () => {
+  const navigate = useNavigate();
+
+  const handleRoleSelection = (role) => {
+    navigate("/login", { state: { role } });
+  };
+
   return (
     <div className="bg-blue-200 min-h-screen flex items-center justify-center">
       <div className="bg-white p-6 rounded-lg shadow-md max-w-md mx-auto">
@@ -9,12 +15,18 @@ const RoleSelector = () => {
           ARE YOU A EVALUATOR OR ADMIN?
         </h1>
         <div className="flex justify-between gap-4">
-          <Link to="/profile" className="flex-1 py-2 px-4 border border-blue-500 rounded-md text-blue-500 hover:bg-blue-50 transition-colors">
+          <button
+            onClick={() => handleRoleSelection("evaluator")}
+            className="flex-1 py-2 px-4 border border-blue-500 rounded-md text-blue-500 hover:bg-blue-50 transition-colors"
+          >
             EVALUATOR
-          </Link>
-          <Link to="/adminDashboard" className="flex-1 py-2 px-4 border border-blue-500 rounded-md text-blue-500 hover:bg-blue-50 transition-colors">
+          </button>
+          <button
+            onClick={() => handleRoleSelection("admin")}
+            className="flex-1 py-2 px-4 border border-blue-500 rounded-md text-blue-500 hover:bg-blue-50 transition-colors"
+          >
             ADMIN
-          </Link>
+          </button>
         </div>
       </div>
     </div>
