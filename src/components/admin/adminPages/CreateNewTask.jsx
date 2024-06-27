@@ -1,8 +1,7 @@
-// CreateNewTask.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const CreateNewTask = ({ onClose, onSubmit }) => {
+const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
   const [taskData, setTaskData] = useState({
     projectName: '',
     brief: '',
@@ -20,12 +19,6 @@ const CreateNewTask = ({ onClose, onSubmit }) => {
       [name]: value
     }));
   };
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   onSubmit(taskData);
-  //   onClose();
-  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,6 +41,7 @@ const CreateNewTask = ({ onClose, onSubmit }) => {
         console.log('Task created successfully:', response.data.data);
         // Optionally handle success, e.g., show a success message
         onClose(); // Close the modal or perform any other action upon success
+        onTaskCreated(); // Trigger parent component's refresh after task creation
       } else {
         console.error('Failed to create task:', response.data.message);
         // Optionally handle failure, e.g., show an error message
@@ -180,8 +174,3 @@ const CreateNewTask = ({ onClose, onSubmit }) => {
 };
 
 export default CreateNewTask;
-
-
-
-
-
