@@ -1,5 +1,6 @@
 // CreateNewTask.jsx
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const CreateNewTask = ({ onClose, onSubmit }) => {
   const [taskData, setTaskData] = useState({
@@ -20,18 +21,57 @@ const CreateNewTask = ({ onClose, onSubmit }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   onSubmit(taskData);
+  //   onClose();
+  // };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(taskData);
-    onClose();
+    
+    try {
+      const response = await axios.post(
+        'http://localhost:3001/api/tasks/createTask',
+        {
+          name: taskData.projectName,
+          desc: taskData.brief,
+          tags: taskData.tags.split(',').map(tag => tag.trim()),
+          github_url: taskData.gitLinks,
+          guideline_url: taskData.guidelines,
+          lower_price: parseInt(taskData.priceRangeMin),
+          higher_price: parseInt(taskData.priceRangeMax)
+        }
+      );
+      
+      if (response.data.success) {
+        console.log('Task created successfully:', response.data.data);
+        // Optionally handle success, e.g., show a success message
+        onClose(); // Close the modal or perform any other action upon success
+      } else {
+        console.error('Failed to create task:', response.data.message);
+        // Optionally handle failure, e.g., show an error message
+      }
+    } catch (error) {
+      console.error('Error creating task:', error);
+      // Handle network error or other issues
+    }
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg">
+    <div className="bg-white p-6 rounded-lg shadow-lg relative">
+      <button
+        onClick={onClose}
+        className="absolute top-2 right-2 bg-black text-white rounded-md p-2 m-2 mt-2"
+      >
+        X
+      </button>
       <h2 className="text-2xl font-bold mb-4">Create New Task</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label htmlFor="projectName" className="block text-sm font-medium text-gray-700">Project Name:</label>
+          <label htmlFor="projectName" className="block text-sm font-medium text-gray-700">
+            Project Name:
+          </label>
           <input
             type="text"
             id="projectName"
@@ -44,7 +84,9 @@ const CreateNewTask = ({ onClose, onSubmit }) => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="brief" className="block text-sm font-medium text-gray-700">Brief:</label>
+          <label htmlFor="brief" className="block text-sm font-medium text-gray-700">
+            Brief:
+          </label>
           <textarea
             id="brief"
             name="brief"
@@ -57,7 +99,9 @@ const CreateNewTask = ({ onClose, onSubmit }) => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="tags" className="block text-sm font-medium text-gray-700">Tags:</label>
+          <label htmlFor="tags" className="block text-sm font-medium text-gray-700">
+            Tags:
+          </label>
           <input
             type="text"
             id="tags"
@@ -70,7 +114,9 @@ const CreateNewTask = ({ onClose, onSubmit }) => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="gitLinks" className="block text-sm font-medium text-gray-700">Git Links:</label>
+          <label htmlFor="gitLinks" className="block text-sm font-medium text-gray-700">
+            Git Links:
+          </label>
           <input
             type="text"
             id="gitLinks"
@@ -82,7 +128,9 @@ const CreateNewTask = ({ onClose, onSubmit }) => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="guidelines" className="block text-sm font-medium text-gray-700">Guidelines:</label>
+          <label htmlFor="guidelines" className="block text-sm font-medium text-gray-700">
+            Guidelines:
+          </label>
           <textarea
             id="guidelines"
             name="guidelines"
@@ -94,7 +142,9 @@ const CreateNewTask = ({ onClose, onSubmit }) => {
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Price Range:</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Price Range:
+          </label>
           <div className="flex items-center space-x-2">
             <input
               type="number"
@@ -130,3 +180,8 @@ const CreateNewTask = ({ onClose, onSubmit }) => {
 };
 
 export default CreateNewTask;
+
+
+
+
+

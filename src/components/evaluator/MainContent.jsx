@@ -3,8 +3,8 @@
 // import { Avatar } from "antd";
 // import TaskCard from "./pages/TaskCard";
 // import ProfileInfo from "../admin/adminPages/ProfileInfo";
-// import axios from "axios";
 // import MyProjects from "./pages/MyProjects";
+// import axios from "axios";
 
 // const MainContent = ({ activePage }) => {
 //   const [showProfileInfo, setShowProfileInfo] = useState(false);
@@ -16,9 +16,8 @@
 //   };
 
 //   useEffect(() => {
-//     // Close profile info when the activePage changes
 //     setShowProfileInfo(false);
-//     setCurrentView(activePage); // Update current view when activePage changes
+//     setCurrentView(activePage);
 //     if (activePage === "tasks") {
 //       fetchTasks();
 //     }
@@ -59,24 +58,27 @@
 //       {showProfileInfo ? (
 //         <ProfileInfo />
 //       ) : (
-//         <div className=" overflow-y-auto 90vh  ">
-//           {currentView === "tasks" &&
-//             tasks.map((task) => (
+//         <>
+//         {currentView === "tasks" &&
+//           tasks.map((task) => (
 //               <TaskCard
-//                 key={task.id}
-//                 title={task.name}
-//                 description={task.description}
-//                 tags={task.tags}
-//               />
-//             ))}
-//           {currentView === "myprojects" && <MyProjects />}
-//         </div>
+//               task_id={task.id}
+//               title={task.name}
+//               description={task.description}
+//               tags={task.tags}
+//             />
+//           ))}
+//         {currentView === "my projects" && <MyProjects />} {/* Ensure 'myprojects' matches */}
+//       </>
 //       )}
 //     </div>
 //   );
 // };
 
 // export default MainContent;
+
+
+
 
 import React, { useState, useEffect } from "react";
 import { UserOutlined } from "@ant-design/icons";
@@ -85,6 +87,7 @@ import TaskCard from "./pages/TaskCard";
 import ProfileInfo from "../admin/adminPages/ProfileInfo";
 import MyProjects from "./pages/MyProjects";
 import axios from "axios";
+import CompletedProjects from "./pages/CompletedProjects";
 
 const MainContent = ({ activePage }) => {
   const [showProfileInfo, setShowProfileInfo] = useState(false);
@@ -121,8 +124,8 @@ const MainContent = ({ activePage }) => {
   };
 
   return (
-    <div className="flex-1 p-8">
-      <header className="flex justify-between items-center mb-8">
+    <div className="flex flex-col h-screen w-full">
+      <header className="flex justify-between items-center p-4 bg-white shadow-md w-full">
         <h1 className="text-2xl font-bold">HELLO, Evaluator</h1>
         <div className="flex items-center space-x-4">
           <input
@@ -135,22 +138,26 @@ const MainContent = ({ activePage }) => {
           </button>
         </div>
       </header>
-      {showProfileInfo ? (
-        <ProfileInfo />
-      ) : (
-        <>
-        {currentView === "tasks" &&
-          tasks.map((task) => (
-            <TaskCard
-              key={task.id}
-              title={task.name}
-              description={task.description}
-              tags={task.tags}
-            />
-          ))}
-        {currentView === "my projects" && <MyProjects />} {/* Ensure 'myprojects' matches */}
-      </>
-      )}
+      <div className="flex-1 overflow-y-auto p-4 w-full">
+        {showProfileInfo ? (
+          <ProfileInfo />
+        ) : (
+          <div className="w-full max-w-7xl mx-auto">
+            {currentView === "tasks" &&
+              tasks.map((task) => (
+                <TaskCard
+                  key={task.id}
+                  task_id={task.id}
+                  title={task.name}
+                  description={task.description}
+                  tags={task.tags}
+                />
+              ))}
+            {currentView === "my projects" && <MyProjects />}
+            {currentView === "existing" && <CompletedProjects />}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

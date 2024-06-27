@@ -1,12 +1,12 @@
 // import React, { useState } from "react";
 // import CreateNewTask from "./CreateNewTask";
+// import TaskDetailsPopup from "./TaskDetailsPopup";
 
 // const TasksContent = () => {
 //   const [showCreateTask, setShowCreateTask] = useState(false);
+//   const [selectedTask, setSelectedTask] = useState(null);
 
 //   const handleCreateTask = (newTaskData) => {
-//     // Here you would typically send this data to your backend API
-//     // For now, we'll just add it to the tasks array
 //     const newTask = {
 //       id: tasks.length + 1,
 //       projectName: newTaskData.projectName,
@@ -65,6 +65,14 @@
 //         ? prevFilters.tags.filter((t) => t !== tag)
 //         : [...prevFilters.tags, tag],
 //     }));
+//   };
+
+//   const handleViewTask = (task) => {
+//     setSelectedTask(task);
+//   };
+
+//   const handleClosePopup = () => {
+//     setSelectedTask(null);
 //   };
 
 //   const filteredTasks = tasks.filter((task) => {
@@ -210,7 +218,7 @@
 //                       </span>
 //                     ))}
 //                   </td>
-//                   <td className="py-4">${task.priceRange.toFixed(2)}</td>
+//                   <td className="py-4">{task.priceRange}</td>
 //                   <td className="py-4">
 //                     <span
 //                       className={`px-2 py-1 rounded-md ${
@@ -225,7 +233,10 @@
 //                     </span>
 //                   </td>
 //                   <td className="py-4">
-//                     <button className="bg-blue-100 text-blue-800 px-4 py-1 rounded-md">
+//                     <button
+//                       className="bg-blue-100 text-blue-800 px-4 py-1 rounded-md"
+//                       onClick={() => handleViewTask(task)}
+//                     >
 //                       View
 //                     </button>
 //                   </td>
@@ -235,19 +246,50 @@
 //           </table>
 //         </>
 //       )}
+
+//       {selectedTask && (
+//         <TaskDetailsPopup task={selectedTask} onClose={handleClosePopup} />
+//       )}
 //     </div>
 //   );
 // };
 
 // export default TasksContent;
 
-import React, { useState } from "react";
+
+
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import CreateNewTask from "./CreateNewTask";
 import TaskDetailsPopup from "./TaskDetailsPopup";
 
 const TasksContent = () => {
+  const [tasks, setTasks] = useState([]);
   const [showCreateTask, setShowCreateTask] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filters, setFilters] = useState({
+    status: "",
+    minPrice: "",
+    maxPrice: "",
+    tags: [],
+  });
+  const [showFilters, setShowFilters] = useState(false);
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await axios.post("http://localhost:3001/api/tasks/getTasks");
+        if (response.data.success) {
+          setTasks(response.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      }
+    };
+
+    fetchTasks();
+  }, []);
 
   const handleCreateTask = (newTaskData) => {
     const newTask = {
@@ -260,34 +302,6 @@ const TasksContent = () => {
     };
     setTasks([...tasks, newTask]);
   };
-
-  const [tasks, setTasks] = useState([
-    {
-      id: 1,
-      projectName: "Frontend Developer",
-      date: "2/19/21",
-      tags: ["Agile", "Git", "Flutter", "API"],
-      priceRange: 500.0,
-      status: "Approved",
-    },
-    {
-      id: 2,
-      projectName: "Backend Developer",
-      date: "5/7/16",
-      tags: ["Agile", "Git", "Flutter", "API"],
-      priceRange: 500.0,
-      status: "Complete",
-    },
-  ]);
-
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filters, setFilters] = useState({
-    status: "",
-    minPrice: "",
-    maxPrice: "",
-    tags: [],
-  });
-  const [showFilters, setShowFilters] = useState(false);
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -320,20 +334,20 @@ const TasksContent = () => {
 
   const filteredTasks = tasks.filter((task) => {
     const matchesSearch =
-      task.projectName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      task.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       task.tags.some((tag) =>
-        tag.toLowerCase().includes(searchTerm.toLowerCase())
+        tag.toString().toLowerCase().includes(searchTerm.toLowerCase())
       );
 
     const matchesStatus =
       filters.status === "" || task.status === filters.status;
     const matchesPrice =
       (filters.minPrice === "" ||
-        task.priceRange >= Number(filters.minPrice)) &&
-      (filters.maxPrice === "" || task.priceRange <= Number(filters.maxPrice));
+        task.lower_price >= Number(filters.minPrice)) &&
+      (filters.maxPrice === "" || task.higher_price <= Number(filters.maxPrice));
     const matchesTags =
       filters.tags.length === 0 ||
-      filters.tags.every((tag) => task.tags.includes(tag));
+      filters.tags.every((tag) => task.tags.includes(Number(tag)));
 
     return matchesSearch && matchesStatus && matchesPrice && matchesTags;
   });
@@ -421,7 +435,7 @@ const TasksContent = () => {
                         key={tag}
                         onClick={() => handleTagFilter(tag)}
                         className={`mr-2 mb-2 px-2 py-1 rounded-md ${
-                          filters.tags.includes(tag)
+                          filters.tags.includes(tag.toString())
                             ? "bg-blue-500 text-white"
                             : "bg-gray-200 text-gray-700"
                         }`}
@@ -449,8 +463,8 @@ const TasksContent = () => {
             <tbody>
               {filteredTasks.map((task) => (
                 <tr key={task.id} className="border-t border-gray-200">
-                  <td className="py-4">{task.projectName}</td>
-                  <td className="py-4">{task.date}</td>
+                  <td className="py-4">{task.name}</td>
+                  <td className="py-4">{new Date(task.created_at).toLocaleDateString()}</td>
                   <td className="py-4">
                     {task.tags.map((tag, index) => (
                       <span
@@ -461,18 +475,18 @@ const TasksContent = () => {
                       </span>
                     ))}
                   </td>
-                  <td className="py-4">{task.priceRange}</td>
+                  <td className="py-4">${task.lower_price} - ${task.higher_price}</td>
                   <td className="py-4">
                     <span
                       className={`px-2 py-1 rounded-md ${
-                        task.status === "Approved"
+                        task.is_approved
                           ? "bg-green-100 text-green-800"
-                          : task.status === "Complete"
+                          : task.is_completed
                           ? "bg-blue-100 text-blue-800"
                           : "bg-yellow-100 text-yellow-800"
                       }`}
                     >
-                      {task.status}
+                      {task.is_approved ? "Approved" : task.is_completed ? "Complete" : "Assigned"}
                     </span>
                   </td>
                   <td className="py-4">
