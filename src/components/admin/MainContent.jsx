@@ -1,36 +1,40 @@
 import React, { useState, useEffect } from "react";
-import CreateTaskForm from "./adminPages/CreateTaskForm";
 import ProfileInfo from "./adminPages/ProfileInfo";
 import { UserOutlined } from "@ant-design/icons";
 import { Avatar } from "antd";
 import TasksContent from "./adminPages/TaskContent";
 import RequestsList from "./adminPages/RequestsList";
-import EvaluatorDetails from "./EvaluatorDetails"; // Import EvaluatorDetails component
+import EvaluatorDetails from "./EvaluatorDetails";
 
 const MainContent = ({ activePage }) => {
   const [showProfileInfo, setShowProfileInfo] = useState(false);
-  const [currentView, setCurrentView] = useState(activePage); // Manage current view state
-  const [selectedRequest, setSelectedRequest] = useState(null); // Manage selected request state
+  const [currentView, setCurrentView] = useState(activePage);
+  const [selectedRequest, setSelectedRequest] = useState(null);
+  const [tasksKey, setTasksKey] = useState(0); // New state to trigger re-render
 
   const handleProfileClick = () => {
     setShowProfileInfo(!showProfileInfo);
   };
 
   useEffect(() => {
-    // Close profile info when the activePage changes
     setShowProfileInfo(false);
-    setCurrentView(activePage); // Update current view when activePage changes
-    setSelectedRequest(null); // Reset selected request when activePage changes
+    setCurrentView(activePage);
+    setSelectedRequest(null);
   }, [activePage]);
 
   const handleViewRequest = (request) => {
-    setSelectedRequest(request); // Set selected request
-    setCurrentView("evaluatorDetails"); // Change view to EvaluatorDetails
+    setSelectedRequest(request);
+    setCurrentView("evaluatorDetails");
   };
 
   const handleBack = () => {
-    setCurrentView("requests"); // Change view back to RequestsList
-    setSelectedRequest(null); // Clear selected request
+    setCurrentView("requests");
+    setSelectedRequest(null);
+  };
+
+  // New function to trigger tasks reload
+  const handleTaskCreated = () => {
+    setTasksKey(prevKey => prevKey + 1);
   };
 
   return (
@@ -48,11 +52,10 @@ const MainContent = ({ activePage }) => {
           </button>
         </div>
       </header>
-      {showProfileInfo ? (
-        <ProfileInfo />
-      ) : (
-        <>
-          {currentView === "tasks" && <TasksContent />}
+      <>
+          {currentView === "tasks" && (
+            <TasksContent key={tasksKey} onTaskCreated={handleTaskCreated} />
+          )}
           {currentView === "requests" && (
             <RequestsList onViewRequest={handleViewRequest} />
           )}
@@ -61,7 +64,22 @@ const MainContent = ({ activePage }) => {
             <EvaluatorDetails evaluator={selectedRequest} onBack={handleBack} />
           )}
         </>
-      )}
+      {/* {showProfileInfo ? (
+        <ProfileInfo />
+      ) : (
+        <>
+          {currentView === "tasks" && (
+            <TasksContent key={tasksKey} onTaskCreated={handleTaskCreated} />
+          )}
+          {currentView === "requests" && (
+            <RequestsList onViewRequest={handleViewRequest} />
+          )}
+          {currentView === "analytics" && <div>Analytics Page Content</div>}
+          {currentView === "evaluatorDetails" && selectedRequest && (
+            <EvaluatorDetails evaluator={selectedRequest} onBack={handleBack} />
+          )}
+        </>
+      )} */}
     </div>
   );
 };

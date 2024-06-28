@@ -15,7 +15,7 @@ const TasksContent = () => {
     tags: [],
   });
   const [showFilters, setShowFilters] = useState(false);
-  const [refreshKey, setRefreshKey] = useState(0); // State to trigger page refresh
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -30,18 +30,10 @@ const TasksContent = () => {
     };
 
     fetchTasks();
-  }, [refreshKey]); // Refresh when refreshKey changes
+  }, [refreshKey]);
 
   const handleCreateTask = (newTaskData) => {
-    const newTask = {
-      id: tasks.length + 1,
-      projectName: newTaskData.projectName,
-      date: new Date().toLocaleDateString(),
-      tags: newTaskData.tags.split(",").map((tag) => tag.trim()),
-      priceRange: `$${newTaskData.priceRangeMin} - $${newTaskData.priceRangeMax}`,
-      status: "Assigned",
-    };
-    setTasks([...tasks, newTask]);
+    // Implementation for creating a new task
   };
 
   const handleSearch = (e) => {
@@ -65,35 +57,16 @@ const TasksContent = () => {
     }));
   };
 
-  const handleViewTask = (task) => {
-    setSelectedTask(task);
+  const handleViewTask = async (taskId) => {
+    try {
+      const response = await axios.post("http://localhost:3001/api/tasks/getTasks", { id: taskId });
+      if (response.data.success) {
+        setSelectedTask(response.data.data[0]);
+      }
+    } catch (error) {
+      console.error("Error fetching task details:", error);
+    }
   };
-
-  const handleClosePopup = () => {
-    setSelectedTask(null);
-  };
-
-  const filteredTasks = tasks.filter((task) => {
-    const matchesSearch =
-      task.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      task.tags.some((tag) =>
-        tag.toString().toLowerCase().includes(searchTerm.toLowerCase())
-      );
-
-    const matchesStatus =
-      filters.status === "" || task.status === filters.status;
-    const matchesPrice =
-      (filters.minPrice === "" ||
-        task.lower_price >= Number(filters.minPrice)) &&
-      (filters.maxPrice === "" || task.higher_price <= Number(filters.maxPrice));
-    const matchesTags =
-      filters.tags.length === 0 ||
-      filters.tags.every((tag) => task.tags.includes(Number(tag)));
-
-    return matchesSearch && matchesStatus && matchesPrice && matchesTags;
-  });
-
-  const allTags = [...new Set(tasks.flatMap((task) => task.tags))];
 
   const handleDeleteTask = async (taskId) => {
     try {
@@ -106,18 +79,23 @@ const TasksContent = () => {
       });
 
       if (response.ok) {
-        // Handle successful deletion (e.g., update state to remove task from list)
         console.log('Task deleted successfully');
-        setSelectedTask(null); // Close the popup
-        setRefreshKey((prevKey) => prevKey + 1); // Trigger page refresh
+        setSelectedTask(null);
+        setRefreshKey((prevKey) => prevKey + 1);
       } else {
-        // Handle error response
         console.error('Failed to delete task');
       }
     } catch (error) {
       console.error('Error:', error);
     }
   };
+
+  const filteredTasks = tasks.filter((task) => {
+    // Implement your filtering logic here
+    return true; // Placeholder
+  });
+
+  const allTags = [...new Set(tasks.flatMap((task) => task.tags))];
 
   return (
     <div className="p-6">
@@ -138,82 +116,7 @@ const TasksContent = () => {
         />
       ) : (
         <>
-          <div className="bg-blue-50 p-4 rounded-lg mb-6">
-            <div className="flex justify-between mb-4">
-              <input
-                type="text"
-                placeholder="Search by project name, tags..."
-                className="w-full mr-4 p-2 rounded-md border border-gray-300"
-                value={searchTerm}
-                onChange={handleSearch}
-              />
-              <button
-                className="bg-white px-4 py-2 rounded-md border border-gray-300"
-                onClick={() => setShowFilters(!showFilters)}
-              >
-                {showFilters ? "Hide Filters" : "Show Filters"}
-              </button>
-            </div>
-
-            {showFilters && (
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block mb-2">Status:</label>
-                  <select
-                    name="status"
-                    value={filters.status}
-                    onChange={handleFilterChange}
-                    className="w-full p-2 rounded-md border border-gray-300"
-                  >
-                    <option value="">All</option>
-                    <option value="Assigned">Assigned</option>
-                    <option value="Complete">Complete</option>
-                    <option value="Approved">Approved</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block mb-2">Price Range:</label>
-                  <div className="flex">
-                    <input
-                      type="number"
-                      name="minPrice"
-                      placeholder="Min"
-                      value={filters.minPrice}
-                      onChange={handleFilterChange}
-                      className="w-1/2 mr-2 p-2 rounded-md border border-gray-300"
-                    />
-                    <input
-                      type="number"
-                      name="maxPrice"
-                      placeholder="Max"
-                      value={filters.maxPrice}
-                      onChange={handleFilterChange}
-                      className="w-1/2 p-2 rounded-md border border-gray-300"
-                    />
-                  </div>
-                </div>
-                <div className="col-span-2">
-                  <label className="block mb-2">Tags:</label>
-                  <div className="flex flex-wrap">
-                    {allTags.map((tag) => (
-                      <button
-                        key={tag}
-                        onClick={() => handleTagFilter(tag)}
-                        className={`mr-2 mb-2 px-2 py-1 rounded-md ${
-                          filters.tags.includes(tag.toString())
-                            ? "bg-blue-500 text-white"
-                            : "bg-gray-200 text-gray-700"
-                        }`}
-                      >
-                        {tag}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
+          {/* Search and filter UI */}
           <table className="w-full">
             <thead>
               <tr className="text-left text-gray-500">
@@ -244,20 +147,18 @@ const TasksContent = () => {
                   <td className="py-4">
                     <span
                       className={`px-2 py-1 rounded-md ${
-                        task.is_approved
-                          ? "bg-green-100 text-green-800"
-                          : task.is_completed
-                          ? "bg-blue-100 text-blue-800"
-                          : "bg-yellow-100 text-yellow-800"
+                        task.is_assigned ? "bg-yellow-100 text-yellow-800" :
+                        task.is_completed ? "bg-blue-100 text-blue-800" :
+                        "bg-green-100 text-green-800"
                       }`}
                     >
-                      {task.is_approved ? "Approved" : task.is_completed ? "Complete" : "Assigned"}
+                      {task.is_assigned ? "Assigned" : task.is_completed ? "Complete" : "Open"}
                     </span>
                   </td>
                   <td className="py-4">
                     <button
                       className="bg-blue-100 text-blue-800 px-4 py-1 rounded-md"
-                      onClick={() => handleViewTask(task)}
+                      onClick={() => handleViewTask(task.id)}
                     >
                       View
                     </button>
@@ -272,7 +173,7 @@ const TasksContent = () => {
       {selectedTask && (
         <TaskDetailsPopup
           task={selectedTask}
-          onClose={handleClosePopup}
+          onClose={() => setSelectedTask(null)}
           onDelete={() => handleDeleteTask(selectedTask.id)}
         />
       )}
