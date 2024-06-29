@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   UserOutlined,
   ProjectOutlined,
@@ -10,6 +10,7 @@ import {
 
 const Sidebar = ({ onSidebarClick }) => {
   const [activeButton, setActiveButton] = useState("TASKS");
+  const navigate = useNavigate();
 
   const buttons = [
     { name: "TASKS", icon: <PlusCircleOutlined /> },
@@ -20,6 +21,12 @@ const Sidebar = ({ onSidebarClick }) => {
   const handleButtonClick = (name) => {
     setActiveButton(name);
     onSidebarClick(name.toLowerCase()); // Make sure this matches the case in MainContent
+  };
+
+  const handleLogout = () => {
+    // Clear all localStorage data
+    localStorage.clear();
+    navigate("/role"); // Navigate to the role selector page
   };
 
   return (
@@ -49,15 +56,15 @@ const Sidebar = ({ onSidebarClick }) => {
         </nav>
       </div>
       <div className="mt-auto">
-        <Link
-          to="/role"
+        <button
+          onClick={handleLogout}
           className="flex items-center space-x-2 p-2 rounded transition-colors hover:bg-white/50"
         >
           <span className="flex-shrink-0">
             <LogoutOutlined className="h-6 w-6" />
           </span>
           <span className="flex-shrink-0">LOGOUT</span>
-        </Link>
+        </button>
       </div>
     </aside>
   );
