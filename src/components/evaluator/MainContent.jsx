@@ -99,6 +99,8 @@ const MainContent = ({ activePage }) => {
   };
 
   useEffect(() => {
+    console.log(localStorage.getItem("token"));
+    console.log(localStorage.getItem("user"));
     setShowProfileInfo(false);
     setCurrentView(activePage);
     if (activePage === "tasks") {
@@ -109,7 +111,8 @@ const MainContent = ({ activePage }) => {
   const fetchTasks = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:3001/api/tasks/getTasks"
+        "http://localhost:3001/api/tasks/getEvalTasks",
+        {evaluator_id:localStorage.getItem("user")}
       );
       const result = response.data;
       if (result.success) {

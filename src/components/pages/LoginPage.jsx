@@ -144,11 +144,9 @@
 
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
-import { useAuth } from "../utils/AuthContext"; // Import useAuth hook
 import axios from "axios";
 
 const LoginPage = () => {
-  const { login } = useAuth(); // Destructure login method from AuthContext
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -190,10 +188,12 @@ const LoginPage = () => {
       );
 
       if (response.data.success) {
-        const { token, user } = response.data;
+        const token = response.data.token;
+        const user = response.data.data.id;
 
-        // Call login method from AuthContext to update authentication state
-        login(token, user);
+        // Store token in local storage
+        localStorage.setItem("token", token);
+        localStorage.setItem("user",user);
 
         // Redirect based on role or default path
         navigate(role === "admin" ? "/adminDashboard" : "/evaluatorDashboard");
