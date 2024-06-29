@@ -44,7 +44,7 @@ const MyProjects = ({ setCompletedProjects }) => {
         const project = projects.inprogress.find(p => p.id === projectId);
         setCompletedProjects(prevState => [...prevState, project]);
         setProjects(prevState => ({
-          inprogress: prevState.inprogress.filter(p => p.id !== projectId),
+          inprogress: prevState.inprogress.filter(p => p.id != projectId),
           assigned: prevState.assigned
         }));
       }

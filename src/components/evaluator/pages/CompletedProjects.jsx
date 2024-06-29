@@ -70,8 +70,7 @@ const CompletedProjects = () => {
     const fetchCompletedProjects = async () => {
       try {
         const response = await axios.post("http://localhost:3001/api/tasks/completeTask", {
-          // evaluator_id: user.evaluator_id,
-          evaluator_id: 40,
+          evaluator_id: localStorage.getItem("user") ,
           is_fetch: 1
         });
 

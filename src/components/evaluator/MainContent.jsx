@@ -126,6 +126,12 @@ const MainContent = ({ activePage }) => {
     }
   };
 
+  const handleTaskInterest = (taskId) => {
+    const updatedTasks = tasks.filter((task) => task.id !== taskId);
+    setTasks(updatedTasks);
+  };
+
+
   return (
     <div className="flex flex-col h-screen w-full">
       <header className="flex justify-between items-center p-4 bg-white shadow-md w-full">
@@ -154,6 +160,7 @@ const MainContent = ({ activePage }) => {
                   title={task.name}
                   description={task.description}
                   tags={task.tags}
+                  onTaskInterest={handleTaskInterest}
                 />
               ))}
             {currentView === "my projects" && <MyProjects />}

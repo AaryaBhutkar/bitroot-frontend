@@ -13,7 +13,7 @@ const EvaluatorDetails = ({ evaluatorId, onBack }) => {
         setLoading(true);
         const response = await axios.post("http://localhost:3001/api/users/completeProfile", {
         is_fetch: 1,
-        evaluator_id:33
+        evaluator_id:localStorage.getItem("user")
         });
         console.log("gbghjfgvdc",response);
         if (response.data.success) {

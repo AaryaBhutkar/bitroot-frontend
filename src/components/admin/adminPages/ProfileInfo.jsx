@@ -17,7 +17,7 @@ const ProfileInfo = () => {
       setStatus('Fetching profile...');
       const response = await axios.post('http://localhost:3001/api/users/completeProfile', {
         is_fetch: 1,
-        evaluator_id: 38
+        evaluator_id: localStorage.getItem("user")
       });
       
       if (response.data.success) {
