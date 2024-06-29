@@ -16,9 +16,7 @@ const TasksContent = () => {
   });
   const [showFilters, setShowFilters] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
-
-  useEffect(() => {
-    const fetchTasks = async () => {
+  const fetchTasks = async () => {
       try {
         const response = await axios.post("http://localhost:3001/api/tasks/getTasks");
         if (response.data.success) {
@@ -29,12 +27,17 @@ const TasksContent = () => {
       }
     };
 
+  useEffect(() => {
+    
     fetchTasks();
   }, [refreshKey]);
 
   const handleCreateTask = (newTaskData) => {
-    // Implementation for creating a new task
+    // Update tasks using the functional update pattern
   };
+  const handleTaskAdditionState=()=>{
+    fetchTasks();
+  }
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -57,12 +60,13 @@ const TasksContent = () => {
     }));
   };
 
-  const handleViewTask = async (taskId) => {
+  const handleViewTask = async (task) => {
     try {
-      const response = await axios.post("http://localhost:3001/api/tasks/getTasks", { id: taskId });
-      if (response.data.success) {
-        setSelectedTask(response.data.data[0]);
-      }
+      console.log(task);
+      // const response = await axios.post("http://localhost:3001/api/tasks/getTasks", { id: taskId });
+      // if (response.data.success) {
+        setSelectedTask(task);
+      // }
     } catch (error) {
       console.error("Error fetching task details:", error);
     }
@@ -113,6 +117,7 @@ const TasksContent = () => {
         <CreateNewTask
           onClose={() => setShowCreateTask(false)}
           onSubmit={handleCreateTask}
+          onTaskCreated={handleTaskAdditionState}
         />
       ) : (
         <>
@@ -158,7 +163,7 @@ const TasksContent = () => {
                   <td className="py-4">
                     <button
                       className="bg-blue-100 text-blue-800 px-4 py-1 rounded-md"
-                      onClick={() => handleViewTask(task.id)}
+                      onClick={() => handleViewTask(task)}
                     >
                       View
                     </button>
