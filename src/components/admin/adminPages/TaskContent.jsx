@@ -16,11 +16,21 @@ const TasksContent = () => {
   });
   const [showFilters, setShowFilters] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [pageSize] = useState(6); // Default page size
+  const [currentPage, setCurrentPage] = useState(0); // Page starts from 0
+  const [totalPages, setTotalPages] = useState(0); 
+  
   const fetchTasks = async () => {
       try {
-        const response = await axios.post("http://localhost:3001/api/tasks/getTasks");
+        const response = await axios.post("http://localhost:3001/api/tasks/getTasks", {
+          size: pageSize,
+          page: currentPage,
+        });
         if (response.data.success) {
           setTasks(response.data.data);
+          const total = response.data.meta.total;
+        const calculatedTotalPages = Math.ceil(total / pageSize);
+        setTotalPages(calculatedTotalPages);
         }
       } catch (error) {
         console.error("Error fetching tasks:", error);
@@ -30,7 +40,7 @@ const TasksContent = () => {
   useEffect(() => {
     
     fetchTasks();
-  }, [refreshKey]);
+  }, [refreshKey,currentPage]);
 
   const handleCreateTask = (newTaskData) => {
     // Update tasks using the functional update pattern
@@ -100,6 +110,37 @@ const TasksContent = () => {
   });
 
   const allTags = [...new Set(tasks.flatMap((task) => task.tags))];
+  const handlePageClick = (page) => {
+    setCurrentPage(page);
+  };
+
+
+  const getPageNumbers = () => {
+    const pageNumbers = [];
+    const maxVisiblePages = 5; // Adjust as needed
+    const total = totalPages;
+
+    if (totalPages <= maxVisiblePages) {
+      for (let i = 0; i < totalPages; i++) {
+        pageNumbers.push(i);
+      }
+    } else {
+      const halfVisiblePages = Math.floor(maxVisiblePages / 2);
+      let startPage = Math.max(currentPage - halfVisiblePages, 0);
+      let endPage = Math.min(startPage + maxVisiblePages - 1, totalPages - 1);
+
+      if (endPage - startPage < maxVisiblePages - 1) {
+        startPage = Math.max(endPage - maxVisiblePages + 1, 0);
+      }
+
+      for (let i = startPage; i <= endPage; i++) {
+        pageNumbers.push(i);
+      }
+    }
+
+    return pageNumbers;
+  };
+
 
   return (
     <div className="p-6">
@@ -172,6 +213,38 @@ const TasksContent = () => {
               ))}
             </tbody>
           </table>
+            {/* Pagination controls */}
+          <div className="flex justify-end mt-4">
+            <button
+              className={`px-4 py-2 mr-2 bg-gray-200 rounded-md ${
+                currentPage === 0 ? "cursor-not-allowed" : "hover:bg-gray-300"
+              }`}
+              onClick={() => handlePageClick(currentPage - 1)}
+              disabled={currentPage === 0}
+            >
+              Previous
+            </button>
+            {getPageNumbers().map((page) => (
+              <button
+                key={page}
+                className={`px-4 py-2 mr-2 bg-gray-200 rounded-md ${
+                  currentPage === page ? "bg-blue-500 text-white" : "hover:bg-gray-300"
+                }`}
+                onClick={() => handlePageClick(page)}
+              >
+                {page + 1}
+              </button>
+            ))}
+            <button
+              className={`px-4 py-2 bg-gray-200 rounded-md ${
+                currentPage === totalPages - 1 ? "cursor-not-allowed" : "hover:bg-gray-300"
+              }`}
+              onClick={() => handlePageClick(currentPage + 1)}
+              disabled={currentPage === totalPages - 1}
+            >
+              Next
+            </button>
+          </div>
         </>
       )}
 
