@@ -15,6 +15,12 @@ const MainContent = ({ activePage }) => {
   const handleProfileClick = () => {
     setShowProfileInfo(!showProfileInfo);
   };
+  useEffect(()=>{
+    if(!localStorage.getItem("token")){
+      //navigate to role
+      window.location.href = "/role";
+    }
+  },[])
 
   useEffect(() => {
     setShowProfileInfo(false);
