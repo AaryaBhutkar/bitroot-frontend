@@ -88,6 +88,7 @@ import ProfileInfo from "../admin/adminPages/ProfileInfo";
 import MyProjects from "./pages/MyProjects";
 import axios from "axios";
 import CompletedProjects from "./pages/CompletedProjects";
+import { Navigate } from "react-router-dom";
 
 const MainContent = ({ activePage }) => {
   const [showProfileInfo, setShowProfileInfo] = useState(false);
@@ -97,6 +98,13 @@ const MainContent = ({ activePage }) => {
   const handleProfileClick = () => {
     setShowProfileInfo(!showProfileInfo);
   };
+
+  useEffect(()=>{
+    if(!localStorage.getItem("token")|| !localStorage.getItem("user")){
+      //navigate to role
+      window.location.href = "/role";
+    }
+  },[])
 
   useEffect(() => {
     console.log(localStorage.getItem("token"));

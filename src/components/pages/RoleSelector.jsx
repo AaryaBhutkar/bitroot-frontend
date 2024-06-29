@@ -1,8 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const RoleSelector = () => {
   const navigate = useNavigate();
+
+  useEffect(()=>{
+    localStorage.removeItem("token")
+    if(localStorage.getItem("user"))localStorage.removeItem("user");
+  },[]);
 
   const handleRoleSelection = (role) => {
     navigate("/login", { state: { role } });
