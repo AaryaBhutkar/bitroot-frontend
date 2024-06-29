@@ -61,6 +61,22 @@ const MyProjects = ({ setCompletedProjects }) => {
     setSelectedProject(null); // Close the detailed view popup
   };
 
+  const handleUnassignProject = async (projectId) => {
+    try {
+      await axios.post(
+        "http://localhost:3001/api/tasks/assignTask",
+        { task_id: projectId,evaluator_id:Number(localStorage.getItem("user")),is_delete:1 }
+      );
+      const updatedAssignedProjects = projects.assigned.filter(p => p.id !== projectId);
+      setProjects(prevState => ({
+        ...prevState,
+        assigned: updatedAssignedProjects
+      }));
+    } catch (error) {
+      console.error("Error unassigning project:", error);
+    }
+  };
+
   const renderProjectItem = (project) => (
     <div
       key={project.id}
@@ -84,12 +100,20 @@ const MyProjects = ({ setCompletedProjects }) => {
             Complete
           </button>
         ) : (
-          <button
-            className="mt-2 bg-purple-500 text-white px-4 py-1 rounded hover:bg-purple-600"
-            onClick={() => handleActionButton(project.id, "start")}
-          >
-            Start
-          </button>
+          <>
+            <button
+              className="mt-2 bg-purple-500 text-white px-4 py-1 rounded hover:bg-purple-600"
+              onClick={() => handleActionButton(project.id, "start")}
+            >
+              Start
+            </button>
+            <button
+              className="mt-2 bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600 ml-2"
+              onClick={() => handleUnassignProject(project.id)}
+            >
+              Delete
+            </button>
+          </>
         )}
       </div>
       {selectedProject && selectedProject.id === project.id && (
