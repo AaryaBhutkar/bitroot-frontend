@@ -1,58 +1,11 @@
-
 import React, { useState, useEffect } from "react";
-
-const demoRequests = [
-  {
-    id: 1,
-    name: "Evaluator A",
-    linkedin: "https://linkedin.com/in/evaluatorA",
-    experience: "5 years",
-    price: "$5000",
-    tags: ["Frontend Developer"],
-    contact: "8454545454",
-    role: "Frontend Developer",
-    applicationDate: "2023-06-15T10:30:00Z",
-    status: "Pending",
-    skills: ["React", "JavaScript", "CSS"],
-    additionalInfo: "3 years of experience in frontend development",
-  },
-  {
-    id: 2,
-    name: "Evaluator B",
-    linkedin: "https://linkedin.com/in/evaluatorB",
-    experience: "4 years",
-    price: "$4000",
-    tags: ["Backend Developer"],
-    contact: "9454545454",
-    role: "Backend Developer",
-    applicationDate: "2023-06-14T14:45:00Z",
-    status: "Under Review",
-    skills: ["Node.js", "Express", "MongoDB"],
-    additionalInfo: "Proficient in RESTful API design",
-  },
-  {
-    id: 3,
-    name: "Evaluator C",
-    linkedin: "https://linkedin.com/in/evaluatorC",
-    experience: "3 years",
-    price: "$3000",
-    tags: ["Flutter Developer"],
-    contact: "7454545454",
-    role: "Flutter Developer",
-    applicationDate: "2023-06-13T09:15:00Z",
-    status: "Pending",
-    skills: ["Flutter", "Dart", "Mobile Development"],
-    additionalInfo: "Experience with both iOS and Android development",
-  }
-  
-];
+import axios from "axios";
 
 const RequestItem = ({ request, onView }) => (
-  <div className="bg-blue-50 p-5 rounded-lg shadow mb-4 ">
+  <div className="bg-blue-50 p-5 rounded-lg shadow mb-4">
     <p className="text-sm text-gray-700 mb-2">
-      {request.name} has applied for the project {request.name}
+      {request.evaluator_name} has applied for the project {request.task_name}
     </p>
-    
     <div className="flex justify-between items-center">
       <button
         onClick={() => onView(request)}
@@ -72,10 +25,22 @@ const RequestsList = ({ onViewRequest }) => {
     fetchRequests();
   }, []);
 
-  const fetchRequests = () => {
-    setTimeout(() => {
-      setRequests(demoRequests);
-    }, 500);
+  const fetchRequests = async () => {
+    try {
+      const response = await axios.post("http://localhost:3001/api/tasks/getTasks", {
+        is_interested: 1
+      });
+      if (response.data.success) {
+        const transformedRequests = response.data.data.map((item) => ({
+          id: item.task_id,
+          evaluator_name: item.evaluator_name,
+          task_name: item.task_name
+        }));
+        setRequests(transformedRequests);
+      }
+    } catch (error) {
+      console.error("Error fetching requests:", error);
+    }
   };
 
   return (
