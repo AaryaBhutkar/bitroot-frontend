@@ -30,9 +30,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import axiosInstance from "../../utils/axiosInstance";
+import { toast } from "react-toastify";
 const TaskCard = ({ task_id, title, description, tags,onTaskInterest  }) => {
-  const [showNotification, setShowNotification] = useState(false);
-  const [notificationMessage, setNotificationMessage] = useState("");
 
   const handleInterestClick = async () => {
     console.log("key", task_id);
@@ -50,6 +49,7 @@ const TaskCard = ({ task_id, title, description, tags,onTaskInterest  }) => {
       );
       const result = response.data;
       if (result.success) {
+        toast.success("Interest Notified !");
         console.log("Task assigned successfully:", result.data);
         onTaskInterest(task_id);
       } else {
