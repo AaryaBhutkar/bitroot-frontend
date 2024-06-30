@@ -29,6 +29,7 @@ const MainContent = ({ activePage }) => {
   }, [activePage]);
 
   const handleViewRequest = (request) => {
+    console.log("req",request);
     setSelectedRequest(request);
     setCurrentView("evaluatorDetails");
   };
@@ -67,7 +68,7 @@ const MainContent = ({ activePage }) => {
           )}
           {currentView === "analytics" && <div>Analytics Page Content</div>}
           {currentView === "evaluatorDetails" && selectedRequest && (
-            <EvaluatorDetails evaluator={selectedRequest} onBack={handleBack} />
+            <EvaluatorDetails evaluatorId={selectedRequest.evaluator_id} onBack={handleBack} />
           )}
         </>
       {/* {showProfileInfo ? (

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import CreateNewTask from "./CreateNewTask";
 import TaskDetailsPopup from "./TaskDetailsPopup";
+import axiosInstance from "../../utils/axiosInstance";
 
 const TasksContent = () => {
   const [tasks, setTasks] = useState([]);
@@ -22,7 +23,7 @@ const TasksContent = () => {
   
   const fetchTasks = async () => {
       try {
-        const response = await axios.post("http://localhost:3001/api/tasks/getTasks", {
+        const response = await axiosInstance.post("tasks/getTasks", {
           size: pageSize,
           page: currentPage,
         });
@@ -84,13 +85,7 @@ const TasksContent = () => {
 
   const handleDeleteTask = async (taskId) => {
     try {
-      const response = await fetch('http://localhost:3001/api/tasks/createTask', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({is_delete:1 ,id:taskId }),
-      });
+      const response = await axiosInstance.post("tasks/createTask", {is_delete:1 ,id:taskId });
 
       if (response.ok) {
         console.log('Task deleted successfully');

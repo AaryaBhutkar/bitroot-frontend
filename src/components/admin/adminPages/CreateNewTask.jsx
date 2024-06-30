@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import axiosInstance from '../../utils/axiosInstance';
 
 const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
   const [taskData, setTaskData] = useState({
@@ -24,8 +25,8 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
     e.preventDefault();
     
     try {
-      const response = await axios.post(
-        'http://localhost:3001/api/tasks/createTask',
+      const response = await axiosInstance.post(
+        'tasks/createTask',
         {
           name: taskData.projectName,
           desc: taskData.brief,

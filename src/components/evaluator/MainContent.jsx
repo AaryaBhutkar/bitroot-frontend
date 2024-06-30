@@ -88,6 +88,7 @@ import ProfileInfo from "../admin/adminPages/ProfileInfo";
 import MyProjects from "./pages/MyProjects";
 import axios from "axios";
 import CompletedProjects from "./pages/CompletedProjects";
+import axiosInstance from "../utils/axiosInstance";
 import { Navigate } from "react-router-dom";
 
 const MainContent = ({ activePage }) => {
@@ -119,8 +120,8 @@ const MainContent = ({ activePage }) => {
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.post(
-        "http://localhost:3001/api/tasks/getEvalTasks",
+      const response = await axiosInstance.post(
+        "/tasks/getEvalTasks",
         {evaluator_id:localStorage.getItem("user"),
           search:searchTerm
         }

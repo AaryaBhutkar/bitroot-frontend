@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 
 const EvaluatorDetails = ({ evaluatorId, onBack }) => {
   const [evaluator, setEvaluator] = useState(null);
@@ -11,9 +12,9 @@ const EvaluatorDetails = ({ evaluatorId, onBack }) => {
     const fetchEvaluatorDetails = async () => {
       try {
         setLoading(true);
-        const response = await axios.post("http://localhost:3001/api/users/completeProfile", {
+        const response = await axiosInstance.post("users/completeProfile", {
         is_fetch: 1,
-        evaluator_id:localStorage.getItem("user")
+        evaluator_id:evaluatorId
         });
         console.log("gbghjfgvdc",response);
         if (response.data.success) {

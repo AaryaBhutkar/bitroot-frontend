@@ -29,6 +29,7 @@
 
 import React, { useState } from "react";
 import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance";
 const TaskCard = ({ task_id, title, description, tags,onTaskInterest  }) => {
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState("");
@@ -39,8 +40,8 @@ const TaskCard = ({ task_id, title, description, tags,onTaskInterest  }) => {
     console.log("key", description);
     console.log("key", tags);
     try {
-      const response = await axios.post(
-        "http://localhost:3001/api/tasks/assignTask",
+      const response = await axiosInstance.post(
+        "tasks/assignTask",
         {
           task_id: task_id, // Assuming taskId is passed as prop
           evaluator_id: localStorage.getItem("user"), // Replace with actual evaluator ID

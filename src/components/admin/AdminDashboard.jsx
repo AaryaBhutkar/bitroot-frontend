@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MainContent from "./MainContent";
 import Sidebar from "./Sidebar";
 
 const Dashboard = () => {
   const [activePage, setActivePage] = useState("tasks");
+  useEffect(()=>{
+
+  });
 
   const handleSidebarClick = (page) => {
     setActivePage(page);

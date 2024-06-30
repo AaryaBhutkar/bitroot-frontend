@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance";
 
 const MyProjects = ({ setCompletedProjects }) => {
   const [activeTab, setActiveTab] = useState("IN PROGRESS");
@@ -16,8 +17,8 @@ const MyProjects = ({ setCompletedProjects }) => {
   const fetchProjects = async () => {
     try {
       const [inProgressResponse, assignedResponse] = await Promise.all([
-        axios.post('http://localhost:3001/api/tasks/getEvalTasks', { evaluator_id: localStorage.getItem("user"), in_progress: 1 }),
-        axios.post('http://localhost:3001/api/tasks/getEvalTasks', { evaluator_id: localStorage.getItem("user"), is_assigned: 1 })
+        axiosInstance.post('tasks/getEvalTasks', { evaluator_id: localStorage.getItem("user"), in_progress: 1 }),
+        axiosInstance.post('tasks/getEvalTasks', { evaluator_id: localStorage.getItem("user"), is_assigned: 1 })
       ]);
       setProjects({
         inprogress: inProgressResponse.data.data,
@@ -30,8 +31,8 @@ const MyProjects = ({ setCompletedProjects }) => {
 
   const handleActionButton = async (projectId, action) => {
     try {
-      await axios.post(
-        `http://localhost:3001/api/tasks/${action === "start" ? "startTask" : "completeTask"}`,
+      await axiosInstance.post(
+        `tasks/${action === "start" ? "startTask" : "completeTask"}`,
         { task_id: projectId }
       );
       if (action === "start") {
@@ -63,8 +64,8 @@ const MyProjects = ({ setCompletedProjects }) => {
 
   const handleUnassignProject = async (projectId) => {
     try {
-      await axios.post(
-        "http://localhost:3001/api/tasks/assignTask",
+      await axiosInstance.post(
+        "tasks/assignTask",
         { task_id: projectId,evaluator_id:Number(localStorage.getItem("user")),is_delete:1 }
       );
       const updatedAssignedProjects = projects.assigned.filter(p => p.id !== projectId);

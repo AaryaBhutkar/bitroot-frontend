@@ -145,6 +145,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({

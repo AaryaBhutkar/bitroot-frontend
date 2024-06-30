@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance";
 
 const RequestItem = ({ request, onView, onApprove }) => (
   <div className="bg-blue-50 p-5 rounded-lg shadow mb-4">
@@ -32,7 +33,7 @@ const RequestsList = ({ onViewRequest }) => {
 
   const fetchRequests = async () => {
     try {
-      const response = await axios.post("http://localhost:3001/api/tasks/getTasks", {
+      const response = await axiosInstance.post("tasks/getTasks", {
         is_interested: 1
       });
       if (response.data.success) {
@@ -52,7 +53,7 @@ const RequestsList = ({ onViewRequest }) => {
   const handleApprove = async (request) => {
     const { id: task_id, evaluator_id } = request;
     try {
-      const response = await axios.post("http://localhost:3001/api/tasks/assignTask", {
+      const response = await axiosInstance.post("tasks/assignTask", {
         task_id,
         evaluator_id
       });
