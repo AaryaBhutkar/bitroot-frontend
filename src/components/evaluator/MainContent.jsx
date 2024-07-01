@@ -88,17 +88,29 @@ import ProfileInfo from "../admin/adminPages/ProfileInfo";
 import MyProjects from "./pages/MyProjects";
 import axios from "axios";
 import CompletedProjects from "./pages/CompletedProjects";
+import axiosInstance from "../utils/axiosInstance";
+import { Navigate } from "react-router-dom";
 
 const MainContent = ({ activePage }) => {
   const [showProfileInfo, setShowProfileInfo] = useState(false);
   const [currentView, setCurrentView] = useState(activePage);
   const [tasks, setTasks] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleProfileClick = () => {
     setShowProfileInfo(!showProfileInfo);
   };
 
+  useEffect(()=>{
+    if(!localStorage.getItem("token")|| !localStorage.getItem("user")){
+      //navigate to role
+      window.location.href = "/role";
+    }
+  },[])
+
   useEffect(() => {
+    console.log(localStorage.getItem("token"));
+    console.log(localStorage.getItem("user"));
     setShowProfileInfo(false);
     setCurrentView(activePage);
     if (activePage === "tasks") {
@@ -108,8 +120,11 @@ const MainContent = ({ activePage }) => {
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.post(
-        "http://localhost:3001/api/tasks/getTasks"
+      const response = await axiosInstance.post(
+        "/tasks/getEvalTasks",
+        {evaluator_id:localStorage.getItem("user"),
+          search:searchTerm
+        }
       );
       const result = response.data;
       if (result.success) {
@@ -122,6 +137,17 @@ const MainContent = ({ activePage }) => {
       console.error("Error fetching tasks:", error);
     }
   };
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value); // Update search term state
+  };
+  const handleSearchSubmit =(e)=>{
+    fetchTasks();
+  }
+  const handleTaskInterest = (taskId) => {
+    const updatedTasks = tasks.filter((task) => task.id !== taskId);
+    setTasks(updatedTasks);
+  };
+
 
   return (
     <div className="flex flex-col h-screen w-full">
@@ -132,7 +158,15 @@ const MainContent = ({ activePage }) => {
             type="text"
             placeholder="Search"
             className="border rounded-md px-3 py-1"
+            value={searchTerm}
+            onChange={handleSearchChange}
           />
+          <button
+            onClick={handleSearchSubmit}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md"
+          >
+            Search
+          </button>
           <button onClick={handleProfileClick} className="text-gray-600">
             <Avatar size="large" icon={<UserOutlined />} />
           </button>
@@ -151,6 +185,7 @@ const MainContent = ({ activePage }) => {
                   title={task.name}
                   description={task.description}
                   tags={task.tags}
+                  onTaskInterest={handleTaskInterest}
                 />
               ))}
             {currentView === "my projects" && <MyProjects />}

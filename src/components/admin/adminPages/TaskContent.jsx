@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import CreateNewTask from "./CreateNewTask";
 import TaskDetailsPopup from "./TaskDetailsPopup";
+import axiosInstance from "../../utils/axiosInstance";
 
 const TasksContent = () => {
   const [tasks, setTasks] = useState([]);
@@ -16,25 +17,38 @@ const TasksContent = () => {
   });
   const [showFilters, setShowFilters] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
-
-  useEffect(() => {
-    const fetchTasks = async () => {
+  const [pageSize] = useState(6); // Default page size
+  const [currentPage, setCurrentPage] = useState(0); // Page starts from 0
+  const [totalPages, setTotalPages] = useState(0); 
+  
+  const fetchTasks = async () => {
       try {
-        const response = await axios.post("http://localhost:3001/api/tasks/getTasks");
+        const response = await axiosInstance.post("tasks/getTasks", {
+          size: pageSize,
+          page: currentPage,
+        });
         if (response.data.success) {
           setTasks(response.data.data);
+          const total = response.data.meta.total;
+        const calculatedTotalPages = Math.ceil(total / pageSize);
+        setTotalPages(calculatedTotalPages);
         }
       } catch (error) {
         console.error("Error fetching tasks:", error);
       }
     };
 
+  useEffect(() => {
+    
     fetchTasks();
-  }, [refreshKey]);
+  }, [refreshKey,currentPage]);
 
   const handleCreateTask = (newTaskData) => {
-    // Implementation for creating a new task
+    // Update tasks using the functional update pattern
   };
+  const handleTaskAdditionState=()=>{
+    fetchTasks();
+  }
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -57,12 +71,13 @@ const TasksContent = () => {
     }));
   };
 
-  const handleViewTask = async (taskId) => {
+  const handleViewTask = async (task) => {
     try {
-      const response = await axios.post("http://localhost:3001/api/tasks/getTasks", { id: taskId });
-      if (response.data.success) {
-        setSelectedTask(response.data.data[0]);
-      }
+      console.log(task);
+      // const response = await axios.post("http://localhost:3001/api/tasks/getTasks", { id: taskId });
+      // if (response.data.success) {
+        setSelectedTask(task);
+      // }
     } catch (error) {
       console.error("Error fetching task details:", error);
     }
@@ -70,13 +85,7 @@ const TasksContent = () => {
 
   const handleDeleteTask = async (taskId) => {
     try {
-      const response = await fetch('http://localhost:3001/api/tasks/createTask', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({is_delete:1 ,id:taskId }),
-      });
+      const response = await axiosInstance.post("tasks/createTask", {is_delete:1 ,id:taskId });
 
       if (response.ok) {
         console.log('Task deleted successfully');
@@ -96,6 +105,37 @@ const TasksContent = () => {
   });
 
   const allTags = [...new Set(tasks.flatMap((task) => task.tags))];
+  const handlePageClick = (page) => {
+    setCurrentPage(page);
+  };
+
+
+  const getPageNumbers = () => {
+    const pageNumbers = [];
+    const maxVisiblePages = 5; // Adjust as needed
+    const total = totalPages;
+
+    if (totalPages <= maxVisiblePages) {
+      for (let i = 0; i < totalPages; i++) {
+        pageNumbers.push(i);
+      }
+    } else {
+      const halfVisiblePages = Math.floor(maxVisiblePages / 2);
+      let startPage = Math.max(currentPage - halfVisiblePages, 0);
+      let endPage = Math.min(startPage + maxVisiblePages - 1, totalPages - 1);
+
+      if (endPage - startPage < maxVisiblePages - 1) {
+        startPage = Math.max(endPage - maxVisiblePages + 1, 0);
+      }
+
+      for (let i = startPage; i <= endPage; i++) {
+        pageNumbers.push(i);
+      }
+    }
+
+    return pageNumbers;
+  };
+
 
   return (
     <div className="p-6">
@@ -113,6 +153,7 @@ const TasksContent = () => {
         <CreateNewTask
           onClose={() => setShowCreateTask(false)}
           onSubmit={handleCreateTask}
+          onTaskCreated={handleTaskAdditionState}
         />
       ) : (
         <>
@@ -158,7 +199,7 @@ const TasksContent = () => {
                   <td className="py-4">
                     <button
                       className="bg-blue-100 text-blue-800 px-4 py-1 rounded-md"
-                      onClick={() => handleViewTask(task.id)}
+                      onClick={() => handleViewTask(task)}
                     >
                       View
                     </button>
@@ -167,6 +208,38 @@ const TasksContent = () => {
               ))}
             </tbody>
           </table>
+            {/* Pagination controls */}
+          <div className="flex justify-end mt-4">
+            <button
+              className={`px-4 py-2 mr-2 bg-gray-200 rounded-md ${
+                currentPage === 0 ? "cursor-not-allowed" : "hover:bg-gray-300"
+              }`}
+              onClick={() => handlePageClick(currentPage - 1)}
+              disabled={currentPage === 0}
+            >
+              Previous
+            </button>
+            {getPageNumbers().map((page) => (
+              <button
+                key={page}
+                className={`px-4 py-2 mr-2 bg-gray-200 rounded-md ${
+                  currentPage === page ? "bg-blue-500 text-white" : "hover:bg-gray-300"
+                }`}
+                onClick={() => handlePageClick(page)}
+              >
+                {page + 1}
+              </button>
+            ))}
+            <button
+              className={`px-4 py-2 bg-gray-200 rounded-md ${
+                currentPage === totalPages - 1 ? "cursor-not-allowed" : "hover:bg-gray-300"
+              }`}
+              onClick={() => handlePageClick(currentPage + 1)}
+              disabled={currentPage === totalPages - 1}
+            >
+              Next
+            </button>
+          </div>
         </>
       )}
 

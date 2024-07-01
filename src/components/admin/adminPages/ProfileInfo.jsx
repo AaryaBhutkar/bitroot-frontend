@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import axiosInstance from '../../utils/axiosInstance';
 
 const ProfileInfo = () => {
   const [profile, setProfile] = useState({
@@ -15,9 +16,9 @@ const ProfileInfo = () => {
   const fetchProfileData = async () => {
     try {
       setStatus('Fetching profile...');
-      const response = await axios.post('http://localhost:3001/api/users/completeProfile', {
+      const response = await axiosInstance.post('users/completeProfile', {
         is_fetch: 1,
-        evaluator_id: 38
+        evaluator_id: localStorage.getItem("user")
       });
       
       if (response.data.success) {

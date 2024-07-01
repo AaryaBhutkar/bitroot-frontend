@@ -27,28 +27,31 @@
 
 // export default TaskCard;
 
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance";
+import { toast } from "react-toastify";
+const TaskCard = ({ task_id, title, description, tags,onTaskInterest  }) => {
 
-const TaskCard = ({ task_id, title, description, tags }) => {
   const handleInterestClick = async () => {
     console.log("key", task_id);
     console.log("key", title);
     console.log("key", description);
     console.log("key", tags);
     try {
-      const response = await axios.post(
-        "http://localhost:3001/api/tasks/assignTask",
+      const response = await axiosInstance.post(
+        "tasks/assignTask",
         {
           task_id: task_id, // Assuming taskId is passed as prop
-          evaluator_id: 33, // Replace with actual evaluator ID
+          evaluator_id: localStorage.getItem("user"), // Replace with actual evaluator ID
           is_interest: 1,
         }
       );
       const result = response.data;
       if (result.success) {
+        toast.success("Interest Notified !");
         console.log("Task assigned successfully:", result.data);
-        // Optionally, you can update UI or show a message indicating success
+        onTaskInterest(task_id);
       } else {
         console.error("Failed to assign task:", result.message);
         // Handle error case if necessary
@@ -81,6 +84,7 @@ const TaskCard = ({ task_id, title, description, tags }) => {
           I'm interested
         </button>
       </div>
+      
     </div>
   );
 };

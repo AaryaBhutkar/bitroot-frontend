@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance";
 
-const RequestItem = ({ request, onView }) => (
+const RequestItem = ({ request, onView, onApprove }) => (
   <div className="bg-blue-50 p-5 rounded-lg shadow mb-4">
     <p className="text-sm text-gray-700 mb-2">
       {request.evaluator_name} has applied for the project {request.task_name}
@@ -9,11 +10,16 @@ const RequestItem = ({ request, onView }) => (
     <div className="flex justify-between items-center">
       <button
         onClick={() => onView(request)}
-        className="text-blue-500 font-medium text-sm hover:underline"
+        className="text-blue-500 font-medium text-sm hover:underline mr-2"
       >
         VIEW
       </button>
-      <button className="text-gray-400 hover:text-gray-600">...</button>
+      <button
+        onClick={() => onApprove(request)}
+        className="text-green-500 font-medium text-sm hover:underline"
+      >
+        APPROVE
+      </button>
     </div>
   </div>
 );
@@ -27,12 +33,13 @@ const RequestsList = ({ onViewRequest }) => {
 
   const fetchRequests = async () => {
     try {
-      const response = await axios.post("http://localhost:3001/api/tasks/getTasks", {
+      const response = await axiosInstance.post("tasks/getTasks", {
         is_interested: 1
       });
       if (response.data.success) {
         const transformedRequests = response.data.data.map((item) => ({
           id: item.task_id,
+          evaluator_id: item.evaluator_id,
           evaluator_name: item.evaluator_name,
           task_name: item.task_name
         }));
@@ -40,6 +47,21 @@ const RequestsList = ({ onViewRequest }) => {
       }
     } catch (error) {
       console.error("Error fetching requests:", error);
+    }
+  };
+
+  const handleApprove = async (request) => {
+    const { id: task_id, evaluator_id } = request;
+    try {
+      const response = await axiosInstance.post("tasks/assignTask", {
+        task_id,
+        evaluator_id
+      });
+      if (response.data.success) {
+        fetchRequests();
+      }
+    } catch (error) {
+      console.error("Error approving task:", error);
     }
   };
 
@@ -52,6 +74,7 @@ const RequestsList = ({ onViewRequest }) => {
             key={request.id}
             request={request}
             onView={onViewRequest}
+            onApprove={() => handleApprove(request)}
           />
         ))}
       </div>

@@ -15,6 +15,12 @@ const MainContent = ({ activePage }) => {
   const handleProfileClick = () => {
     setShowProfileInfo(!showProfileInfo);
   };
+  useEffect(()=>{
+    if(!localStorage.getItem("token")){
+      //navigate to role
+      window.location.href = "/role";
+    }
+  },[])
 
   useEffect(() => {
     setShowProfileInfo(false);
@@ -23,6 +29,7 @@ const MainContent = ({ activePage }) => {
   }, [activePage]);
 
   const handleViewRequest = (request) => {
+    console.log("req",request);
     setSelectedRequest(request);
     setCurrentView("evaluatorDetails");
   };
@@ -61,7 +68,7 @@ const MainContent = ({ activePage }) => {
           )}
           {currentView === "analytics" && <div>Analytics Page Content</div>}
           {currentView === "evaluatorDetails" && selectedRequest && (
-            <EvaluatorDetails evaluator={selectedRequest} onBack={handleBack} />
+            <EvaluatorDetails evaluatorId={selectedRequest.evaluator_id} onBack={handleBack} />
           )}
         </>
       {/* {showProfileInfo ? (

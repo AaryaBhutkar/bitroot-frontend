@@ -60,6 +60,7 @@
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance";
 
 const CompletedProjects = () => {
   const [completedProjects, setCompletedProjects] = useState([]);
@@ -69,9 +70,8 @@ const CompletedProjects = () => {
   useEffect(() => {
     const fetchCompletedProjects = async () => {
       try {
-        const response = await axios.post("http://localhost:3001/api/tasks/completeTask", {
-          // evaluator_id: user.evaluator_id,
-          evaluator_id: 40,
+        const response = await axiosInstance.post("tasks/completeTask", {
+          evaluator_id: localStorage.getItem("user") ,
           is_fetch: 1
         });
 
