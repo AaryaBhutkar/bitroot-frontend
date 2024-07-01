@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "../utils/axiosInstance";
 
 const ProfileForm = () => {
   const [formData, setFormData] = useState({
@@ -37,21 +38,16 @@ const ProfileForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:3001/api/users/completeProfile", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      const response = await axiosInstance.post("http://localhost:3001/api/users/completeProfile", {
           user_id: localStorage.getItem("user"), // You need to implement this function
           ...formData,
           yoe: parseInt(formData.yoe, 10),
           tags: selectedTags,
           is_fetch: 0,
-        }),
+        
       });
 
-      const data = await response.json();
+      const data = await response.data
 
       if (data.success) {
         navigate("/evaluatorDashboard");
