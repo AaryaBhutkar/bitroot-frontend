@@ -1,43 +1,63 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import {
+  UserOutlined,
+  ProjectOutlined,
+  HistoryOutlined,
+  PlusCircleOutlined,
+  LogoutOutlined,
+} from "@ant-design/icons";
 
-const Sidebar = () => {
-  const [activeButton, setActiveButton] = useState('TASKS');
+const Sidebar = ({ onSidebarClick }) => {
+  const [activeButton, setActiveButton] = useState("TASKS");
 
   const buttons = [
-    { name: 'TASKS', icon: '✏️' },
-    { name: 'COMPLETED', icon: '🔒' },
-    { name: 'EXISTING', icon: '📚' },
+    { name: "TASKS", icon: <PlusCircleOutlined /> },
+    { name: "MY PROJECTS", icon: <ProjectOutlined /> },
+    { name: "EXISTING", icon: <HistoryOutlined /> },
   ];
 
+  const handleButtonClick = (name) => {
+    setActiveButton(name);
+    onSidebarClick(name.toLowerCase()); // Make sure this matches the case in MainContent
+  };
+
   return (
-    <aside className="w-64 bg-blue-50 h-screen p-4 flex flex-col">
-      <div className="mb-8">
-        <img src="logo.svg" alt="Bitroot" className="h-8" />
+    <aside className="w-64 bg-blue-200 p-4 flex flex-col justify-between min-h-screen">
+      <div>
+        <div className="mb-8 border-b-2 border-black">
+          <img src="/logo.png" alt="Bitroot" className="h-10 mb-4" />
+        </div>
+        <nav>
+          <ul className="space-y-2">
+            {buttons.map((button) => (
+              <li key={button.name}>
+                <button
+                  onClick={() => handleButtonClick(button.name)}
+                  className={`w-full flex items-center space-x-2 p-2 rounded transition-colors ${
+                    activeButton === button.name
+                      ? "bg-white text-blue-600"
+                      : "hover:bg-white/50"
+                  }`}
+                >
+                  <span>{button.icon}</span>
+                  <span>{button.name}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </div>
-      <nav className="flex-grow">
-        <ul className="space-y-2">
-          {buttons.map((button) => (
-            <li key={button.name}>
-              <button
-                className={`w-full flex items-center space-x-2 p-2 rounded transition-colors ${
-                  activeButton === button.name
-                    ? 'bg-white text-blue-600'
-                    : 'hover:bg-white/50'
-                }`}
-                onClick={() => setActiveButton(button.name)}
-              >
-                <span>{button.icon}</span>
-                <span>{button.name}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      </nav>
       <div className="mt-auto">
-        <button className="flex items-center space-x-2 text-gray-600 hover:text-gray-800">
-          <span>LOGOUT</span>
-          <span>↪️</span>
-        </button>
+        <Link
+          to="/role"
+          className="flex items-center space-x-2 p-2 rounded transition-colors hover:bg-white/50"
+        >
+          <span className="flex-shrink-0">
+            <LogoutOutlined className="h-6 w-6" />
+          </span>
+          <span className="flex-shrink-0">LOGOUT</span>
+        </Link>
       </div>
     </aside>
   );
