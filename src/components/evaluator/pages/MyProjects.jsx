@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect, useCallback } from "react";
 import axiosInstance from "../../utils/axiosInstance";
+import { toast } from "react-toastify";
 
 const MyProjects = ({ setCompletedProjects }) => {
   const [activeTab, setActiveTab] = useState("IN PROGRESS");
@@ -8,13 +8,9 @@ const MyProjects = ({ setCompletedProjects }) => {
     inprogress: [],
     assigned: []
   });
-  const [selectedProject, setSelectedProject] = useState(null); // State to track the selected project for detailed view
+  const [selectedProject, setSelectedProject] = useState(null);
 
-  useEffect(() => {
-    fetchProjects();
-  }, []);
-
-  const fetchProjects = async () => {
+  const fetchProjects = useCallback(async () => {
     try {
       const [inProgressResponse, assignedResponse] = await Promise.all([
         axiosInstance.post('tasks/getEvalTasks', { evaluator_id: localStorage.getItem("user"), in_progress: 1 }),
@@ -26,8 +22,13 @@ const MyProjects = ({ setCompletedProjects }) => {
       });
     } catch (error) {
       console.error("Error fetching projects:", error);
+      toast.error("Failed to fetch projects. Please try again.");
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchProjects();
+  }, [fetchProjects]);
 
   const handleActionButton = async (projectId, action) => {
     try {
@@ -35,46 +36,52 @@ const MyProjects = ({ setCompletedProjects }) => {
         `tasks/${action === "start" ? "startTask" : "completeTask"}`,
         { task_id: projectId }
       );
+      
       if (action === "start") {
-        const project = projects.assigned.find(p => p.id === projectId);
         setProjects(prevState => ({
-          inprogress: [...prevState.inprogress, project],
+          inprogress: [...prevState.inprogress, prevState.assigned.find(p => p.id === projectId)],
           assigned: prevState.assigned.filter(p => p.id !== projectId)
         }));
       } else if (action === "complete") {
-        const project = projects.inprogress.find(p => p.id === projectId);
-        setCompletedProjects(prevState => [...prevState, project]);
+        const completedProject = projects.inprogress.find(p => p.id === projectId);
+        // setCompletedProjects(prevState => [...prevState, completedProject]);
         setProjects(prevState => ({
-          inprogress: prevState.inprogress.filter(p => p.id != projectId),
+          inprogress: prevState.inprogress.filter(p => p.id !== projectId),
           assigned: prevState.assigned
         }));
       }
+      
+      toast.success(`Task ${action}ed successfully`);
+      await fetchProjects(); // Refresh the projects after the action
     } catch (error) {
-      console.error(`Error ${action} project:`, error);
+      console.log(`Error ${action}ing project:`, error);
+      toast.error(`Failed to ${action} the task. Please try again.`);
     }
   };
 
   const handleViewProject = (project) => {
-    setSelectedProject(project); // Set the selected project for detailed view
+    setSelectedProject(project);
   };
 
   const handleClosePopup = () => {
-    setSelectedProject(null); // Close the detailed view popup
+    setSelectedProject(null);
   };
 
   const handleUnassignProject = async (projectId) => {
     try {
       await axiosInstance.post(
         "tasks/assignTask",
-        { task_id: projectId,evaluator_id:Number(localStorage.getItem("user")),is_delete:1 }
+        { task_id: projectId, evaluator_id: Number(localStorage.getItem("user")), is_delete: 1 }
       );
-      const updatedAssignedProjects = projects.assigned.filter(p => p.id !== projectId);
       setProjects(prevState => ({
         ...prevState,
-        assigned: updatedAssignedProjects
+        assigned: prevState.assigned.filter(p => p.id !== projectId)
       }));
+      toast.success("Task unassigned successfully");
+      await fetchProjects(); // Refresh the projects after unassigning
     } catch (error) {
       console.error("Error unassigning project:", error);
+      toast.error("Failed to unassign the task. Please try again.");
     }
   };
 
@@ -89,7 +96,7 @@ const MyProjects = ({ setCompletedProjects }) => {
         </p>
         <button
           className="mt-2 bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600 mr-2"
-          onClick={() => handleViewProject(project)} // Handle click to view project details
+          onClick={() => handleViewProject(project)}
         >
           View
         </button>
