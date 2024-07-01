@@ -8,6 +8,7 @@ import Layout from "./components/pages/MainContent";
 import LoginPage from "./components/pages/LoginPage";
 import AdminDashboard from "./components/admin/AdminDashboard";
 import EvaluatorDashboard from "./components/evaluator/EvaluatorDashboard";
+import ShowTask from "./components/forpublic/ShowTask";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/profile" element={<ProfileForm />} />
           <Route path="/evaluatorDashboard" element={<EvaluatorDashboard />} />
           <Route path="/adminDashboard" element={<AdminDashboard />} />
+          <Route path="/tasks" element={<ShowTask/>}/>
         </Routes>
       </AuthProvider>
     </Router>
