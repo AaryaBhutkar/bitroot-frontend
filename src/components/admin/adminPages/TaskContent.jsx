@@ -188,12 +188,11 @@ const TasksContent = () => {
                   <td className="py-4">
                     <span
                       className={`px-2 py-1 rounded-md ${
-                        task.is_assigned ? "bg-yellow-100 text-yellow-800" :
-                        task.is_completed ? "bg-blue-100 text-blue-800" :
-                        "bg-green-100 text-green-800"
+                        task.is_completed ? "bg-green-100 text-green-800"  :
+                        task.is_assigned ? "bg-yellow-100 text-yellow-800": "bg-blue-100 text-blue-800" 
                       }`}
                     >
-                      {task.is_assigned ? "Assigned" : task.is_completed ? "Complete" : "Open"}
+                      {task.is_completed ? "Completed" : task.is_assigned ? "Assigned" : "Open"}
                     </span>
                   </td>
                   <td className="py-4">
