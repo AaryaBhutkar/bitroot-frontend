@@ -71,12 +71,6 @@ const ProfileInfo = () => {
         <label className="block text-gray-700">Tags:</label>
         <p className="p-2 border rounded">{profile.tags}</p>
       </div>
-      {/* <button 
-        onClick={fetchProfileData}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Refresh Profile
-      </button> */}
       {status && <p className="mt-2 text-sm text-gray-600">{status}</p>}
     </div>
   );

@@ -20,6 +20,7 @@ function App() {
           <Route path="/profile" element={<ProfileForm />} />
           <Route path="/evaluatorDashboard" element={<EvaluatorDashboard />} />
           <Route path="/adminDashboard" element={<AdminDashboard />} />
+          <Route path="/ProfileForm" element={<ProfileForm />} />
         </Routes>
       </AuthProvider>
     </Router>

@@ -53,9 +53,19 @@ const LoginPage = () => {
         localStorage.setItem("token", token);
         localStorage.setItem("user", user);
         toast(response.data.data.msg);
+        if(role==="admin")navigate("/adminDashboard");
+        const complete = response.data.data.is_profile_complete;
+        console.log("complete",complete);
+        if (complete && response.data.data.is_profile_complete === 1 ) {
+          // Redirect based on role
+          navigate(role === "admin" ? "/adminDashboard" : "/evaluatorDashboard");
+        } else {
+          // Redirect to profile page
+          navigate("/profile");
+        }
 
         // Redirect based on role or default path
-        navigate(role === "admin" ? "/adminDashboard" : "/evaluatorDashboard");
+        // navigate(role === "admin" ? "/adminDashboard" : "/evaluatorDashboard");
       } else {
         // Handle login error
       }

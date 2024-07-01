@@ -109,6 +109,14 @@ const TasksContent = () => {
     setCurrentPage(page);
   };
 
+  const handleUpdateTask = (updatedTask) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === updatedTask.id ? updatedTask : task
+      )
+    );
+  };
+
 
   const getPageNumbers = () => {
     const pageNumbers = [];
@@ -247,6 +255,7 @@ const TasksContent = () => {
           task={selectedTask}
           onClose={() => setSelectedTask(null)}
           onDelete={() => handleDeleteTask(selectedTask.id)}
+          onUpdate={handleUpdateTask}
         />
       )}
     </div>
