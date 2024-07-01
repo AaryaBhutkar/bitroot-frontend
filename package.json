@@ -22,18 +22,28 @@
         "toastify": "^2.0.1",
         "web-vitals": "^2.1.4"
     },
-    "scripts": {
-        "start": "react-scripts start",
-        "build": "react-scripts build",
-        "test": "react-scripts test",
-        "eject": "react-scripts eject"
+   "scripts": {
+    "start": "react-scripts start",
+    "build": "GENERATE_SOURCEMAP=false eslint --ignore-path .gitignore . && react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ],
+    "rules": {
+      "react-hooks/exhaustive-deps": "off", 
+      "eqeqeq": "off",
+      "no-console": "off", 
+      "no-unused-vars": "off" 
     },
-    "eslintConfig": {
-        "extends": [
-            "react-app",
-            "react-app/jest"
-        ]
-    },
+    "ignorePatterns": [
+      "build/",
+      "node_modules/"
+    ]
+  },
     "browserslist": {
         "production": [
             ">0.2%",
