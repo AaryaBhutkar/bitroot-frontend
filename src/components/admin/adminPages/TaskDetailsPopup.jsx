@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import axiosInstance from "../../utils/axiosInstance";
+import { toast } from 'react-toastify';
 
 const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
   const [editMode, setEditMode] = useState(false);
@@ -41,6 +42,18 @@ const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
       alert("An error occurred while updating the task. Please try again.");
     } finally {
       setIsUpdating(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await onDelete();
+      toast.success("Task deleted successfully");
+      onClose();
+      window.location.reload();
+    } catch (error) {
+      console.error('Error deleting task:', error);
+      toast.error("Failed to delete task. Please try again.");
     }
   };
 
@@ -103,7 +116,7 @@ const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
               />
             </div>
           ) : (
-            <p>${task.lower_price} - ${task.higher_price}</p>
+            <p>{task.lower_price} - {task.higher_price}</p>
           )}
         </div>
 
@@ -155,7 +168,7 @@ const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
               Edit
             </button>
           )}
-          <button onClick={onDelete} className="bg-red-600 text-white px-4 py-2 rounded">
+          <button onClick={handleDelete} className="bg-red-600 text-white px-4 py-2 rounded">
             Delete
           </button>
         </div>
