@@ -14,12 +14,20 @@ const RequestItem = ({ request, onView, onApprove }) => (
       >
         VIEW
       </button>
-      <button
-        onClick={() => onApprove(request)}
-        className="text-green-500 font-medium text-sm hover:underline"
-      >
-        APPROVE
-      </button>
+      <div>
+        <button
+          onClick={() => onApprove(request)}
+          className="text-white-500 bg-red-500 rounded-xl p-2 font-medium text-sm hover:underline mr-2"
+        >
+          REJECT
+        </button>
+        <button
+          onClick={() => onApprove(request)}
+          className="text-white-500 bg-green-500 rounded-xl p-2 font-medium text-sm hover:underline"
+        >
+          APPROVE
+        </button>
+      </div>
     </div>
   </div>
 );
@@ -34,14 +42,14 @@ const RequestsList = ({ onViewRequest }) => {
   const fetchRequests = async () => {
     try {
       const response = await axiosInstance.post("tasks/getTasks", {
-        is_interested: 1
+        is_interested: 1,
       });
       if (response.data.success) {
         const transformedRequests = response.data.data.map((item) => ({
           id: item.task_id,
           evaluator_id: item.evaluator_id,
           evaluator_name: item.evaluator_name,
-          task_name: item.task_name
+          task_name: item.task_name,
         }));
         setRequests(transformedRequests);
       }
@@ -55,7 +63,7 @@ const RequestsList = ({ onViewRequest }) => {
     try {
       const response = await axiosInstance.post("tasks/assignTask", {
         task_id,
-        evaluator_id
+        evaluator_id,
       });
       if (response.data.success) {
         fetchRequests();
