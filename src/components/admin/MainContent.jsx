@@ -15,12 +15,12 @@ const MainContent = ({ activePage }) => {
   const handleProfileClick = () => {
     setShowProfileInfo(!showProfileInfo);
   };
-  useEffect(()=>{
-    if(!localStorage.getItem("token")){
+  useEffect(() => {
+    if (!localStorage.getItem("token")) {
       //navigate to role
       window.location.href = "/role";
     }
-  },[])
+  }, []);
 
   useEffect(() => {
     setShowProfileInfo(false);
@@ -29,7 +29,7 @@ const MainContent = ({ activePage }) => {
   }, [activePage]);
 
   const handleViewRequest = (request) => {
-    console.log("req",request);
+    console.log("req", request);
     setSelectedRequest(request);
     setCurrentView("evaluatorDetails");
   };
@@ -41,7 +41,7 @@ const MainContent = ({ activePage }) => {
 
   // New function to trigger tasks reload
   const handleTaskCreated = () => {
-    setTasksKey(prevKey => prevKey + 1);
+    setTasksKey((prevKey) => prevKey + 1);
   };
 
   return (
@@ -49,28 +49,26 @@ const MainContent = ({ activePage }) => {
       <header className="flex justify-between items-center mb-8">
         <h1 className="text-2xl font-bold">HELLO, ADMIN</h1>
         <div className="flex items-center space-x-4">
-          <input
-            type="text"
-            placeholder="Search"
-            className="border rounded-md px-3 py-1"
-          />
           <button onClick={handleProfileClick} className="text-gray-600">
             <Avatar size="large" icon={<UserOutlined />} />
           </button>
         </div>
       </header>
       <>
-          {currentView === "tasks" && (
-            <TasksContent key={tasksKey} onTaskCreated={handleTaskCreated} />
-          )}
-          {currentView === "requests" && (
-            <RequestsList onViewRequest={handleViewRequest} />
-          )}
-          {currentView === "analytics" && <div>Analytics Page Content</div>}
-          {currentView === "evaluatorDetails" && selectedRequest && (
-            <EvaluatorDetails evaluatorId={selectedRequest.evaluator_id} onBack={handleBack} />
-          )}
-        </>
+        {currentView === "tasks" && (
+          <TasksContent key={tasksKey} onTaskCreated={handleTaskCreated} />
+        )}
+        {currentView === "requests" && (
+          <RequestsList onViewRequest={handleViewRequest} />
+        )}
+        {currentView === "analytics" && <div>Analytics Page Content</div>}
+        {currentView === "evaluatorDetails" && selectedRequest && (
+          <EvaluatorDetails
+            evaluatorId={selectedRequest.evaluator_id}
+            onBack={handleBack}
+          />
+        )}
+      </>
       {/* {showProfileInfo ? (
         <ProfileInfo />
       ) : (
