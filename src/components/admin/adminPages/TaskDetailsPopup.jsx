@@ -26,6 +26,7 @@ const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
         higher_price: updatedTask.higher_price,
         github_url: updatedTask.github_url,
         guideline_url: updatedTask.guideline_url,
+        evaluator_name: updatedTask.evaluator_name,
         tags: updatedTask.tags,
         is_update: 1,
       });
@@ -66,7 +67,7 @@ const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
         </div>
 
         <div className="mb-4">
-          <label className="block mb-2 font-bold">Name:</label>
+          <label className="block mb-2 font-bold">Task Name:</label>
           {editMode ? (
             <input
               type="text"
@@ -77,6 +78,21 @@ const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
             />
           ) : (
             <p>{task.name}</p>
+          )}
+        </div>
+
+        <div className="mb-4">
+          <label className="block mb-2 font-bold">Evaluator Name:</label>
+          {editMode ? (
+            <input
+              type="text"
+              name="evaluator_name"
+              value={updatedTask.evaluator_name}
+              onChange={handleInputChange}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+          ) : (
+            <p>{task.evaluator_name}</p>
           )}
         </div>
 

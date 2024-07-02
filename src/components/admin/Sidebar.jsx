@@ -5,6 +5,7 @@ import {
   PullRequestOutlined,
   LineChartOutlined,
   LogoutOutlined,
+  ClockCircleOutlined
 } from "@ant-design/icons";
 
 const Sidebar = ({ onSidebarClick }) => {
@@ -14,11 +15,12 @@ const Sidebar = ({ onSidebarClick }) => {
     { name: "TASKS", icon: <PlusCircleOutlined /> },
     { name: "REQUESTS", icon: <PullRequestOutlined /> },
     { name: "ANALYTICS", icon: <LineChartOutlined /> },
+    { name: "HISTORY", icon: <ClockCircleOutlined /> },
   ];
 
   const handleButtonClick = (name) => {
     setActiveButton(name);
-    onSidebarClick(name.toLowerCase());
+    onSidebarClick(name.toLowerCase().replace(' ', '-'));
   };
 
   return (

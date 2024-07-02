@@ -239,10 +239,10 @@ const TasksContent = () => {
           <table className="w-full">
             <thead>
               <tr className="text-left text-gray-500">
-                <th className="pb-4">PROJECT NAME</th>
+                <th className="pb-4">TASK NAME</th>
                 <th className="pb-4">DATE</th>
                 <th className="pb-4">TAGS</th>
-                <th className="pb-4">PRICE RANGE(In Rupees)</th>
+                <th className="pb-4">PRICE RANGE(In Rs)</th>
                 <th className="pb-4">STATUS</th>
                 <th className="pb-4"></th>
               </tr>

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import axiosInstance from "../../utils/axiosInstance";
+import { toast } from 'react-toastify';
 
-const RequestItem = ({ request, onView, onApprove }) => (
+const RequestItem = ({ request, onView, onApprove, onDeny }) => (
   <div className="bg-blue-50 p-5 rounded-lg shadow mb-4">
     <p className="text-sm text-gray-700 mb-2">
       {request.evaluator_name} has applied for the project {request.task_name}
@@ -16,10 +17,10 @@ const RequestItem = ({ request, onView, onApprove }) => (
       </button>
       <div>
         <button
-          onClick={() => onApprove(request)}
+          onClick={() => onDeny(request)}
           className="text-white-500 bg-red-500 rounded-xl p-2 font-medium text-sm hover:underline mr-2"
         >
-          REJECT
+          DENY
         </button>
         <button
           onClick={() => onApprove(request)}
@@ -67,9 +68,51 @@ const RequestsList = ({ onViewRequest }) => {
       });
       if (response.data.success) {
         fetchRequests();
+        toast.success("Task approved successfully");
       }
     } catch (error) {
       console.error("Error approving task:", error);
+      toast.error("Error approving task");
+    }
+  };
+
+  // const handleDeny = async (request) => {
+  //   const { id: task_id, evaluator_id } = request;
+  //   try {
+  //     const response = await axiosInstance.post("tasks/assignTask", {
+  //       task_id,
+  //       evaluator_id,
+  //       is_deny: 1
+  //     });
+  //     if (response.data.success) {
+  //       toast.success("Task denied successfully");
+  //       await fetchRequests();
+  //       window.location.reload();
+  //     }
+  //   } catch (error) {
+  //     console.error("Error denying task:", error);
+  //     toast.error("Error denying task");
+  //   }
+  // };
+
+  const handleDeny = async (request) => {
+    const { id: task_id, evaluator_id } = request;
+    try {
+      const response = await axiosInstance.post("tasks/assignTask", {
+        task_id,
+        evaluator_id,
+        is_deny: 1
+      });
+      if (response.data.success) {
+        toast.success("Task denied successfully");
+        await fetchRequests();
+        window.location.reload();
+      } else {
+        throw new Error(response.data.message || 'Failed to deny task');
+      }
+    } catch (error) {
+      console.error("Error denying task:", error);
+      toast.error(`Error denying task: ${error.message}`);
     }
   };
 
@@ -83,6 +126,7 @@ const RequestsList = ({ onViewRequest }) => {
             request={request}
             onView={onViewRequest}
             onApprove={() => handleApprove(request)}
+            onDeny={() => handleDeny(request)}
           />
         ))}
       </div>
