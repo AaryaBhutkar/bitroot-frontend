@@ -257,14 +257,16 @@ const SignUp = () => {
       newErrors.email = "Email is required";
     } else if (!validateEmail(email)) {
       formIsValid = false;
-      newErrors.email = "Invalid email format. Please use a valid Gmail address.";
+      newErrors.email =
+        "Invalid email format. Please use a valid Gmail address.";
     }
     if (!password) {
       formIsValid = false;
       newErrors.password = "Password is required";
     } else if (!validatePassword(password)) {
       formIsValid = false;
-      newErrors.password = "Password must be at least 6 characters long and contain a number";
+      newErrors.password =
+        "Password must be at least 6 characters long and contain a number";
     }
 
     if (!formIsValid) {
@@ -291,7 +293,6 @@ const SignUp = () => {
     setShowPassword(!showPassword);
   };
 
-  
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white shadow-lg rounded-lg flex w-3/4 max-w-4xl">
@@ -303,7 +304,7 @@ const SignUp = () => {
           </div>
         </div>
         <div className="w-1/2 p-8">
-          <h2 className="text-2xl font-bold mb-4">Sign-Up</h2>
+          <h2 className="text-2xl font-bold mb-4">Sign-Up As Evaluator</h2>
           <form onSubmit={handleSubmit}>
             <input
               type="text"
@@ -322,7 +323,9 @@ const SignUp = () => {
               value={formData.email}
               onChange={handleChange}
             />
-            {errors.email && <p className="text-red-500 mb-4">{errors.email}</p>}
+            {errors.email && (
+              <p className="text-red-500 mb-4">{errors.email}</p>
+            )}
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
@@ -375,7 +378,9 @@ const SignUp = () => {
                 )}
               </span>
             </div>
-            {errors.password && <p className="text-red-500 mb-4">{errors.password}</p>}
+            {errors.password && (
+              <p className="text-red-500 mb-4">{errors.password}</p>
+            )}
             <button
               type="submit"
               className="w-full bg-blue-500 text-white px-4 py-2 rounded-md"
