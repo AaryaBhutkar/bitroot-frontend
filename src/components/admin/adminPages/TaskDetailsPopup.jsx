@@ -17,7 +17,7 @@ const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
   const handleUpdate = async () => {
     setIsUpdating(true);
     try {
-      const response = await axiosInstance.post('http://localhost:3001/api/tasks/createTask', {
+      const response = await axiosInstance.post('tasks/createTask', {
         id: task.id,
         name: updatedTask.name,
         desc: updatedTask.description,

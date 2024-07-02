@@ -38,7 +38,7 @@ const ProfileForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axiosInstance.post("http://localhost:3001/api/users/completeProfile", {
+      const response = await axiosInstance.post("users/completeProfile", {
           user_id: localStorage.getItem("user"), // You need to implement this function
           ...formData,
           yoe: parseInt(formData.yoe, 10),
