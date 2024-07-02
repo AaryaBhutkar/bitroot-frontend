@@ -16,7 +16,7 @@ const MainContent = ({ activePage }) => {
     setShowProfileInfo(!showProfileInfo);
   };
   useEffect(() => {
-    if (!localStorage.getItem("token")|| localStorage.getItem("user")) {
+    if (!localStorage.getItem("token")) {
       //navigate to role
       window.location.href = "/role";
     }
