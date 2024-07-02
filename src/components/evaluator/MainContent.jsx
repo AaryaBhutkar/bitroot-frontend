@@ -4,10 +4,8 @@ import { Avatar } from "antd";
 import TaskCard from "./pages/TaskCard";
 import ProfileInfo from "../admin/adminPages/ProfileInfo";
 import MyProjects from "./pages/MyProjects";
-import axios from "axios";
 import CompletedProjects from "./pages/CompletedProjects";
 import axiosInstance from "../utils/axiosInstance";
-import { Navigate } from "react-router-dom";
 
 const MainContent = ({ activePage }) => {
   const [showProfileInfo, setShowProfileInfo] = useState(false);

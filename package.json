@@ -13,37 +13,42 @@
         "antd": "^5.18.3",
         "axios": "^1.7.2",
         "chart.js": "^4.4.3",
+        "class-variance-authority": "^0.7.0",
+        "clsx": "^2.1.1",
+        "lucide-react": "^0.400.0",
         "react": "^18.3.1",
         "react-chartjs-2": "^5.2.0",
         "react-dom": "^18.3.1",
         "react-router-dom": "^6.24.0",
         "react-scripts": "^5.0.1",
         "react-toastify": "^10.0.5",
+        "tailwind-merge": "^2.3.0",
+        "tailwindcss-animate": "^1.0.7",
         "toastify": "^2.0.1",
         "web-vitals": "^2.1.4"
     },
-   "scripts": {
-    "start": "react-scripts start",
-    "build": "GENERATE_SOURCEMAP=false eslint --ignore-path .gitignore . && react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ],
-    "rules": {
-      "react-hooks/exhaustive-deps": "off", 
-      "eqeqeq": "off",
-      "no-console": "off", 
-      "no-unused-vars": "off" 
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "GENERATE_SOURCEMAP=false eslint --ignore-path .gitignore . && react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject"
     },
-    "ignorePatterns": [
-      "build/",
-      "node_modules/"
-    ]
-  },
+    "eslintConfig": {
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ],
+        "rules": {
+            "react-hooks/exhaustive-deps": "off",
+            "eqeqeq": "off",
+            "no-console": "off",
+            "no-unused-vars": "off"
+        },
+        "ignorePatterns": [
+            "build/",
+            "node_modules/"
+        ]
+    },
     "browserslist": {
         "production": [
             ">0.2%",

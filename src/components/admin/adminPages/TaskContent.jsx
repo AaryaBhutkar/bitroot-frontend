@@ -34,9 +34,11 @@ const TasksContent = () => {
         const total = response.data.meta.total;
         const calculatedTotalPages = Math.ceil(total / pageSize);
         setTotalPages(calculatedTotalPages);
-        
+
         // Extract all unique tags from tasks
-        const tags = [...new Set(response.data.data.flatMap(task => task.tags))];
+        const tags = [
+          ...new Set(response.data.data.flatMap((task) => task.tags)),
+        ];
         setAllTags(tags);
       }
     } catch (error) {
@@ -58,17 +60,17 @@ const TasksContent = () => {
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    setFilters(prevFilters => ({
+    setFilters((prevFilters) => ({
       ...prevFilters,
       [name]: value,
     }));
   };
 
   const handleTagFilter = (tag) => {
-    setFilters(prevFilters => ({
+    setFilters((prevFilters) => ({
       ...prevFilters,
       tags: prevFilters.tags.includes(tag)
-        ? prevFilters.tags.filter(t => t !== tag)
+        ? prevFilters.tags.filter((t) => t !== tag)
         : [...prevFilters.tags, tag],
     }));
   };
@@ -90,26 +92,32 @@ const TasksContent = () => {
 
   const handleDeleteTask = async (taskId) => {
     try {
-      const response = await axiosInstance.post("tasks/createTask", { is_delete: 1, id: taskId });
+      const response = await axiosInstance.post("tasks/createTask", {
+        is_delete: 1,
+        id: taskId,
+      });
       if (response.ok) {
-        console.log('Task deleted successfully');
+        console.log("Task deleted successfully");
         setSelectedTask(null);
-        setRefreshKey(prevKey => prevKey + 1);
+        setRefreshKey((prevKey) => prevKey + 1);
       } else {
-        console.error('Failed to delete task');
+        console.error("Failed to delete task");
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
   };
 
-  const filteredTasks = tasks.filter(task => {
-    const nameMatch = task.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const tagMatch = filters.tags.length === 0 || filters.tags.some(tag => task.tags.includes(tag));
-    const priceMatch = (
+  const filteredTasks = tasks.filter((task) => {
+    const nameMatch = task.name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const tagMatch =
+      filters.tags.length === 0 ||
+      filters.tags.some((tag) => task.tags.includes(tag));
+    const priceMatch =
       (!filters.minPrice || task.lower_price >= parseFloat(filters.minPrice)) &&
-      (!filters.maxPrice || task.higher_price <= parseFloat(filters.maxPrice))
-    );
+      (!filters.maxPrice || task.higher_price <= parseFloat(filters.maxPrice));
     return nameMatch && tagMatch && priceMatch;
   });
 
@@ -118,10 +126,8 @@ const TasksContent = () => {
   };
 
   const handleUpdateTask = (updatedTask) => {
-    setTasks(prevTasks =>
-      prevTasks.map(task =>
-        task.id === updatedTask.id ? updatedTask : task
-      )
+    setTasks((prevTasks) =>
+      prevTasks.map((task) => (task.id === updatedTask.id ? updatedTask : task))
     );
   };
 
@@ -146,7 +152,7 @@ const TasksContent = () => {
     return pageNumbers;
   };
 
-  const filteredTags = allTags.filter(tag => 
+  const filteredTags = allTags.filter((tag) =>
     tag.toLowerCase().includes(tagSearch.toLowerCase())
   );
 
@@ -225,7 +231,6 @@ const TasksContent = () => {
                     onChange={(e) => setTagSearch(e.target.value)}
                     className="w-full p-2 border rounded-md mb-2"
                   />
-
                 </div>
               </div>
             )}
@@ -237,7 +242,7 @@ const TasksContent = () => {
                 <th className="pb-4">PROJECT NAME</th>
                 <th className="pb-4">DATE</th>
                 <th className="pb-4">TAGS</th>
-                <th className="pb-4">PRICE RANGE</th>
+                <th className="pb-4">PRICE RANGE(In Rupees)</th>
                 <th className="pb-4">STATUS</th>
                 <th className="pb-4"></th>
               </tr>
@@ -246,7 +251,9 @@ const TasksContent = () => {
               {filteredTasks.map((task) => (
                 <tr key={task.id} className="border-t border-gray-200">
                   <td className="py-4">{task.name}</td>
-                  <td className="py-4">{new Date(task.created_at).toLocaleDateString()}</td>
+                  <td className="py-4">
+                    {new Date(task.created_at).toLocaleDateString()}
+                  </td>
                   <td className="py-4">
                     {task.tags.map((tag, index) => (
                       <span
@@ -257,15 +264,24 @@ const TasksContent = () => {
                       </span>
                     ))}
                   </td>
-                  <td className="py-4">${task.lower_price} - ${task.higher_price}</td>
+                  <td className="py-4">
+                    {task.lower_price} - {task.higher_price}
+                  </td>
                   <td className="py-4">
                     <span
                       className={`px-2 py-1 rounded-md ${
-                        task.is_completed ? "bg-green-100 text-green-800" :
-                        task.is_assigned ? "bg-yellow-100 text-yellow-800" : "bg-blue-100 text-blue-800" 
+                        task.is_completed
+                          ? "bg-green-100 text-green-800"
+                          : task.is_assigned
+                          ? "bg-yellow-100 text-yellow-800"
+                          : "bg-blue-100 text-blue-800"
                       }`}
                     >
-                      {task.is_completed ? "Completed" : task.is_assigned ? "Assigned" : "Open"}
+                      {task.is_completed
+                        ? "Completed"
+                        : task.is_assigned
+                        ? "Assigned"
+                        : "Open"}
                     </span>
                   </td>
                   <td className="py-4">
@@ -296,7 +312,9 @@ const TasksContent = () => {
               <button
                 key={page}
                 className={`px-4 py-2 mr-2 bg-gray-200 rounded-md ${
-                  currentPage === page ? "bg-blue-500 text-white" : "hover:bg-gray-300"
+                  currentPage === page
+                    ? "bg-blue-500 text-white"
+                    : "hover:bg-gray-300"
                 }`}
                 onClick={() => handlePageClick(page)}
               >
@@ -305,7 +323,9 @@ const TasksContent = () => {
             ))}
             <button
               className={`px-4 py-2 bg-gray-200 rounded-md ${
-                currentPage === totalPages - 1 ? "cursor-not-allowed" : "hover:bg-gray-300"
+                currentPage === totalPages - 1
+                  ? "cursor-not-allowed"
+                  : "hover:bg-gray-300"
               }`}
               onClick={() => handlePageClick(currentPage + 1)}
               disabled={currentPage === totalPages - 1}
