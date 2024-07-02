@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create Axios instance with default configuration
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3001/api/', // Replace with your API base URL
+  baseURL: 'https://bitroot-backend-nh9c.onrender.com/api/', // Replace with your API base URL
   headers: {
     'Content-Type': 'application/json',
   },
