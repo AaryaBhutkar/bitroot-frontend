@@ -76,7 +76,7 @@ const SignUp = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3001/api/users/signup",
+        "https://bitroot-backend-nh9c.onrender.com/api/users/signup",
         formData
       );
       toast(response.data.data[0].msg);
