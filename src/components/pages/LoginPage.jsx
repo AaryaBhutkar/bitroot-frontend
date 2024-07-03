@@ -48,17 +48,21 @@ const LoginPage = () => {
       if (response.data.success) {
         const token = response.data.token;
         const user = response.data.data.id;
+        const name = response.data.data.name;
 
         // Store token in local storage
         localStorage.setItem("token", token);
         localStorage.setItem("user", user);
+        localStorage.setItem("name", name);
         toast(response.data.data.msg);
-        if(role==="admin")navigate("/adminDashboard");
+        if (role === "admin") navigate("/adminDashboard");
         const complete = response.data.data.is_profile_complete;
-        console.log("complete",complete);
-        if (complete && response.data.data.is_profile_complete === 1 ) {
+        console.log("complete", complete);
+        if (complete && response.data.data.is_profile_complete === 1) {
           // Redirect based on role
-          navigate(role === "admin" ? "/adminDashboard" : "/evaluatorDashboard");
+          navigate(
+            role === "admin" ? "/adminDashboard" : "/evaluatorDashboard"
+          );
         } else {
           // Redirect to profile page
           navigate("/profile");
