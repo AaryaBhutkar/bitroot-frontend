@@ -5,6 +5,7 @@ import { Avatar } from "antd";
 import TasksContent from "./adminPages/TaskContent";
 import RequestsList from "./adminPages/RequestsList";
 import EvaluatorDetails from "./EvaluatorDetails";
+import AdminHistory from "./adminPages/AdminHistory";
 
 const MainContent = ({ activePage }) => {
   const [showProfileInfo, setShowProfileInfo] = useState(false);
@@ -68,23 +69,9 @@ const MainContent = ({ activePage }) => {
             onBack={handleBack}
           />
         )}
+        {currentView === "history" && <AdminHistory />}
       </>
-      {/* {showProfileInfo ? (
-        <ProfileInfo />
-      ) : (
-        <>
-          {currentView === "tasks" && (
-            <TasksContent key={tasksKey} onTaskCreated={handleTaskCreated} />
-          )}
-          {currentView === "requests" && (
-            <RequestsList onViewRequest={handleViewRequest} />
-          )}
-          {currentView === "analytics" && <div>Analytics Page Content</div>}
-          {currentView === "evaluatorDetails" && selectedRequest && (
-            <EvaluatorDetails evaluator={selectedRequest} onBack={handleBack} />
-          )}
-        </>
-      )} */}
+      
     </div>
   );
 };
