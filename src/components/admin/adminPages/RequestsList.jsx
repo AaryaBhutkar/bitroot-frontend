@@ -116,6 +116,21 @@ const RequestsList = ({ onViewRequest }) => {
     }
   };
 
+  const handleDeny = async (request) => {
+    const { id: task_id, evaluator_id } = request;
+    try {
+      const response = await axiosInstance.post("tasks/rejectTask", {
+        task_id,
+        evaluator_id,
+      });
+      if (response.data.success) {
+        fetchRequests();
+      }
+    } catch (error) {
+      console.error("Error rejecting task:", error);
+    }
+  }
+
   return (
     <div className="p-6 max-w-8xl mx-auto">
       <h2 className="text-2xl font-bold mb-6">Requests</h2>
@@ -125,6 +140,7 @@ const RequestsList = ({ onViewRequest }) => {
             key={request.id}
             request={request}
             onView={onViewRequest}
+            onReject={() => handleDeny(request)}
             onApprove={() => handleApprove(request)}
             onDeny={() => handleDeny(request)}
           />

@@ -15,6 +15,7 @@ const Sidebar = ({ onSidebarClick }) => {
     { name: "TASKS", icon: <PlusCircleOutlined /> },
     { name: "MY PROJECTS", icon: <ProjectOutlined /> },
     { name: "EXISTING", icon: <HistoryOutlined /> },
+    { name: "HISTORY", icon: <HistoryOutlined />}
   ];
 
   const handleButtonClick = (name) => {
