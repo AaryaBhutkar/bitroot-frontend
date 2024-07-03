@@ -124,7 +124,7 @@ const MyProjects = ({ setCompletedProjects }) => {
         ) : (
           <>
             <button
-              className="mt-2 bg-purple-500 text-white px-4 py-1 rounded hover:bg-purple-600"
+              className="mt-2 bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600"
               onClick={() => handleActionButton(project.id, "start")}
             >
               Start

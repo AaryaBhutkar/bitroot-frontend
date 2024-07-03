@@ -20,7 +20,7 @@
 //         is_fetch: 1,
 //         evaluator_id: localStorage.getItem("user")
 //       });
-      
+
 //       if (response.data.success) {
 //         setProfile({
 //           id: response.data.data.id,
@@ -74,49 +74,45 @@
 
 // export default ProfileInfo;
 
-
-
-
-
-import React, { useState, useEffect } from 'react';
-import axiosInstance from '../../utils/axiosInstance';
+import React, { useState, useEffect } from "react";
+import axiosInstance from "../../utils/axiosInstance";
 
 const ProfileInfo = () => {
   const [profile, setProfile] = useState({
-    id: '',
-    name: '',
-    email: '',
-    linkedin_url: '',
-    yoe: '',
-    tags: ''
+    id: "",
+    name: "",
+    email: "",
+    linkedin_url: "",
+    yoe: "",
+    tags: "",
   });
   const [isEditing, setIsEditing] = useState(false);
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState("");
 
   const fetchProfileData = async () => {
     try {
-      setStatus('Fetching profile...');
-      const response = await axiosInstance.post('users/completeProfile', {
+      setStatus("Fetching profile...");
+      const response = await axiosInstance.post("users/completeProfile", {
         is_fetch: 1,
-        evaluator_id: localStorage.getItem("user")
+        evaluator_id: localStorage.getItem("user"),
       });
-      
+
       if (response.data.success) {
         setProfile({
           id: response.data.data.id,
           name: response.data.data.name,
           email: response.data.data.email,
-          linkedin_url: response.data.data.linkedin_url || 'Not provided',
-          yoe: response.data.data.yoe || 'Not provided',
-          tags: response.data.data.tags || 'Not provided'
+          linkedin_url: response.data.data.linkedin_url || "Not provided",
+          yoe: response.data.data.yoe || "Not provided",
+          tags: response.data.data.tags || "Not provided",
         });
-        setStatus('Profile fetched successfully!');
+        setStatus("Profile fetched successfully!");
       } else {
-        setStatus('Failed to fetch profile data.');
+        setStatus("Failed to fetch profile data.");
       }
     } catch (error) {
-      setStatus('Error fetching profile. Please try again.');
-      console.error('Error:', error);
+      setStatus("Error fetching profile. Please try again.");
+      console.error("Error:", error);
     }
   };
 
@@ -138,21 +134,21 @@ const ProfileInfo = () => {
 
   const handleSaveChanges = async () => {
     try {
-      setStatus('Saving changes...');
-      const response = await axiosInstance.post('users/updateProfile', {
+      setStatus("Saving changes...");
+      const response = await axiosInstance.post("users/updateProfile", {
         ...profile,
-        evaluator_id: localStorage.getItem("user")
+        evaluator_id: localStorage.getItem("user"),
       });
 
       if (response.data.success) {
-        setStatus('Profile updated successfully!');
+        setStatus("Profile updated successfully!");
         setIsEditing(false);
       } else {
-        setStatus('Failed to update profile.');
+        setStatus("Failed to update profile.");
       }
     } catch (error) {
-      setStatus('Error updating profile. Please try again.');
-      console.error('Error:', error);
+      setStatus("Error updating profile. Please try again.");
+      console.error("Error:", error);
     }
   };
 

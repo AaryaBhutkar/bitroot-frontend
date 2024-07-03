@@ -125,6 +125,7 @@ import ProfileInfo from "../admin/adminPages/ProfileInfo";
 import MyProjects from "./pages/MyProjects";
 import CompletedProjects from "./pages/CompletedProjects";
 import axiosInstance from "../utils/axiosInstance";
+import EvaluatorHistory from "./pages/EvaluatorHistory";
 
 const MainContent = ({ activePage }) => {
   const [showProfileInfo, setShowProfileInfo] = useState(false);
@@ -212,6 +213,8 @@ const MainContent = ({ activePage }) => {
         description={task.description}
         tags={task.tags}
         onTaskInterest={handleTaskInterest}
+        createdAt={task.created_at}
+        interestCount={task.interest_count}
       />
     ));
   };
@@ -247,6 +250,7 @@ const MainContent = ({ activePage }) => {
             {currentView === "tasks" && renderTasks()}
             {currentView === "my projects" && <MyProjects />}
             {currentView === "existing" && <CompletedProjects />}
+            {currentView === "history" && <EvaluatorHistory />}
           </div>
         )}
       </div>
