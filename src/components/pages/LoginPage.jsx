@@ -85,13 +85,13 @@ const LoginPage = () => {
       <div className="w-1/2 bg-blue-200 p-12 flex flex-col justify-between">
         <div>
           <h1 className="text-4xl font-bold text-gray-800 mb-4">
-            Need money!
-            {/* <br />
-            for your ? */}
+            We are Bitroot
             <br />
+            We design zero to one platform.
+            {/* <br />
             Bitroot will
             <br />
-            be your honey.
+            be your honey. */}
           </h1>
         </div>
         <div>
