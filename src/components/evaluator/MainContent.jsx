@@ -246,7 +246,7 @@ const MainContent = ({ activePage }) => {
         {showProfileInfo ? (
           <ProfileInfo />
         ) : (
-          <div className="w-full max-w-7xl mx-auto">
+          <div className="w-full max-w mx-auto">
             {currentView === "tasks" && renderTasks()}
             {currentView === "my projects" && <MyProjects />}
             {currentView === "existing" && <CompletedProjects />}
