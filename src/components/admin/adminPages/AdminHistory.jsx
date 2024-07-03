@@ -6,12 +6,38 @@ const HistoryItem = ({ user, action, task, viewable = true }) => (
       <span className="font-semibold">{user}</span> {action} {task}.
     </p>
     {viewable && (
-      <button className="mt-2 px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600">
-        View
-      </button>
+      <button
+      className="bg-blue-100 text-blue-800 px-4 py-1 rounded-md"
+      onClick={() => handleViewTask(task)}
+    >
+      View
+    </button>
     )}
   </div>
 );
+
+const fetchTasks = async () => {
+    try {
+      const response = await axiosInstance.post("tasks/getHistory", {
+        is_admin:1,
+    
+      });
+      if (response.data.success) {
+        setTasks(response.data.data);
+        const total = response.data.meta.total;
+        const calculatedTotalPages = Math.ceil(total / pageSize);
+        setTotalPages(calculatedTotalPages);
+
+        // Extract all unique tags from tasks
+        const tags = [
+          ...new Set(response.data.data.flatMap((task) => task.tags)),
+        ];
+        setAllTags(tags);
+      }
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+    }
+  };
 
 const AdminHistory = () => {
   const [activeTab, setActiveTab] = useState('TASKS');
