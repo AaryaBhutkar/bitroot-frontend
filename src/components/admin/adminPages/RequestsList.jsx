@@ -116,20 +116,20 @@ const RequestsList = ({ onViewRequest }) => {
     }
   };
 
-  const handleDeny = async (request) => {
-    const { id: task_id, evaluator_id } = request;
-    try {
-      const response = await axiosInstance.post("tasks/rejectTask", {
-        task_id,
-        evaluator_id,
-      });
-      if (response.data.success) {
-        fetchRequests();
-      }
-    } catch (error) {
-      console.error("Error rejecting task:", error);
-    }
-  }
+  // const handleDeny = async (request) => {
+  //   const { id: task_id, evaluator_id } = request;
+  //   try {
+  //     const response = await axiosInstance.post("tasks/rejectTask", {
+  //       task_id,
+  //       evaluator_id,
+  //     });
+  //     if (response.data.success) {
+  //       fetchRequests();
+  //     }
+  //   } catch (error) {
+  //     console.error("Error rejecting task:", error);
+  //   }
+  // }
 
   return (
     <div className="p-6 max-w-8xl mx-auto">
