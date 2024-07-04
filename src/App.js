@@ -8,8 +8,20 @@ import Layout from "./components/pages/MainContent";
 import LoginPage from "./components/pages/LoginPage";
 import AdminDashboard from "./components/admin/AdminDashboard";
 import EvaluatorDashboard from "./components/evaluator/EvaluatorDashboard";
+import ReactGA from "react-ga";
+
+const TRACKING_ID='G-0R29VR1RYZ';
+// ReactGA.initialize(TRACKING_ID);
+ReactGA.initialize('G-0R29VR1RYZ', {
+  debug: true,
+  titleCase: false,
+  gaOptions: {
+    userId: 123
+  }
+});
 
 function App() {
+
   return (
     <Router>
       <AuthProvider>
@@ -26,5 +38,8 @@ function App() {
     </Router>
   );
 }
+
+
+
 
 export default App;
