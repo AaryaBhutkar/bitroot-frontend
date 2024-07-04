@@ -8,8 +8,21 @@ import Layout from "./components/pages/MainContent";
 import LoginPage from "./components/pages/LoginPage";
 import AdminDashboard from "./components/admin/AdminDashboard";
 import EvaluatorDashboard from "./components/evaluator/EvaluatorDashboard";
+import ReactGA from "react-ga";
+import ShowTask from "./components/forpublic/ShowTask";
+
+const TRACKING_ID='G-0R29VR1RYZ';
+// ReactGA.initialize(TRACKING_ID);
+ReactGA.initialize('G-0R29VR1RYZ', {
+  debug: true,
+  titleCase: false,
+  gaOptions: {
+    userId: 123
+  }
+});
 
 function App() {
+
   return (
     <Router>
       <AuthProvider>
@@ -21,10 +34,14 @@ function App() {
           <Route path="/evaluatorDashboard" element={<EvaluatorDashboard />} />
           <Route path="/adminDashboard" element={<AdminDashboard />} />
           <Route path="/ProfileForm" element={<ProfileForm />} />
+          <Route path="/tasks" element={<ShowTask/>}/>
         </Routes>
       </AuthProvider>
     </Router>
   );
 }
+
+
+
 
 export default App;

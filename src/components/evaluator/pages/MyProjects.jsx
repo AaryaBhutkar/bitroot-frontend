@@ -1,24 +1,215 @@
+// import React, { useState, useEffect, useCallback } from "react";
+// import axiosInstance from "../../utils/axiosInstance";
+// import { toast } from "react-toastify";
+// import ProjectDetailsModal from "./ProjectDetailsModal";
+
+// const MyProjects = ({ setCompletedProjects }) => {
+//   const [activeTab, setActiveTab] = useState("IN PROGRESS");
+//   const [projects, setProjects] = useState({
+//     inprogress: [],
+//     assigned: [],
+//   });
+//   const [selectedProject, setSelectedProject] = useState(null);
+
+//   const fetchProjects = useCallback(async () => {
+//     try {
+//       const [inProgressResponse, assignedResponse] = await Promise.all([
+//         axiosInstance.post("tasks/getEvalTasks", {
+//           evaluator_id: localStorage.getItem("user"),
+//           in_progress: 1,
+//         }),
+//         axiosInstance.post("tasks/getEvalTasks", {
+//           evaluator_id: localStorage.getItem("user"),
+//           is_assigned: 1,
+//         }),
+//       ]);
+//       setProjects({
+//         inprogress: inProgressResponse.data.data,
+//         assigned: assignedResponse.data.data,
+//       });
+//     } catch (error) {
+//       console.error("Error fetching projects:", error);
+//       toast.error("Failed to fetch projects. Please try again.");
+//     }
+//   }, []);
+
+//   useEffect(() => {
+//     fetchProjects();
+//   }, [fetchProjects]);
+
+//   const handleActionButton = async (projectId, action) => {
+//     try {
+//       await axiosInstance.post(
+//         `tasks/${action === "start" ? "startTask" : "completeTask"}`,
+//         { task_id: projectId }
+//       );
+
+//       if (action === "start") {
+//         setProjects((prevState) => ({
+//           inprogress: [
+//             ...prevState.inprogress,
+//             prevState.assigned.find((p) => p.id === projectId),
+//           ],
+//           assigned: prevState.assigned.filter((p) => p.id !== projectId),
+//         }));
+//       } else if (action === "complete") {
+//         const completedProject = projects.inprogress.find(
+//           (p) => p.id === projectId
+//         );
+//         // setCompletedProjects(prevState => [...prevState, completedProject]);
+//         setProjects((prevState) => ({
+//           inprogress: prevState.inprogress.filter((p) => p.id !== projectId),
+//           assigned: prevState.assigned,
+//         }));
+//       }
+
+//       toast.success(`Task ${action}ed successfully`);
+//       await fetchProjects(); // Refresh the projects after the action
+//     } catch (error) {
+//       console.log(`Error ${action}ing project:`, error);
+//       toast.error(`Failed to ${action} the task. Please try again.`);
+//     }
+//   };
+
+//   const handleViewProject = (project) => {
+//     setSelectedProject(project);
+//   };
+
+//   const handleClosePopup = () => {
+//     setSelectedProject(null);
+//   };
+
+//   const handleUnassignProject = async (projectId) => {
+//     try {
+//       await axiosInstance.post("tasks/assignTask", {
+//         task_id: projectId,
+//         evaluator_id: Number(localStorage.getItem("user")),
+//         is_delete: 1,
+//       });
+//       setProjects((prevState) => ({
+//         ...prevState,
+//         assigned: prevState.assigned.filter((p) => p.id !== projectId),
+//       }));
+//       toast.success("Task unassigned successfully");
+//       await fetchProjects(); // Refresh the projects after unassigning
+//     } catch (error) {
+//       console.error("Error unassigning project:", error);
+//       toast.error("Failed to unassign the task. Please try again.");
+//     }
+//   };
+
+//   const renderProjectItem = (project) => (
+//     <div
+//       key={project.id}
+//       className="bg-white p-4 rounded-lg shadow mb-4 flex justify-between items-center relative"
+//     >
+//       <div>
+//         <p className="font-semibold">
+//           Evaluator {project.evaluator_name} you have applied for {project.name}
+//           .
+//         </p>
+//         <button
+//           className="mt-2 bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600 mr-2"
+//           onClick={() => handleViewProject(project)}
+//         >
+//           View
+//         </button>
+//         {activeTab === "IN PROGRESS" ? (
+//           <button
+//             className="mt-2 bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600"
+//             onClick={() => handleActionButton(project.id, "complete")}
+//           >
+//             Complete
+//           </button>
+//         ) : (
+//           <>
+//             <button
+//               className="mt-2 bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600"
+//               onClick={() => handleActionButton(project.id, "start")}
+//             >
+//               Start
+//             </button>
+//             <button
+//               className="mt-2 bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600 ml-2"
+//               onClick={() => handleUnassignProject(project.id)}
+//             >
+//               Delete
+//             </button>
+//           </>
+//         )}
+//       </div>
+//       {selectedProject && selectedProject.id === project.id && (
+//         <ProjectDetailsModal
+//           project={selectedProject}
+//           onClose={handleClosePopup}
+//         />
+//       )}
+//     </div>
+//   );
+
+//   return (
+//     <div className="p-4">
+//       <div className="flex mb-4">
+//         <button
+//           className={`mr-2 px-4 py-2 rounded ${
+//             activeTab === "IN PROGRESS"
+//               ? "bg-blue-500 text-white"
+//               : "bg-gray-200 text-gray-700"
+//           }`}
+//           onClick={() => setActiveTab("IN PROGRESS")}
+//         >
+//           IN PROGRESS
+//         </button>
+//         <button
+//           className={`px-4 py-2 rounded ${
+//             activeTab === "ASSIGNED"
+//               ? "bg-blue-500 text-white"
+//               : "bg-gray-200 text-gray-700"
+//           }`}
+//           onClick={() => setActiveTab("ASSIGNED")}
+//         >
+//           ASSIGNED
+//         </button>
+//       </div>
+//       <div className="space-y-4">
+//         {projects[activeTab.toLowerCase().replace(" ", "")].map(
+//           renderProjectItem
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default MyProjects;
+
 import React, { useState, useEffect, useCallback } from "react";
 import axiosInstance from "../../utils/axiosInstance";
 import { toast } from "react-toastify";
+import ProjectDetailsModal from "./ProjectDetailsModal";
 
 const MyProjects = ({ setCompletedProjects }) => {
-  const [activeTab, setActiveTab] = useState("IN PROGRESS");
+  const [activeTab, setActiveTab] = useState("inprogress");
   const [projects, setProjects] = useState({
     inprogress: [],
-    assigned: []
+    assigned: [],
   });
   const [selectedProject, setSelectedProject] = useState(null);
 
   const fetchProjects = useCallback(async () => {
     try {
       const [inProgressResponse, assignedResponse] = await Promise.all([
-        axiosInstance.post('tasks/getEvalTasks', { evaluator_id: localStorage.getItem("user"), in_progress: 1 }),
-        axiosInstance.post('tasks/getEvalTasks', { evaluator_id: localStorage.getItem("user"), is_assigned: 1 })
+        axiosInstance.post("tasks/getEvalTasks", {
+          evaluator_id: localStorage.getItem("user"),
+          in_progress: 1,
+        }),
+        axiosInstance.post("tasks/getEvalTasks", {
+          evaluator_id: localStorage.getItem("user"),
+          is_assigned: 1,
+        }),
       ]);
       setProjects({
         inprogress: inProgressResponse.data.data,
-        assigned: assignedResponse.data.data
+        assigned: assignedResponse.data.data,
       });
     } catch (error) {
       console.error("Error fetching projects:", error);
@@ -34,25 +225,32 @@ const MyProjects = ({ setCompletedProjects }) => {
     try {
       await axiosInstance.post(
         `tasks/${action === "start" ? "startTask" : "completeTask"}`,
-        { task_id: projectId }
+        {
+          task_id: projectId,
+          evaluator_id: Number(localStorage.getItem("user")),
+        }
       );
-      
+
       if (action === "start") {
-        setProjects(prevState => ({
-          inprogress: [...prevState.inprogress, prevState.assigned.find(p => p.id === projectId)],
-          assigned: prevState.assigned.filter(p => p.id !== projectId)
+        setProjects((prevState) => ({
+          inprogress: [
+            ...prevState.inprogress,
+            prevState.assigned.find((p) => p.id === projectId),
+          ],
+          assigned: prevState.assigned.filter((p) => p.id !== projectId),
         }));
       } else if (action === "complete") {
-        const completedProject = projects.inprogress.find(p => p.id === projectId);
-        // setCompletedProjects(prevState => [...prevState, completedProject]);
-        setProjects(prevState => ({
-          inprogress: prevState.inprogress.filter(p => p.id !== projectId),
-          assigned: prevState.assigned
+        const completedProject = projects.inprogress.find(
+          (p) => p.id === projectId
+        );
+        setProjects((prevState) => ({
+          inprogress: prevState.inprogress.filter((p) => p.id !== projectId),
+          assigned: prevState.assigned,
         }));
       }
-      
+
       toast.success(`Task ${action}ed successfully`);
-      await fetchProjects(); // Refresh the projects after the action
+      await fetchProjects();
     } catch (error) {
       console.log(`Error ${action}ing project:`, error);
       toast.error(`Failed to ${action} the task. Please try again.`);
@@ -69,16 +267,17 @@ const MyProjects = ({ setCompletedProjects }) => {
 
   const handleUnassignProject = async (projectId) => {
     try {
-      await axiosInstance.post(
-        "tasks/assignTask",
-        { task_id: projectId, evaluator_id: Number(localStorage.getItem("user")), is_delete: 1 }
-      );
-      setProjects(prevState => ({
+      await axiosInstance.post("tasks/assignTask", {
+        task_id: projectId,
+        evaluator_id: Number(localStorage.getItem("user")),
+        is_delete: 1,
+      });
+      setProjects((prevState) => ({
         ...prevState,
-        assigned: prevState.assigned.filter(p => p.id !== projectId)
+        assigned: prevState.assigned.filter((p) => p.id !== projectId),
       }));
       toast.success("Task unassigned successfully");
-      await fetchProjects(); // Refresh the projects after unassigning
+      await fetchProjects();
     } catch (error) {
       console.error("Error unassigning project:", error);
       toast.error("Failed to unassign the task. Please try again.");
@@ -86,23 +285,19 @@ const MyProjects = ({ setCompletedProjects }) => {
   };
 
   const renderProjectItem = (project) => (
-    <div
-      key={project.id}
-      className="bg-white p-4 rounded-lg shadow mb-4 flex justify-between items-center relative"
-    >
-      <div>
-        <p className="font-semibold">
-          Evaluator {project.evaluator_name} you have applied for {project.name}.
-        </p>
+    <div key={project.id} className="bg-white shadow-md rounded-lg p-4 mb-4">
+      <h3 className="text-lg font-semibold mb-2">Project: {project.name}</h3>
+      <p className="mb-4">Evaluator: {project.evaluator_name}</p>
+      <div className="flex justify-between">
         <button
-          className="mt-2 bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600 mr-2"
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
           onClick={() => handleViewProject(project)}
         >
           View
         </button>
-        {activeTab === "IN PROGRESS" ? (
+        {activeTab === "inprogress" ? (
           <button
-            className="mt-2 bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600"
+            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
             onClick={() => handleActionButton(project.id, "complete")}
           >
             Complete
@@ -110,13 +305,13 @@ const MyProjects = ({ setCompletedProjects }) => {
         ) : (
           <>
             <button
-              className="mt-2 bg-purple-500 text-white px-4 py-1 rounded hover:bg-purple-600"
+              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
               onClick={() => handleActionButton(project.id, "start")}
             >
               Start
             </button>
             <button
-              className="mt-2 bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600 ml-2"
+              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
               onClick={() => handleUnassignProject(project.id)}
             >
               Delete
@@ -124,34 +319,17 @@ const MyProjects = ({ setCompletedProjects }) => {
           </>
         )}
       </div>
-      {selectedProject && selectedProject.id === project.id && (
-        <div className="fixed top-0 left-0 h-screen w-screen flex items-center justify-center z-50 bg-gray-800 bg-opacity-75">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-xl w-full">
-            <h3 className="text-lg font-semibold mb-2">
-              Project Details for {selectedProject.name}
-            </h3>
-            <p>Evaluator: {selectedProject.evaluator_name}</p>
-            <p>Description: {selectedProject.description}</p>
-            {selectedProject.tags && (
-              <p>Tags: {selectedProject.tags.join(', ')}</p>
-            )}
-            {selectedProject.github_url && (
-              <p>Github URL: <a href={selectedProject.github_url} target="_blank" rel="noopener noreferrer">{selectedProject.github_url}</a></p>
-            )}
-            {selectedProject.guideline_url && (
-              <p>Guideline URL: <a href={selectedProject.guideline_url} target="_blank" rel="noopener noreferrer">{selectedProject.guideline_url}</a></p>
-            )}
-            <p>Lower Price: ${selectedProject.lower_price}</p>
-            <p>Higher Price: ${selectedProject.higher_price}</p>
-            <button
-              className="mt-4 bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
-              onClick={handleClosePopup}
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
+    </div>
+  );
+
+  const renderNoTasksMessage = (tabName) => (
+    <div className="bg-gray-100 border-l-4 text-gray-700 p-4 mb-4">
+      <p className="font-bold">No {tabName} tasks</p>
+      <p>
+        {tabName === "In Progress"
+          ? "You don't have any tasks in progress. Start a task from the Assigned tab."
+          : "You don't have any assigned tasks. Check back later for new assignments."}
+      </p>
     </div>
   );
 
@@ -160,28 +338,41 @@ const MyProjects = ({ setCompletedProjects }) => {
       <div className="flex mb-4">
         <button
           className={`mr-2 px-4 py-2 rounded ${
-            activeTab === "IN PROGRESS"
+            activeTab === "inprogress"
               ? "bg-blue-500 text-white"
               : "bg-gray-200 text-gray-700"
           }`}
-          onClick={() => setActiveTab("IN PROGRESS")}
+          onClick={() => setActiveTab("inprogress")}
         >
-          IN PROGRESS
+          In Progress
         </button>
         <button
           className={`px-4 py-2 rounded ${
-            activeTab === "ASSIGNED"
+            activeTab === "assigned"
               ? "bg-blue-500 text-white"
               : "bg-gray-200 text-gray-700"
           }`}
-          onClick={() => setActiveTab("ASSIGNED")}
+          onClick={() => setActiveTab("assigned")}
         >
-          ASSIGNED
+          Assigned
         </button>
       </div>
-      <div className="space-y-4">
-        {projects[activeTab.toLowerCase().replace(" ", "")].map(renderProjectItem)}
+      <div>
+        {activeTab === "inprogress" &&
+          (projects.inprogress.length > 0
+            ? projects.inprogress.map(renderProjectItem)
+            : renderNoTasksMessage("In Progress"))}
+        {activeTab === "assigned" &&
+          (projects.assigned.length > 0
+            ? projects.assigned.map(renderProjectItem)
+            : renderNoTasksMessage("Assigned"))}
       </div>
+      {selectedProject && (
+        <ProjectDetailsModal
+          project={selectedProject}
+          onClose={handleClosePopup}
+        />
+      )}
     </div>
   );
 };

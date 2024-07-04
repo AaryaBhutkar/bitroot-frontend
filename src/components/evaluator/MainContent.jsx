@@ -6,23 +6,26 @@ import ProfileInfo from "../admin/adminPages/ProfileInfo";
 import MyProjects from "./pages/MyProjects";
 import CompletedProjects from "./pages/CompletedProjects";
 import axiosInstance from "../utils/axiosInstance";
+import EvaluatorHistory from "./pages/EvaluatorHistory";
 
 const MainContent = ({ activePage }) => {
   const [showProfileInfo, setShowProfileInfo] = useState(false);
   const [currentView, setCurrentView] = useState(activePage);
   const [tasks, setTasks] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+
+  const EvaluatorName = localStorage.getItem("name");
 
   const handleProfileClick = () => {
     setShowProfileInfo(!showProfileInfo);
   };
 
-  useEffect(()=>{
-    if(!localStorage.getItem("token")|| !localStorage.getItem("user")){
-      //navigate to role
+  useEffect(() => {
+    if (!localStorage.getItem("token") || !localStorage.getItem("user")) {
       window.location.href = "/role";
     }
-  },[])
+  }, []);
 
   useEffect(() => {
     console.log(localStorage.getItem("token"));
@@ -35,13 +38,12 @@ const MainContent = ({ activePage }) => {
   }, [activePage]);
 
   const fetchTasks = async () => {
+    setIsLoading(true);
     try {
-      const response = await axiosInstance.post(
-        "/tasks/getEvalTasks",
-        {evaluator_id:localStorage.getItem("user"),
-          search:searchTerm
-        }
-      );
+      const response = await axiosInstance.post("/tasks/getEvalTasks", {
+        evaluator_id: localStorage.getItem("user"),
+        search: searchTerm,
+      });
       const result = response.data;
       if (result.success) {
         console.log("Tasks fetched successfully:", result.data);
@@ -51,24 +53,59 @@ const MainContent = ({ activePage }) => {
       }
     } catch (error) {
       console.error("Error fetching tasks:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
+
   const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value); // Update search term state
+    setSearchTerm(e.target.value);
   };
-  const handleSearchSubmit =(e)=>{
+
+  const handleSearchSubmit = (e) => {
     fetchTasks();
-  }
+  };
+
   const handleTaskInterest = (taskId) => {
     const updatedTasks = tasks.filter((task) => task.id !== taskId);
     setTasks(updatedTasks);
   };
 
+  const renderTasks = () => {
+    if (isLoading) {
+      return <div className="text-center py-4">Loading tasks...</div>;
+    }
+
+    if (tasks.length === 0) {
+      return (
+        <TaskCard
+          task_id={null}
+          title=""
+          description=""
+          tags={[]}
+          onTaskInterest={() => {}}
+        />
+      );
+    }
+
+    return tasks.map((task) => (
+      <TaskCard
+        key={task.id}
+        task_id={task.id}
+        title={task.name}
+        description={task.description}
+        tags={task.tags}
+        onTaskInterest={handleTaskInterest}
+        createdAt={task.created_at}
+        interestCount={task.interest_count}
+      />
+    ));
+  };
 
   return (
     <div className="flex flex-col h-screen w-full">
       <header className="flex justify-between items-center p-4 bg-white shadow-md w-full">
-        <h1 className="text-2xl font-bold">HELLO, Evaluator</h1>
+        <h1 className="text-2xl font-bold">HELLO, {EvaluatorName}</h1>
         <div className="flex items-center space-x-4">
           <input
             type="text"
@@ -92,20 +129,11 @@ const MainContent = ({ activePage }) => {
         {showProfileInfo ? (
           <ProfileInfo />
         ) : (
-          <div className="w-full max-w-7xl mx-auto">
-            {currentView === "tasks" &&
-              tasks.map((task) => (
-                <TaskCard
-                  key={task.id}
-                  task_id={task.id}
-                  title={task.name}
-                  description={task.description}
-                  tags={task.tags}
-                  onTaskInterest={handleTaskInterest}
-                />
-              ))}
+          <div className="w-full max-w mx-auto">
+            {currentView === "tasks" && renderTasks()}
             {currentView === "my projects" && <MyProjects />}
             {currentView === "existing" && <CompletedProjects />}
+            {currentView === "history" && <EvaluatorHistory />}
           </div>
         )}
       </div>
