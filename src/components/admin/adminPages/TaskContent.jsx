@@ -261,7 +261,7 @@ const TasksContent = () => {
                 <th className="pb-4">TASK NAME</th>
                 <th className="pb-4">DATE</th>
                 <th className="pb-4">TAGS</th>
-                <th className="pb-4">PRICE RANGE(In Rs)</th>
+                <th className="pb-4">PRICE RANGE (₹)</th>
                 <th className="pb-4">STATUS</th>
                 <th className="pb-4"></th>
               </tr>
