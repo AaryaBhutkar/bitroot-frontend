@@ -48,13 +48,6 @@ const ProjectItem = ({ project, onView, onComplete, onAccept, onDeny, isAssigned
 
 const ProjectList = () => {
   const [activeTab, setActiveTab] = useState('IN PROGRESS');
-  const [projects, setProjects] = useState([
-    { id: 1, title: 'Frontend Developer', isAnonymous: false },
-    { id: 2, title: 'Frontend Developer', isAnonymous: true },
-    { id: 3, title: 'Frontend Developer', isAnonymous: false },
-    { id: 4, title: 'Flutter', isAnonymous: false },
-    { id: 5, title: 'Backend Developer', isAnonymous: false },
-  ]);
 
   const handleView = (id) => console.log(`Viewing project ${id}`);
   const handleComplete = (id) => console.log(`Completing project ${id}`);
