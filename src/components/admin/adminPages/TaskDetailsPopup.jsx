@@ -16,6 +16,7 @@ const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
   };
 
   const handleUpdate = async () => {
+    if (!onUpdate) return;
     setIsUpdating(true);
     try {
       const response = await axiosInstance.post('tasks/createTask', {
@@ -26,7 +27,7 @@ const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
         higher_price: updatedTask.higher_price,
         github_url: updatedTask.github_url,
         guideline_url: updatedTask.guideline_url,
-        evaluator_name: updatedTask.evaluator_name,
+        evaluator_name: task.evaluator_name, // keep original evaluator name
         tags: updatedTask.tags,
         is_update: 1,
       });
@@ -36,17 +37,18 @@ const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
         onClose();
       } else {
         console.error('Failed to update task:', response.data);
-        alert("Failed to update task. Please try again.");
+        toast.error("Failed to update task. Please try again.");
       }
     } catch (error) {
       console.error('Error updating task:', error);
-      alert("An error occurred while updating the task. Please try again.");
+      toast.error("An error occurred while updating the task. Please try again.");
     } finally {
       setIsUpdating(false);
     }
   };
 
   const handleDelete = async () => {
+    if (!onDelete) return;
     try {
       await onDelete();
       toast.success("Task deleted successfully");
@@ -83,17 +85,7 @@ const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
 
         <div className="mb-4">
           <label className="block mb-2 font-bold">Evaluator Name:</label>
-          {editMode ? (
-            <input
-              type="text"
-              name="evaluator_name"
-              value={updatedTask.evaluator_name}
-              onChange={handleInputChange}
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-          ) : (
-            <p>{task.evaluator_name}</p>
-          )}
+          <p>{task.evaluator_name}</p>
         </div>
 
         <div className="mb-4">
@@ -171,22 +163,26 @@ const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
         </div>
 
         <div className="flex justify-end space-x-4">
-          {editMode ? (
-            <button 
-              onClick={handleUpdate} 
-              className="bg-green-600 text-white px-4 py-2 rounded"
-              disabled={isUpdating}
-            >
-              {isUpdating ? "Saving..." : "Save"}
-            </button>
-          ) : (
-            <button onClick={() => setEditMode(true)} className="bg-yellow-600 text-white px-4 py-2 rounded">
-              Edit
+          {onUpdate && (
+            editMode ? (
+              <button 
+                onClick={handleUpdate} 
+                className="bg-green-600 text-white px-4 py-2 rounded"
+                disabled={isUpdating}
+              >
+                {isUpdating ? "Saving..." : "Save"}
+              </button>
+            ) : (
+              <button onClick={() => setEditMode(true)} className="bg-yellow-600 text-white px-4 py-2 rounded">
+                Edit
+              </button>
+            )
+          )}
+          {onDelete && (
+            <button onClick={handleDelete} className="bg-red-600 text-white px-4 py-2 rounded">
+              Delete
             </button>
           )}
-          <button onClick={handleDelete} className="bg-red-600 text-white px-4 py-2 rounded">
-            Delete
-          </button>
         </div>
       </div>
     </div>
@@ -196,8 +192,8 @@ const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
 TaskDetailsPopup.propTypes = {
   task: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
-  onUpdate: PropTypes.func.isRequired,
+  onDelete: PropTypes.func,
+  onUpdate: PropTypes.func,
 };
 
 export default TaskDetailsPopup;

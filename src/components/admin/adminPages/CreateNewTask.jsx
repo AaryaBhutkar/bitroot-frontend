@@ -34,7 +34,8 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
           github_url: taskData.gitLinks,
           guideline_url: taskData.guidelines,
           lower_price: parseInt(taskData.priceRangeMin),
-          higher_price: parseInt(taskData.priceRangeMax)
+          higher_price: parseInt(taskData.priceRangeMax),
+          turnaround: parseInt(taskData.priceRangeMax),
         }
       );
       
