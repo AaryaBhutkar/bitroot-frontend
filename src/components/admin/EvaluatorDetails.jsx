@@ -82,7 +82,7 @@ const EvaluatorDetails = ({ evaluatorId, onBack }) => {
             Price Range:
           </label>
           <p className="text-gray-900 border rounded p-2">
-            ${evaluator.lower_price} - ${evaluator.higher_price}
+            ₹{evaluator.lower_price} - ₹{evaluator.higher_price}
           </p>
         </div>
         <div className="mb-4 border-b pb-4">

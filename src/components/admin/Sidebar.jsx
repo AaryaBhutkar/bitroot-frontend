@@ -50,7 +50,7 @@ const Sidebar = ({ onSidebarClick }) => {
         </nav>
       </div>
       <div className="mt-auto">
-        <Link
+        {/* <Link
           to="/role"
           className="flex items-center space-x-2 p-2 rounded transition-colors hover:bg-white/50"
         >
@@ -58,7 +58,7 @@ const Sidebar = ({ onSidebarClick }) => {
             <LogoutOutlined className="h-6 w-6" />
           </span>
           <span className="flex-shrink-0">LOGOUT</span>
-        </Link>
+        </Link> */}
       </div>
     </aside>
   );

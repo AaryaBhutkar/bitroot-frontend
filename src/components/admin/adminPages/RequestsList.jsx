@@ -56,18 +56,18 @@ const RequestItem = ({ request, onView, onApprove, onDeny }) => (
       >
         VIEW
       </button>
-      <div>
-        <button
-          onClick={() => onDeny(request)}
-          className="text-white-500 bg-red-500 rounded-xl p-2 font-medium text-sm hover:underline mr-2"
-        >
-          DENY
-        </button>
+      <div className="flex space-x-2">
         <button
           onClick={() => onApprove(request)}
-          className="text-white-500 bg-green-500 rounded-xl p-2 font-medium text-sm hover:underline"
+          className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
         >
-          APPROVE
+          Approve
+        </button>
+        <button
+          onClick={() => onDeny(request)}
+          className="px-4 py-2 bg-white text-blue-500 border border-blue-500 rounded-md hover:bg-blue-50"
+        >
+          Reject
         </button>
       </div>
     </div>
@@ -145,21 +145,6 @@ const RequestsList = ({ onViewRequest }) => {
     }
   };
 
-  // const handleDeny = async (request) => {
-  //   const { id: task_id, evaluator_id } = request;
-  //   try {
-  //     const response = await axiosInstance.post("tasks/rejectTask", {
-  //       task_id,
-  //       evaluator_id,
-  //     });
-  //     if (response.data.success) {
-  //       fetchRequests();
-  //     }
-  //   } catch (error) {
-  //     console.error("Error rejecting task:", error);
-  //   }
-  // }
-
   return (
     <div className="p-6 max-w-8xl mx-auto">
       <h2 className="text-2xl font-bold mb-6">Requests</h2>
@@ -169,7 +154,6 @@ const RequestsList = ({ onViewRequest }) => {
             key={request.id}
             request={request}
             onView={onViewRequest}
-            onReject={() => handleDeny(request)}
             onApprove={() => handleApprove(request)}
             onDeny={() => handleDeny(request)}
           />
