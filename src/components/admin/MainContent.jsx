@@ -57,7 +57,7 @@ const MainContent = ({ activePage }) => {
       <Link
         to="/role"
         onClick={handleLogout}
-        className="flex items-center bg-blue-500 space-x-2 p-2 rounded transition-colors hover:bg-white/50"
+        className="flex items-center bg-blue-500 space-x-2 p-2 rounded transition-colors "
       >
         <span className="flex-shrink-0">
           <LogoutOutlined className="h-6 w-6 text-white" />
