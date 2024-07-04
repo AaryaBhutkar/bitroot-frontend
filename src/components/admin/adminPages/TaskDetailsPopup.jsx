@@ -65,7 +65,7 @@ const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
       <div className="bg-white p-8 rounded-md shadow-md w-1/2 max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">{editMode ? "Edit Task" : task.name}</h2>
-          <button onClick={onClose} className="bg-black text-white px-2 py-1 rounded">X</button>
+          <button onClick={onClose} className=" text-black px-2 py-1 rounded">X</button>
         </div>
 
         <div className="mb-4">
@@ -103,7 +103,7 @@ const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
         </div>
 
         <div className="mb-4">
-          <h3 className="font-bold mb-2">Price Range:</h3>
+          <h3 className="font-bold mb-2">Price Range (₹):</h3>
           {editMode ? (
             <div className="flex gap-2">
               <input
@@ -173,13 +173,13 @@ const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
                 {isUpdating ? "Saving..." : "Save"}
               </button>
             ) : (
-              <button onClick={() => setEditMode(true)} className="bg-yellow-600 text-white px-4 py-2 rounded">
+              <button onClick={() => setEditMode(true)} className="bg-blue-500 text-white px-4 py-2 rounded">
                 Edit
               </button>
             )
           )}
           {onDelete && (
-            <button onClick={handleDelete} className="bg-red-600 text-white px-4 py-2 rounded">
+            <button onClick={handleDelete} className="px-4 py-2 bg-white text-blue-500 border border-blue-500 rounded-md hover:bg-blue-50">
               Delete
             </button>
           )}

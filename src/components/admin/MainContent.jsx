@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import ProfileInfo from "./adminPages/ProfileInfo";
-import { UserOutlined } from "@ant-design/icons";
-import { Avatar } from "antd";
+import { Link } from "react-router-dom";
+import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
+import { Popover, Avatar } from "antd";
 import TasksContent from "./adminPages/TaskContent";
 import RequestsList from "./adminPages/RequestsList";
 import EvaluatorDetails from "./EvaluatorDetails";
@@ -16,9 +16,10 @@ const MainContent = ({ activePage }) => {
   const handleProfileClick = () => {
     setShowProfileInfo(!showProfileInfo);
   };
+
   useEffect(() => {
     if (!localStorage.getItem("token")) {
-      //navigate to role
+      // Navigate to role
       window.location.href = "/role";
     }
   }, []);
@@ -45,14 +46,37 @@ const MainContent = ({ activePage }) => {
     setTasksKey((prevKey) => prevKey + 1);
   };
 
+  const handleLogout = () => {
+    // Clear local storage and navigate to login or role page
+    localStorage.removeItem("token");
+    window.location.href = "/role";
+  };
+
+  const content = (
+    <div>
+      <Link
+        to="/role"
+        onClick={handleLogout}
+        className="flex items-center bg-blue-500 space-x-2 p-2 rounded transition-colors hover:bg-white/50"
+      >
+        <span className="flex-shrink-0">
+          <LogoutOutlined className="h-6 w-6 text-white" />
+        </span>
+        <span className="flex-shrink-0 text-white">LOGOUT</span>
+      </Link>
+    </div>
+  );
+
   return (
     <div className="flex-1 p-8">
       <header className="flex justify-between items-center mb-8">
         <h1 className="text-2xl font-bold">HELLO, ADMIN</h1>
         <div className="flex items-center space-x-4">
-          <button onClick={handleProfileClick} className="text-gray-600">
-            <Avatar size="large" icon={<UserOutlined />} />
-          </button>
+          <Popover content={content} trigger="click">
+            <button className="text-gray-600">
+              <Avatar size="large" icon={<UserOutlined />} />
+            </button>
+          </Popover>
         </div>
       </header>
       <>
@@ -71,7 +95,6 @@ const MainContent = ({ activePage }) => {
         )}
         {currentView === "history" && <AdminHistory />}
       </>
-      
     </div>
   );
 };
