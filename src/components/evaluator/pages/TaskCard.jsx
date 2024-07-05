@@ -59,6 +59,7 @@ const TaskCard = ({
       });
       const result = response.data;
       if (result.success) {
+        window.dataLayer.push({'event':'I\'m interested'});
         toast.success("Interest Notified!");
         onTaskInterest(task_id);
       } else {

@@ -10,6 +10,13 @@ import AdminDashboard from "./components/admin/AdminDashboard";
 import EvaluatorDashboard from "./components/evaluator/EvaluatorDashboard";
 import ReactGA from "react-ga";
 import ShowTask from "./components/forpublic/ShowTask";
+import TagManager from 'react-gtm-module'
+
+const tagManagerArgs = {
+    gtmId: 'GTM-TDN8PLXN'
+}
+
+TagManager.initialize(tagManagerArgs);
 
 const TRACKING_ID='G-0R29VR1RYZ';
 // ReactGA.initialize(TRACKING_ID);

@@ -46,6 +46,7 @@ const MyProjects = ({ setCompletedProjects }) => {
           evaluator_id: Number(localStorage.getItem("user")),
         }
       );
+      window.dataLayer.push({'event':`${action} Task`});
 
       if (action === "start") {
         setProjects((prevState) => ({
@@ -92,6 +93,7 @@ const MyProjects = ({ setCompletedProjects }) => {
         ...prevState,
         assigned: prevState.assigned.filter((p) => p.id !== projectId),
       }));
+      window.dataLayer.push({'event':'Rejected Task'});
       toast.success("Task unassigned successfully");
       await fetchProjects();
     } catch (error) {
