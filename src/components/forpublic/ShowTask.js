@@ -40,7 +40,7 @@ const ShowTask = () => {
             </div>
             <div className="flex justify-between items-center">
               <span className="text-gray-500 text-sm">Posted few hours ago</span>
-              <button onClick={()=>window.location.href='/'} className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+              <button onClick={()=>{window.dataLayer.push({'event':'Not login interest'});window.location.href='/'}} className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
                 I'm Interested
               </button>
             </div>
