@@ -15,7 +15,7 @@ const RoleSelector = () => {
   };
 
   return (
-    <div className="bg-blue-200 min-h-screen flex items-center justify-center">
+    <div className="bg-blue-50 min-h-screen flex items-center justify-center">
       <div className="bg-white p-6 rounded-lg shadow-md max-w-md mx-auto">
         <h1 className="text-2xl font-bold text-center mb-6">
           ARE YOU A EVALUATOR OR ADMIN?
