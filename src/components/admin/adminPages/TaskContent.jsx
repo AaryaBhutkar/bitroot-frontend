@@ -201,7 +201,7 @@ const TasksContent = () => {
             <div className="relative">
               <input
                 type="text"
-                placeholder="Search by project name and tags"
+                placeholder="Search by task name and tags"
                 value={searchTerm}
                 onChange={handleSearch}
                 onKeyPress={handleSearch}
@@ -318,10 +318,10 @@ const TasksContent = () => {
                     <span
                       className={`px-2 py-1 rounded-md ${
                         task.is_completed
-                          ? "bg-green-100 text-green-800"
+                          ? "bg-gray-200 text-green-800"
                           : task.is_assigned
                           ? "bg-yellow-100 text-yellow-800"
-                          : "bg-blue-100 text-blue-800"
+                          : "bg-green-300 text-black"
                       }`}
                     >
                       {task.is_completed

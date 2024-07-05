@@ -3,7 +3,7 @@ import axiosInstance from '../../utils/axiosInstance';
 
 const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
   const [taskData, setTaskData] = useState({
-    projectName: '',
+    taskName: '',
     brief: '',
     tags: '',
     gitLinks: '',
@@ -27,7 +27,7 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
       const response = await axiosInstance.post(
         'tasks/createTask',
         {
-          name: taskData.projectName,
+          name: taskData.taskName,
           desc: taskData.brief,
           tags: taskData.tags.split(',').map(tag => tag.trim()),
           github_url: taskData.gitLinks,
@@ -60,16 +60,16 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
       </button>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label htmlFor="projectName" className="block text-sm font-medium text-gray-700">
-            Project Name:
+          <label htmlFor="taskName" className="block text-sm font-medium text-gray-700">
+            Task Name:
           </label>
           <input
             type="text"
-            id="projectName"
-            name="projectName"
-            value={taskData.projectName}
+            id="taskName"
+            name="taskName"
+            value={taskData.taskName}
             onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 pb-3"
+            className="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 pb-3"
             required
           />
         </div>
@@ -83,7 +83,7 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
             name="brief"
             value={taskData.brief}
             onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            className="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
             rows="3"
             required
           ></textarea>
@@ -99,8 +99,8 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
             name="tags"
             value={taskData.tags}
             onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 pb-3"
-            // placeholder="Separate tags with commas"
+            className="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 pb-3"
+            
           />
         </div>
 
@@ -114,7 +114,7 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
             name="gitLinks"
             value={taskData.gitLinks}
             onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 pb-3"
+            className="mt-1 block w-full rounded-md bg-gray-50  border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 pb-3"
           />
         </div>
 
@@ -127,7 +127,7 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
             name="guidelines"
             value={taskData.guidelines}
             onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            className="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
             rows="3"
           ></textarea>
         </div>
@@ -142,7 +142,7 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
               name="priceRangeMin"
               value={taskData.priceRangeMin}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+              className="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
               placeholder="Min"
             />
             <span className="text-gray-500">TO</span>
@@ -151,7 +151,7 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
               name="priceRangeMax"
               value={taskData.priceRangeMax}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+              className="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
               placeholder="Max"
             />
           </div>

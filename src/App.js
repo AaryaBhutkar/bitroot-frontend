@@ -122,15 +122,16 @@ function App() {
               element={<EvalMainContent activePage="my projects" />}
             />
             <Route
-              path="existing"
-              element={<EvalMainContent activePage="existing" />}
+              path="completed"
+              element={<EvalMainContent activePage="completed" />}
             />
             <Route
               path="history"
               element={<EvalMainContent activePage="history" />}
             />
           </Route>
-          <Route path="/adminDashboard" element={<AdminDashboard />}>
+         <Route path="/adminDashboard" element={<AdminDashboard />} />
+          {/* <Route path="/adminDashboard" element={<AdminDashboard />}>
             <Route index element={<Navigate to="tasks" replace />} />
             <Route path="tasks" element={<AdminMainContent activePage="tasks" />} />
             <Route
@@ -145,7 +146,7 @@ function App() {
               path="history"
               element={<AdminMainContent activePage="history" />}
             />
-          </Route>
+          </Route> */}
           <Route path="/ProfileForm" element={<ProfileForm />} />
           <Route path="/tasks" element={<ShowTask />} />
         </Routes>

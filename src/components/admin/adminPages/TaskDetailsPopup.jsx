@@ -126,7 +126,7 @@ const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
               />
             </div>
           ) : (
-            <p>{task.lower_price} - {task.higher_price}</p>
+            <p>₹{task.lower_price} - ₹{task.higher_price}</p>
           )}
         </div>
 

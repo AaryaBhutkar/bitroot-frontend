@@ -47,7 +47,7 @@ const DenyModal = ({ isOpen, onClose, onConfirm }) => {
 const RequestItem = ({ request, onView, onApprove, onDeny }) => (
   <div className="bg-blue-50 p-5 rounded-lg shadow mb-4">
     <p className="text-sm text-gray-700 mb-2">
-      {request.evaluator_name} has applied for the project {request.task_name}
+      {request.evaluator_name} has applied for the task {request.task_name}
     </p>
     <div className="flex justify-between items-center">
       <button
