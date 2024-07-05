@@ -38,8 +38,8 @@ const EvaluatorDashboard = () => {
       case "my projects":
         navigate("/evaluatorDashboard/myprojects");
         break;
-      case "existing":
-        navigate("/evaluatorDashboard/existing");
+      case "completed":
+        navigate("/evaluatorDashboard/completed");
         break;
       case "history":
         navigate("/evaluatorDashboard/history");
@@ -55,8 +55,8 @@ const EvaluatorDashboard = () => {
     switch(path) {
       case "myprojects":
         return "my projects";
-      case "existing":
-        return "existing";
+      case "completed":
+        return "completed";
       case "history":
         return "history";
       default:

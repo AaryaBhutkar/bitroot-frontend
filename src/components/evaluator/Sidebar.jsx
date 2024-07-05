@@ -83,8 +83,8 @@ const Sidebar = ({ onSidebarClick, activePage }) => {
 
   const buttons = [
     { name: "tasks", label: "TASKS", icon: <PlusCircleOutlined /> },
-    { name: "my projects", label: "MY PROJECTS", icon: <ProjectOutlined /> },
-    { name: "existing", label: "EXISTING", icon: <HistoryOutlined /> },
+    { name: "my projects", label: "MY TASKS", icon: <ProjectOutlined /> },
+    { name: "completed", label: "COMPLETED", icon: <HistoryOutlined /> },
     { name: "history", label: "HISTORY", icon: <HistoryOutlined /> }
   ];
 
@@ -94,9 +94,9 @@ const Sidebar = ({ onSidebarClick, activePage }) => {
   };
 
   return (
-    <aside className="w-64 bg-blue-200 p-4 flex flex-col justify-between min-h-screen">
+    <aside className="w-64 bg-blue-50 p-4 flex flex-col justify-between min-h-screen">
       <div>
-        <div className="mb-8 border-b-2 border-gray-500">
+        <div className="mb-8 ">
           <img src="/logo.png" alt="Bitroot" className="h-10 mb-4" />
         </div>
         <nav>
@@ -120,7 +120,7 @@ const Sidebar = ({ onSidebarClick, activePage }) => {
         </nav>
       </div>
       <div className="mt-auto">
-        <Link
+        {/* <Link
           to="/role"
           className="flex items-center space-x-2 p-2 rounded transition-colors hover:bg-white/50"
         >
@@ -128,7 +128,7 @@ const Sidebar = ({ onSidebarClick, activePage }) => {
             <LogoutOutlined className="h-6 w-6" />
           </span>
           <span className="flex-shrink-0">LOGOUT</span>
-        </Link>
+        </Link> */}
       </div>
     </aside>
   );
