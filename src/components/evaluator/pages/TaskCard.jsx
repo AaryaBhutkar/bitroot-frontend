@@ -106,13 +106,13 @@ const TaskCard = ({
         ))}
       </div>
       <div className="flex justify-between items-center">
-        <span className="text-sm text-gray-500 flex items-center">
+        <div className="flex justify-between items-center"> <span className="text-sm bg-gray-200 p-2 rounded-md text-gray-500 flex items-center">
           <Clock className="w-4 h-4 mr-1" />
           {getPostedTime(createdAt)}
         </span>
         <span className="text-lg text-gray-500 flex items-center ml-4">
           Applicants: <span className="text-lg  text-green-600 ml-1">{interestCount}</span>
-        </span>
+        </span></div>
         <button
           onClick={handleInterestClick}
           disabled={isLoading}

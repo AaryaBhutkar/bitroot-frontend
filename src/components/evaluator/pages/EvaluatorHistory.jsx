@@ -3,7 +3,7 @@ import axios from 'axios';
 import axiosInstance from '../../utils/axiosInstance';
 
 const HistoryItem = ({ content }) => (
-  <div className="mb-2 p-4 bg-blue-100 rounded-lg text-lg">
+  <div className=" mb-4 p-4 border rounded-lg shadow-sm">
     {content}
   </div>
 );
@@ -55,7 +55,7 @@ const EvaluatorHistory = () => {
 
   return (
     <div className="p-6">
-      <h2 className="text-xl font-bold mb-4">HISTORY</h2>
+      <h2 className="text-xl font-bold mb-4" >HISTORY</h2>
       <div>
         {historyItems.length > 0 ? (
           historyItems.map((item) => (

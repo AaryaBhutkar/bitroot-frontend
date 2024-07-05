@@ -69,7 +69,7 @@ const EvaluatorDetails = ({ evaluatorId, onBack }) => {
 
         <div className="mb-4">
           <label className="block mb-2 font-bold">Price Range (₹):</label>
-          <p>{evaluator.lower_price} - {evaluator.higher_price}</p>
+          <p>₹{evaluator.lower_price} - ₹{evaluator.higher_price}</p>
         </div>
 
         <div className="mb-4">
