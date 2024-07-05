@@ -68,8 +68,8 @@ const MainContent = ({ activePage }) => {
   );
 
   return (
-    <div className="flex-1 p-8">
-      <header className="flex justify-between items-center mb-8">
+    <div className="flex flex-col h-screen w-full">
+      <header className="flex justify-between items-center p-4 bg-white shadow-md w-full">
         <h1 className="text-2xl font-bold">HELLO, ADMIN</h1>
         <div className="flex items-center space-x-4">
           <Popover content={content} trigger="click">

@@ -52,7 +52,7 @@ const RequestItem = ({ request, onView, onApprove, onDeny }) => (
     <div className="flex justify-between items-center">
       <button
         onClick={() => onView(request)}
-        className="text-blue-500 font-medium text-sm hover:underline mr-2"
+        className="border border-blue-500 p-1 rounded-md text-blue-500 font-medium text-sm hover:underline mr-2"
       >
         VIEW
       </button>
@@ -146,7 +146,7 @@ const RequestsList = ({ onViewRequest }) => {
   };
 
   return (
-    <div className="p-6 max-w-8xl mx-auto">
+    <div className="p-6">
       <h2 className="text-2xl font-bold mb-6">Requests</h2>
       <div className="space-y-4 overflow-y-auto max-h-[calc(100vh-200px)]">
         {requests.map((request) => (
