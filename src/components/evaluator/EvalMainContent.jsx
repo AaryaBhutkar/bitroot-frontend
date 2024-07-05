@@ -8,7 +8,7 @@ import CompletedProjects from "./pages/CompletedProjects";
 import axiosInstance from "../utils/axiosInstance";
 import EvaluatorHistory from "./pages/EvaluatorHistory";
 
-const MainContent = ({ activePage }) => {
+const AdminMainContent = ({ activePage }) => {
   const [showProfileInfo, setShowProfileInfo] = useState(false);
   const [currentView, setCurrentView] = useState(activePage);
   const [tasks, setTasks] = useState([]);
@@ -115,7 +115,7 @@ const MainContent = ({ activePage }) => {
           <ProfileInfo onClose={handleProfileClick}/>
         ) : (
           <div className="w-full max-w mx-auto">
-            {currentView === "tasks" && (
+            {activePage  === "tasks" && (
               <>
                 <div className="w-full mb-4 flex items-center">
                   <Input
@@ -148,9 +148,9 @@ const MainContent = ({ activePage }) => {
                 {renderTasks()}
               </>
             )}
-            {currentView === "my projects" && <MyProjects />}
-            {currentView === "existing" && <CompletedProjects />}
-            {currentView === "history" && <EvaluatorHistory />}
+            {activePage  === "my projects" && <MyProjects />}
+            {activePage  === "existing" && <CompletedProjects />}
+            {activePage  === "history" && <EvaluatorHistory />}
           </div>
         )}
       </div>
@@ -158,4 +158,4 @@ const MainContent = ({ activePage }) => {
   );
 };
 
-export default MainContent;
+export default AdminMainContent;
