@@ -24,7 +24,7 @@ const Sidebar = ({ onSidebarClick }) => {
   };
 
   return (
-    <aside className="w-64 bg-blue-200 p-4 flex flex-col justify-between min-h-screen">
+    <aside className="w-64 bg-blue-50 p-4 flex flex-col justify-between min-h-screen">
       <div>
         <div className="mb-8 ">
           <img src="/logo.png" alt="Bitroot" className="h-10 mb-4" />

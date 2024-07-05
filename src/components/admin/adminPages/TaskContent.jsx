@@ -1,5 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Filter } from "lucide-react";
+import { debounce } from "lodash";
+import { toast } from "react-hot-toast";
 import axiosInstance from "../../utils/axiosInstance";
 import CreateNewTask from "./CreateNewTask";
 import TaskDetailsPopup from "./TaskDetailsPopup";
@@ -21,12 +23,19 @@ const TasksContent = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [allTags, setAllTags] = useState([]);
   const [tagSearch, setTagSearch] = useState("");
+  const [isFiltered, setIsFiltered] = useState(false);
 
   const filterRef = useRef(null);
 
+  const debouncedGetTasks = useCallback(
+    debounce(() => {
+      getTasks();
+    }, 300),
+    []
+  );
+
   useEffect(() => {
-    getTasks();
-    
+    debouncedGetTasks();
 
     const handleClickOutside = (event) => {
       if (filterRef.current && !filterRef.current.contains(event.target)) {
@@ -38,8 +47,7 @@ const TasksContent = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
-
+  }, [debouncedGetTasks]);
 
   const getTasks = async () => {
     try {
@@ -48,10 +56,8 @@ const TasksContent = () => {
         page: currentPage,
         lower_price: filters.minPrice,
         higher_price: filters.maxPrice,
-        search:searchTerm,
-        status:filters.status
-        
-
+        search: searchTerm,
+        status: filters.status
       });
       if (response.data.success) {
         setTasks(response.data.data);
@@ -73,7 +79,7 @@ const TasksContent = () => {
 
   const handleSearchClear = () => {
     setSearchTerm("");
-    getTasks();
+    debouncedGetTasks();
   };
 
   const handleFilterChange = (e) => {
@@ -82,7 +88,6 @@ const TasksContent = () => {
       ...prevFilters,
       [name]: value,
     }));
-    console.log(filters);
   };
 
   const handleTagFilter = (tag) => {
@@ -103,13 +108,17 @@ const TasksContent = () => {
       tags: [],
     });
     setTagSearch("");
-    getTasks();
+    setIsFiltered(false);
+    debouncedGetTasks();
+    toast.success("Filters cleared");
   };
 
   const handleApplyFilters = () => {
     setCurrentPage(0);
+    setIsFiltered(true);
     getTasks();
     setShowFilters(false);
+    toast.success("Filters applied");
   };
 
   const handleViewTask = (task) => {
@@ -126,11 +135,14 @@ const TasksContent = () => {
         console.log("Task deleted successfully");
         setSelectedTask(null);
         getTasks();
+        toast.success("Task deleted successfully");
       } else {
         console.error("Failed to delete task");
+        toast.error("Failed to delete task");
       }
     } catch (error) {
       console.error("Error:", error);
+      toast.error("Error deleting task");
     }
   };
 
@@ -201,9 +213,9 @@ const TasksContent = () => {
             <div className="relative">
               <input
                 type="text"
-                placeholder="Search by task name and tags"
+                placeholder="Search by task name,tags and description"
                 value={searchTerm}
-                onChange={handleSearch}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyPress={handleSearch}
                 className="w-full p-2 pr-10 border rounded-md"
               />
@@ -220,6 +232,9 @@ const TasksContent = () => {
                 className="absolute right-2 top-1/2 transform -translate-y-1/2"
               >
                 <Filter className="w-5 h-5 text-gray-500" />
+                {isFiltered && (
+                  <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                )}
               </button>
             </div>
             {showFilters && (
@@ -227,14 +242,12 @@ const TasksContent = () => {
                 ref={filterRef}
                 className="absolute right-0 mt-2 w-64 bg-white border rounded-md shadow-lg z-10 p-4"
               >
-                {/* Filter content remains the same */}
-                {/* ... */}
-              <h3 className="text-lg font-semibold mb-2">Filters</h3>
-                 <div className="mb-4">
-                   <label className="block text-sm font-medium text-gray-700">Your Budget</label>
-                   <div className="flex items-center space-x-2">
-                     <span>₹{filters.minPrice}</span>
-                     <input
+                <h3 className="text-lg font-semibold mb-2">Filters</h3>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700">Your Budget</label>
+                  <div className="flex items-center space-x-2">
+                    <span>₹{filters.minPrice}</span>
+                    <input
                       type="range"
                       min="0"
                       max="10000"
@@ -282,20 +295,18 @@ const TasksContent = () => {
           </div>
 
           <table className="w-full">
-            {/* Table content remains the same */}
-            {/* ... */}
-           <thead>
-               <tr className="text-left text-gray-500">
-                 <th className="pb-4">TASK NAME</th>
-                 <th className="pb-4">DATE</th>
-                 <th className="pb-4">TAGS</th>
-                 <th className="pb-4">PRICE RANGE (₹)</th>
+            <thead>
+              <tr className="text-left text-gray-500">
+                <th className="pb-4">TASK NAME</th>
+                <th className="pb-4">DATE</th>
+                <th className="pb-4">TAGS</th>
+                <th className="pb-4">PRICE RANGE (₹)</th>
                 <th className="pb-4">STATUS</th>
-                 <th className="pb-4"></th>
-               </tr>
-             </thead>
-             <tbody>
-               {tasks.map((task) => (
+                <th className="pb-4"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {tasks.map((task) => (
                 <tr key={task.id} className="border-t border-gray-200">
                   <td className="py-4">{task.name}</td>
                   <td className="py-4">
@@ -344,53 +355,52 @@ const TasksContent = () => {
             </tbody>
           </table>
 
-            <div className="pagination-container fixed bottom-0 w-full bg-white pb-20 flex ">
-              <nav>
-                <ul className="flex items-center space-x-2">
-                  <li>
+          <div className="pagination-container fixed bottom-0 w-full bg-white pb-20 flex ">
+            <nav>
+              <ul className="flex items-center space-x-2">
+                <li>
+                  <button
+                    className={`px-3 py-1 border rounded-md ${
+                      currentPage === 0
+                        ? "cursor-not-allowed opacity-50"
+                        : "hover:bg-gray-200"
+                    }`}
+                    onClick={() => handlePageClick(currentPage - 1)}
+                    disabled={currentPage === 0}
+                  >
+                    &lt;
+                  </button>
+                </li>
+                {getPageNumbers().map((page) => (
+                  <li key={page}>
                     <button
                       className={`px-3 py-1 border rounded-md ${
-                        currentPage === 0
-                          ? "cursor-not-allowed opacity-50"
+                        currentPage === page
+                          ? "bg-blue-500 text-white"
                           : "hover:bg-gray-200"
                       }`}
-                      onClick={() => handlePageClick(currentPage - 1)}
-                      disabled={currentPage === 0}
+                      onClick={() => handlePageClick(page)}
                     >
-                      &lt;
+                      {page + 1}
                     </button>
                   </li>
-                  {getPageNumbers().map((page) => (
-                    <li key={page}>
-                      <button
-                        className={`px-3 py-1 border rounded-md ${
-                          currentPage === page
-                            ? "bg-blue-500 text-white"
-                            : "hover:bg-gray-200"
-                        }`}
-                        onClick={() => handlePageClick(page)}
-                      >
-                        {page + 1}
-                      </button>
-                    </li>
-                  ))}
-                  <li>
-                    <button
-                      className={`px-3 py-1 border rounded-md ${
-                        currentPage === totalPages - 1
-                          ? "cursor-not-allowed opacity-50"
-                          : "hover:bg-gray-200"
-                      }`}
-                      onClick={() => handlePageClick(currentPage + 1)}
-                      disabled={currentPage === totalPages - 1}
-                    >
-                      &gt;
-                    </button>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-
+                ))}
+                <li>
+                  <button
+                    className={`px-3 py-1 border rounded-md ${
+                      currentPage === totalPages - 1
+                        ? "cursor-not-allowed opacity-50"
+                        : "hover:bg-gray-200"
+                    }`}
+                    onClick={() => handlePageClick(currentPage + 1)}
+                    disabled={currentPage === totalPages - 1}
+                  >
+                    &gt;
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
         </>
       )}
 
