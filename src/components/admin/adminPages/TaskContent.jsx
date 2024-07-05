@@ -262,29 +262,7 @@ const TasksContent = () => {
                     <option value="completed">Completed</option>
                   </select>
                 </div>
-                {/* <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700">Tags</label>
-                  <input
-                    type="text"
-                    value={tagSearch}
-                    onChange={(e) => setTagSearch(e.target.value)}
-                    placeholder="Search tags..."
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                  />
-                  <div className="mt-2 space-y-1 max-h-32 overflow-y-auto">
-                    {filteredTags.map((tag) => (
-                      <label key={tag} className="flex items-center">
-                        <input
-                          type="checkbox"
-                          checked={filters.tags.includes(tag)}
-                          onChange={() => handleTagFilter(tag)}
-                          className="mr-2"
-                        />
-                        {tag}
-                      </label>
-                    ))}
-                  </div>
-                </div> */}
+                
                 <div className="flex justify-between">
                   <button
                     onClick={handleClearFilters}
@@ -366,54 +344,53 @@ const TasksContent = () => {
             </tbody>
           </table>
 
-          <div className="flex justify-center mt-4">
-            <nav>
-              <ul className="flex items-center space-x-2">
-                {/* Pagination content remains the same */}
-                {/* ... */}
-                <li>
-                  <button
-                    className={`px-3 py-1 border rounded-md ${
-                      currentPage === 0
-                        ? "cursor-not-allowed opacity-50"
-                        : "hover:bg-gray-200"
-                    }`}
-                    onClick={() => handlePageClick(currentPage - 1)}
-                    disabled={currentPage === 0}
-                  >
-                    &lt;
-                  </button>
-                </li>
-                {getPageNumbers().map((page) => (
-                  <li key={page}>
+            <div className="pagination-container fixed bottom-0 w-full bg-white pb-20 flex ">
+              <nav>
+                <ul className="flex items-center space-x-2">
+                  <li>
                     <button
                       className={`px-3 py-1 border rounded-md ${
-                        currentPage === page
-                          ? "bg-blue-500 text-white"
+                        currentPage === 0
+                          ? "cursor-not-allowed opacity-50"
                           : "hover:bg-gray-200"
                       }`}
-                      onClick={() => handlePageClick(page)}
+                      onClick={() => handlePageClick(currentPage - 1)}
+                      disabled={currentPage === 0}
                     >
-                      {page + 1}
+                      &lt;
                     </button>
                   </li>
-                ))}
-                <li>
-                  <button
-                    className={`px-3 py-1 border rounded-md ${
-                      currentPage === totalPages - 1
-                        ? "cursor-not-allowed opacity-50"
-                        : "hover:bg-gray-200"
-                    }`}
-                    onClick={() => handlePageClick(currentPage + 1)}
-                    disabled={currentPage === totalPages - 1}
-                  >
-                    &gt;
-                  </button>
-                </li>
-              </ul>
-            </nav>
-          </div>
+                  {getPageNumbers().map((page) => (
+                    <li key={page}>
+                      <button
+                        className={`px-3 py-1 border rounded-md ${
+                          currentPage === page
+                            ? "bg-blue-500 text-white"
+                            : "hover:bg-gray-200"
+                        }`}
+                        onClick={() => handlePageClick(page)}
+                      >
+                        {page + 1}
+                      </button>
+                    </li>
+                  ))}
+                  <li>
+                    <button
+                      className={`px-3 py-1 border rounded-md ${
+                        currentPage === totalPages - 1
+                          ? "cursor-not-allowed opacity-50"
+                          : "hover:bg-gray-200"
+                      }`}
+                      onClick={() => handlePageClick(currentPage + 1)}
+                      disabled={currentPage === totalPages - 1}
+                    >
+                      &gt;
+                    </button>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+
         </>
       )}
 

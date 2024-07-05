@@ -54,7 +54,7 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
     <div className="bg-white p-6 rounded-lg shadow-lg relative max-w-2xl mx-auto">
       <button
         onClick={onClose}
-        className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
+        className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 p-3"
       >
         ✕
       </button>

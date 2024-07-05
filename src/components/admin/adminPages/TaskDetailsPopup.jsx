@@ -65,7 +65,9 @@ const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
       <div className="bg-white p-8 rounded-md shadow-md w-1/2 max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">{editMode ? "Edit Task" : task.name}</h2>
-          <button onClick={onClose} className=" text-black px-2 py-1 rounded">X</button>
+          <button onClick={onClose} className="text-white bg-blue-500 hover:bg-blue-600 focus:ring-2 focus:ring-blue-300 px-3 py-1 rounded-full shadow-md transition-colors duration-200 ease-in-out">
+  &times;
+</button>
         </div>
 
         <div className="mb-4">
@@ -167,7 +169,7 @@ const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
             editMode ? (
               <button 
                 onClick={handleUpdate} 
-                className="bg-green-600 text-white px-4 py-2 rounded"
+                className="bg-blue-500 text-white px-4 py-2 rounded"
                 disabled={isUpdating}
               >
                 {isUpdating ? "Saving..." : "Save"}
