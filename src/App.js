@@ -73,7 +73,7 @@ import EvaluatorDashboard from "./components/evaluator/EvaluatorDashboard";
 import ShowTask from "./components/forpublic/ShowTask";
 import ReactGA from "react-ga";
 import EvalMainContent from "./components/evaluator/EvalMainContent"
-import AdminMainContent from "./components/evaluator/EvalMainContent";
+import AdminMainContent from "./components/admin/AdminMainContent";
 
 const TRACKING_ID = "G-0R29VR1RYZ";
 ReactGA.initialize(TRACKING_ID, {
@@ -114,6 +114,8 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/role" element={<RoleSelector />} />
           <Route path="/profile" element={<ProfileForm />} />
+          
+          
           <Route path="/evaluatorDashboard" element={<EvaluatorDashboard />}>
             <Route index element={<Navigate to="tasks" replace />} />
             <Route path="tasks" element={<EvalMainContent activePage="tasks" />} />
@@ -130,8 +132,8 @@ function App() {
               element={<EvalMainContent activePage="history" />}
             />
           </Route>
-         <Route path="/adminDashboard" element={<AdminDashboard />} />
-          {/* <Route path="/adminDashboard" element={<AdminDashboard />}>
+
+          <Route path="/adminDashboard" element={<AdminDashboard />}>
             <Route index element={<Navigate to="tasks" replace />} />
             <Route path="tasks" element={<AdminMainContent activePage="tasks" />} />
             <Route
@@ -146,7 +148,8 @@ function App() {
               path="history"
               element={<AdminMainContent activePage="history" />}
             />
-          </Route> */}
+          </Route>
+
           <Route path="/ProfileForm" element={<ProfileForm />} />
           <Route path="/tasks" element={<ShowTask />} />
         </Routes>

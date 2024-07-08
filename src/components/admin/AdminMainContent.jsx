@@ -7,7 +7,7 @@ import RequestsList from "./adminPages/RequestsList";
 import EvaluatorDetails from "./EvaluatorDetails";
 import AdminHistory from "./adminPages/AdminHistory";
 
-const MainContent = ({ activePage }) => {
+const AdminMainContent = ({ activePage }) => {
   const [showProfileInfo, setShowProfileInfo] = useState(false);
   const [currentView, setCurrentView] = useState(activePage);
   const [selectedRequest, setSelectedRequest] = useState(null);
@@ -99,4 +99,4 @@ const MainContent = ({ activePage }) => {
   );
 };
 
-export default MainContent;
+export default AdminMainContent;
