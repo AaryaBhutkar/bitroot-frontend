@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../utils/axiosInstance';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
   const [taskData, setTaskData] = useState({
@@ -74,6 +76,7 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
       );
 
       if (response.data.success) {
+        toast.success('Task created successfully!');
         console.log('Task created successfully:', response.data.data);
         onClose();
         onTaskCreated();
@@ -87,6 +90,7 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg relative max-w-2xl mx-auto">
+      <ToastContainer />
       <button
         onClick={onClose}
         className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 p-3"
@@ -146,7 +150,7 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
           <div className="mt-2">
             <p className="text-sm text-gray-500">Selected tags:</p>
             <div className="flex flex-wrap gap-2 mt-1">
-              {taskData.tags.slice(0, 6).map((tag, index) => (
+              {taskData.tags.slice(0, 2).map((tag, index) => (
                 <span key={index} className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
                   {tag}
                   <button
