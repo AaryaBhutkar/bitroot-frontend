@@ -66,7 +66,7 @@ const TaskCard = ({
         toast.error("Failed to assign task: " + result.message);
       }
     } catch (error) {
-      toast.error("Error assigning task: " + error.message);
+      // toast.error("Error assigning task: " + error.message);
     } finally {
       setIsLoading(false);
     }

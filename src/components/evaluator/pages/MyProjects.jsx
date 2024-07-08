@@ -99,7 +99,7 @@ const MyProjects = () => {
       window.dataLayer.push({'event':'Rejected Task'});
     } catch (error) {
       console.error("Error unassigning task:", error);
-      toast.error("Failed to unassign the task. Please try again.");
+      // toast.error("Failed to unassign the task. Please try again.");
     }
   };
 
