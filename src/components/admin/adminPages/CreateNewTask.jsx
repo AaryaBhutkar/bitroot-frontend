@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import axiosInstance from '../../utils/axiosInstance';
+import axios from 'axios';
 
 const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
   const [taskData, setTaskData] = useState({
-    taskName: '',
+    projectName: '',
     brief: '',
     tags: '',
     gitLinks: '',
@@ -24,57 +24,60 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
     e.preventDefault();
     
     try {
-      const response = await axiosInstance.post(
-        'tasks/createTask',
+      const response = await axios.post(
+        'http://localhost:3001/api/tasks/createTask',
         {
-          name: taskData.taskName,
+          name: taskData.projectName,
           desc: taskData.brief,
           tags: taskData.tags.split(',').map(tag => tag.trim()),
           github_url: taskData.gitLinks,
           guideline_url: taskData.guidelines,
           lower_price: parseInt(taskData.priceRangeMin),
-          higher_price: parseInt(taskData.priceRangeMax),
-          turnaround: parseInt(taskData.priceRangeMax),
+          higher_price: parseInt(taskData.priceRangeMax)
         }
       );
       
       if (response.data.success) {
         console.log('Task created successfully:', response.data.data);
-        onClose();
-        onTaskCreated();
+        // Optionally handle success, e.g., show a success message
+        onClose(); // Close the modal or perform any other action upon success
+        onTaskCreated(); // Trigger parent component's refresh after task creation
       } else {
         console.error('Failed to create task:', response.data.message);
+        // Optionally handle failure, e.g., show an error message
       }
     } catch (error) {
       console.error('Error creating task:', error);
+      // Handle network error or other issues
     }
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg relative max-w-2xl mx-auto">
+    <div className="bg-white p-6 rounded-lg shadow-lg relative">
       <button
         onClick={onClose}
-        className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 p-3"
+        className="absolute top-2 right-2 bg-black text-white rounded-md p-2 m-2 mt-2"
       >
-        ✕
+        X
       </button>
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <label htmlFor="taskName" className="block text-sm font-medium text-gray-700">
-            Task Name:
+      <h2 className="text-2xl font-bold mb-4">Create New Task</h2>
+      <form onSubmit={handleSubmit}>
+        <div className="mb-4">
+          <label htmlFor="projectName" className="block text-sm font-medium text-gray-700">
+            Project Name:
           </label>
           <input
             type="text"
-            id="taskName"
-            name="taskName"
-            value={taskData.taskName}
+            id="projectName"
+            name="projectName"
+            value={taskData.projectName}
             onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 pb-3"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             required
           />
         </div>
 
-        <div>
+        <div className="mb-4">
           <label htmlFor="brief" className="block text-sm font-medium text-gray-700">
             Brief:
           </label>
@@ -83,13 +86,13 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
             name="brief"
             value={taskData.brief}
             onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             rows="3"
             required
           ></textarea>
         </div>
 
-        <div>
+        <div className="mb-4">
           <label htmlFor="tags" className="block text-sm font-medium text-gray-700">
             Tags:
           </label>
@@ -99,12 +102,12 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
             name="tags"
             value={taskData.tags}
             onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 pb-3"
-            
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            placeholder="Separate tags with commas"
           />
         </div>
 
-        <div>
+        <div className="mb-4">
           <label htmlFor="gitLinks" className="block text-sm font-medium text-gray-700">
             Git Links:
           </label>
@@ -114,11 +117,11 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
             name="gitLinks"
             value={taskData.gitLinks}
             onChange={handleChange}
-            className="mt-1 block w-full rounded-md bg-gray-50  border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 pb-3"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
           />
         </div>
 
-        <div>
+        <div className="mb-4">
           <label htmlFor="guidelines" className="block text-sm font-medium text-gray-700">
             Guidelines:
           </label>
@@ -127,12 +130,12 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
             name="guidelines"
             value={taskData.guidelines}
             onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             rows="3"
           ></textarea>
         </div>
 
-        <div>
+        <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">
             Price Range:
           </label>
@@ -142,22 +145,22 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
               name="priceRangeMin"
               value={taskData.priceRangeMin}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               placeholder="Min"
             />
-            <span className="text-gray-500">TO</span>
+            <span>TO</span>
             <input
               type="number"
               name="priceRangeMax"
               value={taskData.priceRangeMax}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               placeholder="Max"
             />
           </div>
         </div>
 
-        <div className="flex justify-center">
+        <div className="flex justify-end">
           <button
             type="submit"
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"

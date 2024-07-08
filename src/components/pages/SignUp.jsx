@@ -1,103 +1,154 @@
+// import React, { useState } from "react";
+// import { Link } from "react-router-dom";
 
+// const SignUp = () => {
+//   return (
+//     <div className="min-h-screen flex items-center justify-center bg-gray-100">
+//       <div className="bg-white shadow-lg rounded-lg flex w-3/4 max-w-4xl">
+//         <div className="w-1/2 p-8 bg-blue-200 flex flex-col items-center justify-center space-between">
+//           <h2 className="text-2xl font-bold mb-4">We are Bitroot</h2>
+//           <p className="text-lg">We design zero to hero platforms</p>
+//           <div className="mt-8">
+//             <img src="logo.svg" alt="Bitroot Logo" className="w-24" />
+//           </div>
+//         </div>
+//         <div className="w-1/2 p-8">
+//           <h2 className="text-2xl font-bold mb-4">Sign-Up</h2>
+//           <form>
+//             <input
+//               type="text"
+//               name="name"
+//               placeholder="Name"
+//               className="w-full p-2 mb-4 border border-gray-300 rounded-md"
+//             />
+//             <input
+//               type="email"
+//               name="email"
+//               placeholder="Email"
+//               className="w-full p-2 mb-4 border border-gray-300 rounded-md"
+//             />
+//             <input
+//               type="password"
+//               name="password"
+//               placeholder="Password"
+//               className="w-full p-2 mb-4 border border-gray-300 rounded-md"
+//             />
+//             <Link
+//               to="/role"
+//               type="submit"
+//               className="w-full bg-blue-500 text-white px-4 py-2 rounded-md"
+//             >
+//               Sign Up
+//             </Link>
+//           </form>
+//           <div className="text-center mt-4">
+//             <p>
+//               Already have an account?{" "}
+//               <Link to="/role" className="text-blue-500">
+//                 Login
+//               </Link>
+//             </p>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
 
+// export default SignUp;
 
-import React from 'react';
-import { Form, Input, Button, Card, Typography, Layout } from 'antd';
-import { UserOutlined, MailOutlined, LockOutlined } from '@ant-design/icons';
-import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-
-const { Content } = Layout;
-const { Title, Text } = Typography;
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
 const SignUp = () => {
-  const navigate = useNavigate();
-  const [form] = Form.useForm();
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
 
-  const onFinish = async (values) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
     try {
       const response = await axios.post(
-        'https://bitroot-backend-nh9c.onrender.com/api/users/signup',
-        values
+        "http://localhost:3001/api/users/signup",
+        formData
       );
-      toast(response.data.data[0].msg);
-      navigate('/role');
+      
+
+      // Handle success message or redirect if needed
+      console.log("Success:", response.data);
     } catch (error) {
-      console.error('Error:', error);
-      toast.error('Signup failed. Please try again.');
+      console.error("Error:", error);
+      // Handle error message or display to the user
     }
   };
 
   return (
-    <Layout className="min-h-screen bg-gray-100">
-      <Content className="flex items-center justify-center">
-        <Card className="w-3/4 max-w-4xl">
-          <div className="flex">
-            <div className="w-1/2 p-8 bg-blue-50 flex flex-col items-center justify-center">
-              <Title level={2}>We are Bitroot</Title>
-              <Text className="text-lg mb-8">We design zero to one platforms</Text>
-              <img src="logo.svg" alt="Bitroot Logo" className="w-24" />
-            </div>
-            <div className="w-1/2 p-8">
-              <Title level={2}>Sign-Up As Evaluator</Title>
-              <Form form={form} name="signup" onFinish={onFinish} layout="vertical" size="large">
-                <Form.Item
-                  name="name"
-                  rules={[{ required: true, message: 'Please input your name!' }]}
-                >
-                  <Input 
-                    prefix={<UserOutlined className="text-gray-400" />} 
-                    placeholder="Name" 
-                    className="h-12 text-lg"
-                  />
-                </Form.Item>
-                <Form.Item
-                  name="email"
-                  rules={[
-                    { required: true, message: 'Please input your email!' },
-                    { type: 'email', message: 'Please enter a valid email address!' }
-                  ]}
-                >
-                  <Input 
-                    prefix={<MailOutlined className="text-gray-400" />} 
-                    placeholder="Email" 
-                    className="h-12 text-lg"
-                  />
-                </Form.Item>
-                <Form.Item
-                  name="password"
-                  rules={[
-                    { required: true, message: 'Please input your password!' },
-                    { min: 6, message: 'Password must be at least 6 characters long!' },
-                    { pattern: /\d/, message: 'Password must contain at least one number!' }
-                  ]}
-                >
-                  <Input.Password 
-                    prefix={<LockOutlined className="text-gray-400" />} 
-                    placeholder="Password" 
-                    className="h-12 text-lg"
-                  />
-                </Form.Item>
-                <Form.Item>
-                  <Button type="primary" htmlType="submit" className="w-full h-12 text-lg">
-                    Sign Up
-                  </Button>
-                </Form.Item>
-              </Form>
-              <div className="text-center mt-4">
-                <Text>
-                  Already have an account?{' '}
-                  <Link to="/role" className="text-blue-500">
-                    Login
-                  </Link>
-                </Text>
-              </div>
-            </div>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="bg-white shadow-lg rounded-lg flex w-3/4 max-w-4xl">
+        <div className="w-1/2 p-8 bg-blue-200 flex flex-col items-center justify-center space-between">
+          <h2 className="text-2xl font-bold mb-4">We are Bitroot</h2>
+          <p className="text-lg">We design zero to hero platforms</p>
+          <div className="mt-8">
+            <img src="logo.svg" alt="Bitroot Logo" className="w-24" />
           </div>
-        </Card>
-      </Content>
-    </Layout>
+        </div>
+        <div className="w-1/2 p-8">
+          <h2 className="text-2xl font-bold mb-4">Sign-Up</h2>
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              name="name"
+              placeholder="Name"
+              className="w-full p-2 mb-4 border border-gray-300 rounded-md"
+              value={formData.name}
+              onChange={handleChange}
+            />
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              className="w-full p-2 mb-4 border border-gray-300 rounded-md"
+              value={formData.email}
+              onChange={handleChange}
+            />
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              className="w-full p-2 mb-4 border border-gray-300 rounded-md"
+              value={formData.password}
+              onChange={handleChange}
+            />
+            <button
+              type="submit"
+              className="w-full bg-blue-500 text-white px-4 py-2 rounded-md"
+            >
+              Sign Up
+            </button>
+          </form>
+          <div className="text-center mt-4">
+            <p>
+              Already have an account?{" "}
+              <Link to="/role" className="text-blue-500">
+                Login
+              </Link>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

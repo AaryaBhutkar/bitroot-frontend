@@ -1,14 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const RoleSelector = () => {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    localStorage.removeItem("token");
-    if (localStorage.getItem("user")) localStorage.removeItem("user");
-    if (localStorage.getItem("name")) localStorage.removeItem("name");
-  }, []);
 
   const handleRoleSelection = (role) => {
     // Store the selected role in localStorage
@@ -17,7 +11,7 @@ const RoleSelector = () => {
   };
 
   return (
-    <div className="bg-blue-50 min-h-screen flex items-center justify-center">
+    <div className="bg-blue-200 min-h-screen flex items-center justify-center">
       <div className="bg-white p-6 rounded-lg shadow-md max-w-md mx-auto">
         <h1 className="text-2xl font-bold text-center mb-6">
           ARE YOU A EVALUATOR OR ADMIN?
