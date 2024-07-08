@@ -20,7 +20,7 @@ const TasksContent = () => {
     // endDate:""
   });
   const [showFilters, setShowFilters] = useState(false);
-  const [pageSize] = useState(6);
+  const [pageSize] = useState(5);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [allTags, setAllTags] = useState([]);
@@ -361,15 +361,18 @@ const TasksContent = () => {
                     {new Date(task.created_at).toLocaleDateString()}
                   </td>
                   <td className="py-4">
+                  <div className="flex flex-wrap gap-1">
                     {task.tags.map((tag, index) => (
                       <span
                         key={index}
-                        className="bg-blue-100 text-blue-800 px-2 py-1 rounded-md text-sm mr-1"
+                        className="bg-blue-100 text-blue-800 px-2 py-1 rounded-md text-sm whitespace-nowrap"
                       >
                         {tag}
                       </span>
                     ))}
-                  </td>
+                  </div>
+                </td>
+
                   <td className="py-4">
                     {task.lower_price} - {task.higher_price}
                   </td>
