@@ -86,7 +86,26 @@ const MainContent = ({ activePage }) => {
         {currentView === "requests" && (
           <RequestsList onViewRequest={handleViewRequest} />
         )}
-        {currentView === "analytics" && <div>Analytics Page Content</div>}
+        {currentView === "analytics" && <div><div style={{ position: 'relative', width: '100%', paddingTop: '56.25%' }}>
+  <iframe
+    src="https://lookerstudio.google.com/embed/reporting/bdc45f62-dd7b-4381-96d3-c76a8dca12a9/page/p_or0ht85vid"
+    frameborder="0"
+    style={{
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      border: 0
+    }}
+    allowfullscreen
+    sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+  ></iframe>
+</div>
+
+
+
+</div>}
         {currentView === "evaluatorDetails" && selectedRequest && (
           <EvaluatorDetails
             evaluatorId={selectedRequest.evaluator_id}
