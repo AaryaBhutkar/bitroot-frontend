@@ -14,7 +14,8 @@ const TaskCard = ({
   tags,
   onTaskInterest,
   createdAt,
-  interestCount
+  interestCount,
+  
 }) => {
   const [isLoading, setIsLoading] = useState(false);
 

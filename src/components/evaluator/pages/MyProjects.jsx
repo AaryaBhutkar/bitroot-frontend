@@ -161,10 +161,12 @@
 // export default MyProjects;
 
 
+
 import React, { useState, useEffect, useCallback } from "react";
 import axiosInstance from "../../utils/axiosInstance";
 import { toast } from "react-toastify";
 import ProjectDetailsModal from "./ProjectDetailsModal";
+import Timer from "./Timer";
 
 const MyProjects = () => {
   const [activeTab, setActiveTab] = useState("inprogress");
@@ -173,11 +175,9 @@ const MyProjects = () => {
     assigned: [],
     interested: [],
   });
-  const [loading, setLoading] = useState(true);
   const [selectedProject, setSelectedProject] = useState(null);
 
   const fetchProjects = useCallback(async () => {
-    setLoading(true);
     try {
       const tabs = ["inprogress", "assigned", "interested"];
       const responses = await Promise.all(
@@ -197,8 +197,6 @@ const MyProjects = () => {
     } catch (error) {
       console.error("Error fetching projects:", error);
       toast.error("Failed to fetch projects. Please try again.");
-    } finally {
-      setLoading(false);
     }
   }, []);
 
@@ -221,7 +219,7 @@ const MyProjects = () => {
       window.dataLayer.push({ event: `${action} Task` });
     } catch (error) {
       console.error(`Error ${action}ing project:`, error);
-      // toast.error(`Failed to ${action} the task. Please try again.`);
+      toast.error(`Failed to ${action} the task. Please try again.`);
     }
   };
 
@@ -232,19 +230,18 @@ const MyProjects = () => {
         evaluator_id: Number(localStorage.getItem("user")),
         is_delete: 1,
       });
-      window.dataLayer.push({ event: "Rejected Task" });
       await fetchProjects();
       toast.success("Task unassigned successfully");
+      window.dataLayer.push({ event: "Rejected Task" });
     } catch (error) {
       console.error("Error unassigning project:", error);
-      toast.error("Failed to unassign the task. Please try again.");
     }
   };
 
   const renderProjectItem = (project) => (
     <div key={project.id} className="bg-white shadow-md rounded-lg p-4 mb-4">
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold">Project: {project.name}</h3>
+        <h3 className="text-lg font-semibold">{project.name}</h3>
         <div className="flex space-x-2">
           <button
             className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
@@ -269,6 +266,9 @@ const MyProjects = () => {
           )}
         </div>
       </div>
+      {["inprogress", "assigned"].includes(activeTab) && (
+        <Timer startTime={project.updated_at} />
+      )}
     </div>
   );
 
@@ -309,13 +309,9 @@ const MyProjects = () => {
         ))}
       </div>
       <div>
-        {loading ? (
-          <div className="text-center">Loading...</div>
-        ) : projects[activeTab].length > 0 ? (
-          projects[activeTab].map(renderProjectItem)
-        ) : (
-          renderNoTasksMessage(tabs.find(tab => tab.key === activeTab).label)
-        )}
+        {projects[activeTab].length > 0
+          ? projects[activeTab].map(renderProjectItem)
+          : renderNoTasksMessage(tabs.find(tab => tab.key === activeTab).label)}
       </div>
       {selectedProject && (
         <ProjectDetailsModal
