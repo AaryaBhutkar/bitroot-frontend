@@ -320,7 +320,7 @@ const popoverContent = (
               <>
                 <div className="w-full mb-4 flex items-center">
                   <Input
-                    placeholder="Search by project name, tags ..."
+                    placeholder="Search by task name, tags and description"
                     value={searchTerm}
                     onChange={handleInputChange}
                     onPressEnter={handleSearch}

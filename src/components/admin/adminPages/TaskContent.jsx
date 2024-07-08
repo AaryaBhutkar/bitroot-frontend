@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Filter } from "lucide-react";
+import { Filter,ArrowUp, ArrowDown} from "lucide-react";
 import { debounce } from "lodash";
 import { toast } from "react-hot-toast";
 import axiosInstance from "../../utils/axiosInstance";
@@ -16,14 +16,17 @@ const TasksContent = () => {
     minPrice: 0,
     maxPrice: 10000,
     tags: [],
+    // startDate:"",
+    // endDate:""
   });
   const [showFilters, setShowFilters] = useState(false);
-  const [pageSize] = useState(6);
+  const [pageSize] = useState(5);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [allTags, setAllTags] = useState([]);
   const [tagSearch, setTagSearch] = useState("");
   const [isFiltered, setIsFiltered] = useState(false);
+  const [sortOrder, setSortOrder] = useState("asc");
 
   const filterRef = useRef(null);
 
@@ -57,7 +60,36 @@ const TasksContent = () => {
         lower_price: filters.minPrice,
         higher_price: filters.maxPrice,
         search: searchTerm,
-        status: filters.status
+        status: filters.status,
+        start_date: filters.startDate,
+        end_date: filters.endDate,
+      });
+      if (response.data.success) {
+        setTasks(response.data.data);
+        const total = response.data.meta.total;
+        const calculatedTotalPages = Math.ceil(total / pageSize);
+        setTotalPages(calculatedTotalPages);
+      }
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+    }
+  };
+
+  const handleSort = async() => {
+    const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
+    setSortOrder(newSortOrder);
+
+     try {
+      const response = await axiosInstance.post("tasks/getTasks", {
+        size: pageSize,
+        page: currentPage,
+        lower_price: filters.minPrice,
+        higher_price: filters.maxPrice,
+        search: searchTerm,
+        status: filters.status,
+        start_date: filters.startDate,
+        end_date: filters.endDate,
+        sort:newSortOrder
       });
       if (response.data.success) {
         setTasks(response.data.data);
@@ -106,6 +138,8 @@ const TasksContent = () => {
       minPrice: 0,
       maxPrice: 10000,
       tags: [],
+      startDate:"",
+      endDate:""
     });
     setTagSearch("");
     setIsFiltered(false);
@@ -238,67 +272,97 @@ const TasksContent = () => {
               </button>
             </div>
             {showFilters && (
-              <div
-                ref={filterRef}
-                className="absolute right-0 mt-2 w-64 bg-white border rounded-md shadow-lg z-10 p-4"
-              >
-                <h3 className="text-lg font-semibold mb-2">Filters</h3>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700">Your Budget</label>
-                  <div className="flex items-center space-x-2">
-                    <span>₹{filters.minPrice}</span>
-                    <input
-                      type="range"
-                      min="0"
-                      max="10000"
-                      step="100"
-                      value={filters.maxPrice}
-                      onChange={(e) =>
-                        setFilters((prev) => ({ ...prev, maxPrice: parseInt(e.target.value) }))
-                      }
-                      className="w-full"
-                    />
-                    <span>₹{filters.maxPrice}</span>
-                  </div>
-                </div>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700">Status</label>
-                  <select
-                    name="status"
-                    value={filters.status}
-                    onChange={handleFilterChange}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                  >
-                    <option value="">All</option>
-                    <option value="open">Open</option>
-                    <option value="assigned">Assigned</option>
-                    <option value="completed">Completed</option>
-                  </select>
-                </div>
-                
-                <div className="flex justify-between">
-                  <button
-                    onClick={handleClearFilters}
-                    className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300"
-                  >
-                    Clear
-                  </button>
-                  <button
-                    onClick={handleApplyFilters}
-                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                  >
-                    Apply Filters
-                  </button>
-                </div>
-              </div>
-            )}
+        <div
+          ref={filterRef}
+          className="absolute right-0 mt-2 w-64 bg-white border rounded-md shadow-lg z-10 p-4"
+        >
+          <h3 className="text-lg font-semibold mb-2">Filters</h3>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">Your Budget</label>
+            <div className="flex items-center space-x-2">
+              <span>₹{filters.minPrice}</span>
+              <input
+                type="range"
+                min="0"
+                max="10000"
+                step="100"
+                value={filters.maxPrice}
+                onChange={(e) =>
+                  setFilters((prev) => ({ ...prev, maxPrice: parseInt(e.target.value) }))
+                }
+                className="w-full"
+              />
+              <span>₹{filters.maxPrice}</span>
+            </div>
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">Status</label>
+            <select
+              name="status"
+              value={filters.status}
+              onChange={handleFilterChange}
+              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+            >
+              <option value="">All</option>
+              <option value="open">Open</option>
+              <option value="assigned">Assigned</option>
+              <option value="completed">Completed</option>
+            </select>
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">Start Date</label>
+            <input
+              type="date"
+              name="startDate"
+              value={filters.startDate}
+              onChange={handleFilterChange}
+              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">End Date</label>
+            <input
+              type="date"
+              name="endDate"
+              value={filters.endDate}
+              onChange={handleFilterChange}
+              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+            />
+          </div>
+          <div className="flex justify-between">
+            <button
+              onClick={handleClearFilters}
+              className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300"
+            >
+              Clear
+            </button>
+            <button
+              onClick={handleApplyFilters}
+              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+            >
+              Apply Filters
+            </button>
+          </div>
+        </div>
+      )}
           </div>
 
           <table className="w-full">
             <thead>
               <tr className="text-left text-gray-500">
                 <th className="pb-4">TASK NAME</th>
-                <th className="pb-4">DATE</th>
+                <th className="pb-4">
+              <div className="flex items-center">
+                DATE
+                <button onClick={handleSort} className="ml-2">
+                  {sortOrder === "asc" ? (
+                    <ArrowUp className="w-4 h-4" />
+                  ) : (
+                    <ArrowDown className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
+            </th>
                 <th className="pb-4">TAGS</th>
                 <th className="pb-4">PRICE RANGE (₹)</th>
                 <th className="pb-4">STATUS</th>
@@ -313,15 +377,18 @@ const TasksContent = () => {
                     {new Date(task.created_at).toLocaleDateString()}
                   </td>
                   <td className="py-4">
+                  <div className="flex flex-wrap gap-1">
                     {task.tags.map((tag, index) => (
                       <span
                         key={index}
-                        className="bg-blue-100 text-blue-800 px-2 py-1 rounded-md text-sm mr-1"
+                        className="bg-blue-100 text-blue-800 px-2 py-1 rounded-md text-sm whitespace-nowrap"
                       >
                         {tag}
                       </span>
                     ))}
-                  </td>
+                  </div>
+                </td>
+
                   <td className="py-4">
                     {task.lower_price} - {task.higher_price}
                   </td>
