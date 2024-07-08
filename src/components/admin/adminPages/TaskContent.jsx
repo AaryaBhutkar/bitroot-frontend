@@ -348,27 +348,28 @@ const TasksContent = () => {
           </div>
 
           <table className="w-full">
-            <thead>
-              <tr className="text-left text-gray-500">
-                <th className="pb-4">TASK NAME</th>
-                <th className="pb-4">
-              <div className="flex items-center">
-                DATE
-                <button onClick={handleSort} className="ml-2">
-                  {sortOrder === "asc" ? (
-                    <ArrowUp className="w-4 h-4" />
-                  ) : (
-                    <ArrowDown className="w-4 h-4" />
-                  )}
-                </button>
-              </div>
-            </th>
-                <th className="pb-4">TAGS</th>
-                <th className="pb-4">PRICE RANGE (₹)</th>
-                <th className="pb-4">STATUS</th>
-                <th className="pb-4"></th>
-              </tr>
-            </thead>
+          <thead>
+            <tr className="text-left text-gray-500">
+              <th className="pb-4 w-[19%]">TASK NAME</th>
+              <th className="pb-4 w-[9%]">
+                <div className="flex items-center">
+                  DATE
+                  <button onClick={handleSort} className="ml-2">
+                    {sortOrder === "asc" ? (
+                      <ArrowUp className="w-4 h-4" />
+                    ) : (
+                      <ArrowDown className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
+              </th>
+              <th className="pb-4 w-[42%]">TAGS</th>
+              <th className="pb-4 w-[12%]">PRICE RANGE (₹)</th>
+              <th className="pb-4 w-[10%]">STATUS</th>
+              <th className="pb-4 w-[8%]"></th>
+            </tr>
+          </thead>
+
             <tbody>
               {tasks.map((task) => (
                 <tr key={task.id} className="border-t border-gray-200">
