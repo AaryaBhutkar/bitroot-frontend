@@ -232,19 +232,19 @@ const MyProjects = () => {
         evaluator_id: Number(localStorage.getItem("user")),
         is_delete: 1,
       });
-      window.dataLayer.push({ event: "Rejected Task" });
       await fetchProjects();
       toast.success("Task unassigned successfully");
+      window.dataLayer.push({ event: "Rejected Task" });
     } catch (error) {
       console.error("Error unassigning project:", error);
-      toast.error("Failed to unassign the task. Please try again.");
+      // toast.error("Failed to unassign the task. Please try again.");
     }
   };
 
   const renderProjectItem = (project) => (
     <div key={project.id} className="bg-white shadow-md rounded-lg p-4 mb-4">
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold">Project: {project.name}</h3>
+        <h3 className="text-lg font-semibold">{project.name}</h3>
         <div className="flex space-x-2">
           <button
             className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
