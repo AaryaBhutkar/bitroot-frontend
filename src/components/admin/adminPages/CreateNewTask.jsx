@@ -78,15 +78,16 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
           <label htmlFor="brief" className="block text-sm font-medium text-gray-700">
             Brief:
           </label>
-          <textarea
-            id="brief"
-            name="brief"
-            value={taskData.brief}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-            rows="3"
-            required
-          ></textarea>
+          <div className="mt-1 relative">
+            <textarea
+              id="brief"
+              name="brief"
+              value={taskData.brief}
+              onChange={handleChange}
+              className="block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 h-30 overflow-y-auto resize-none"
+              required
+            ></textarea>
+          </div>
         </div>
 
         <div>
@@ -100,7 +101,6 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
             value={taskData.tags}
             onChange={handleChange}
             className="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 pb-3"
-            
           />
         </div>
 
@@ -114,23 +114,24 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
             name="gitLinks"
             value={taskData.gitLinks}
             onChange={handleChange}
-            className="mt-1 block w-full rounded-md bg-gray-50  border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 pb-3"
+            className="mt-1 block w-full rounded-md bg-gray-50 border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 pb-3"
           />
         </div>
 
         <div>
-          <label htmlFor="guidelines" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="gitLinks" className="block text-sm font-medium text-gray-700">
             Guidelines:
           </label>
-          <textarea
-            id="guidelines"
-            name="guidelines"
+          <input
+            type="text"
+            id="guideline"
+            name="guideline"
             value={taskData.guidelines}
             onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-            rows="3"
-          ></textarea>
+            className="mt-1 block w-full rounded-md bg-gray-50 border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 pb-3"
+          />
         </div>
+
 
         <div>
           <label className="block text-sm font-medium text-gray-700">
@@ -142,6 +143,7 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
               name="priceRangeMin"
               value={taskData.priceRangeMin}
               onChange={handleChange}
+              min="0"
               className="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
               placeholder="Min"
             />
@@ -151,6 +153,7 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
               name="priceRangeMax"
               value={taskData.priceRangeMax}
               onChange={handleChange}
+              min="0"
               className="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
               placeholder="Max"
             />
