@@ -103,12 +103,12 @@ const CompletedProjects = () => {
         if (response.data.success) {
           setCompletedProjects(response.data.data);
         } else {
-          setError("Failed to fetch completed tasks");
+          setError("Failed to fetch completed projects");
         }
 
         setLoading(false);
       } catch (err) {
-        setError("Failed to fetch completed tasks");
+        setError("Failed to fetch completed projects");
         setLoading(false);
       }
     };
@@ -134,9 +134,9 @@ const CompletedProjects = () => {
 
   return (
     <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4">Completed Tasks</h2>
+      <h2 className="text-2xl font-bold mb-4">Completed Projects</h2>
       {completedProjects.length === 0 ? (
-        <div className="text-center py-4 text-gray-500">No completed tasks yet.</div>
+        <div className="text-center py-4 text-gray-500">No completed projects yet.</div>
       ) : (
         <div className="space-y-2">
           {completedProjects.map((project) => (
