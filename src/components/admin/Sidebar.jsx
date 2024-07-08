@@ -8,26 +8,19 @@ import {
   ClockCircleOutlined
 } from "@ant-design/icons";
 
-const Sidebar = ({ onSidebarClick, activePage }) => {
-  const [activeTab, setActiveTab] = useState(activePage || "tasks");
-
-  // const buttons = [
-  //   { name: "TASKS", icon: <PlusCircleOutlined /> },
-  //   { name: "REQUESTS", icon: <PullRequestOutlined /> },
-  //   { name: "ANALYTICS", icon: <LineChartOutlined /> },
-  //   { name: "HISTORY", icon: <ClockCircleOutlined /> },
-  // ];
+const Sidebar = ({ onSidebarClick }) => {
+  const [activeButton, setActiveButton] = useState("TASKS");
 
   const buttons = [
-    { name: "tasks", label: "TASKS", icon: <PlusCircleOutlined /> },
-    { name: "requests", label: "REQUESTS", icon: <PullRequestOutlined /> },
-    { name: "analytics", label: "ANALYTICS", icon: <LineChartOutlined /> },
-    { name: "history", label: "HISTORY", icon: <ClockCircleOutlined /> }
+    { name: "TASKS", icon: <PlusCircleOutlined /> },
+    { name: "REQUESTS", icon: <PullRequestOutlined /> },
+    { name: "ANALYTICS", icon: <LineChartOutlined /> },
+    { name: "HISTORY", icon: <ClockCircleOutlined /> },
   ];
 
-  const handleSidebarClick = (name) => {
-    setActiveTab(name);
-    onSidebarClick(name);
+  const handleButtonClick = (name) => {
+    setActiveButton(name);
+    onSidebarClick(name.toLowerCase().replace(' ', '-'));
   };
 
   return (
@@ -41,15 +34,15 @@ const Sidebar = ({ onSidebarClick, activePage }) => {
             {buttons.map((button) => (
               <li key={button.name}>
                 <button
-                  onClick={() => handleSidebarClick(button.name)}
+                  onClick={() => handleButtonClick(button.name)}
                   className={`w-full flex items-center space-x-2 p-2 rounded transition-colors ${
-                    activeTab === button.name
+                    activeButton === button.name
                       ? "bg-white text-blue-600"
                       : "hover:bg-white/50"
                   }`}
                 >
                   <span>{button.icon}</span>
-                  <span>{button.label}</span>
+                  <span>{button.name}</span>
                 </button>
               </li>
             ))}

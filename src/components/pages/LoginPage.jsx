@@ -219,13 +219,14 @@ const { Content } = Layout;
 const LoginPage = () => {
   const [form] = Form.useForm();
   const [role, setRole] = useState("");
+  const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Get the role from localStorage
-    const storedRole = localStorage.getItem("role");
-    setRole(storedRole);
-  }, []);
+    if (location.state && location.state.role) {
+      setRole(location.state.role);
+    }
+  }, [location.state]);
 
   const handleLogin = async (values) => {
     try {
@@ -274,7 +275,7 @@ const LoginPage = () => {
               We design zero to one platform.
             </Title>
           </div>
-          <img src="logo.svg" alt="Bitroot" className="h-8 " />
+          <img src="logo.svg" alt="Bitroot" className="h-8" />
         </div>
 
         <div className="w-3/5 p-12 flex items-center justify-center bg-gray-100">
