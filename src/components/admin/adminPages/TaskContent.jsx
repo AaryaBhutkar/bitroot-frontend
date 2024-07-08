@@ -75,15 +75,31 @@ const TasksContent = () => {
     }
   };
 
-  const handleSort = () => {
+  const handleSort = async() => {
     const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
     setSortOrder(newSortOrder);
-    const sortedTasks = [...tasks].sort((a, b) => {
-      const dateA = new Date(a.created_at);
-      const dateB = new Date(b.created_at);
-      return newSortOrder === "asc" ? dateA - dateB : dateB - dateA;
-    });
-    setTasks(sortedTasks);
+
+     try {
+      const response = await axiosInstance.post("tasks/getTasks", {
+        size: pageSize,
+        page: currentPage,
+        lower_price: filters.minPrice,
+        higher_price: filters.maxPrice,
+        search: searchTerm,
+        status: filters.status,
+        start_date: filters.startDate,
+        end_date: filters.endDate,
+        sort:newSortOrder
+      });
+      if (response.data.success) {
+        setTasks(response.data.data);
+        const total = response.data.meta.total;
+        const calculatedTotalPages = Math.ceil(total / pageSize);
+        setTotalPages(calculatedTotalPages);
+      }
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+    }
   };
 
   const handleSearch = (e) => {
