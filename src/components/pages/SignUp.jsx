@@ -40,7 +40,7 @@ const SignUp = () => {
               <img src="logo.svg" alt="Bitroot Logo" className="w-24" />
             </div>
             <div className="w-1/2 p-8">
-              <Title level={2}>Sign-Up As Evaluator</Title>
+              <Title level={3}>Sign-Up As Evaluator</Title>
               <Form form={form} name="signup" onFinish={onFinish} layout="vertical" size="large">
                 <Form.Item
                   name="name"
