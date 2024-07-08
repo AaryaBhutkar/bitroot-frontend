@@ -59,9 +59,9 @@ const TaskCard = ({
       });
       const result = response.data;
       if (result.success) {
-        window.dataLayer.push({'event':'I\'m interested'});
         toast.success("Interest Notified!");
         onTaskInterest(task_id);
+        window.dataLayer.push({'event':'I\'m interested'});
       } else {
         toast.error("Failed to assign task: " + result.message);
       }

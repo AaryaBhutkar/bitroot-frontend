@@ -47,8 +47,7 @@ const MyProjects = () => {
           evaluator_id: Number(localStorage.getItem("user")),
         }
       );
-      window.dataLayer.push({'event':`${action} Task`});
-
+      
       if (action === "start") {
         setProjects((prevState) => ({
           inprogress: [
@@ -57,6 +56,7 @@ const MyProjects = () => {
           ],
           assigned: prevState.assigned.filter((p) => p.id !== projectId),
         }));
+        window.dataLayer.push({'event':`${action} Task`});
       } else if (action === "complete") {
         const completedProject = projects.inprogress.find(
           (p) => p.id === projectId
@@ -94,9 +94,9 @@ const MyProjects = () => {
         ...prevState,
         assigned: prevState.assigned.filter((p) => p.id !== projectId),
       }));
-      window.dataLayer.push({'event':'Rejected Task'});
       toast.success("Task unassigned successfully");
       await fetchProjects();
+      window.dataLayer.push({'event':'Rejected Task'});
     } catch (error) {
       console.error("Error unassigning task:", error);
       toast.error("Failed to unassign the task. Please try again.");
