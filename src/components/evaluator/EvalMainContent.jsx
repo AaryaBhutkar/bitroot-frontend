@@ -366,7 +366,7 @@
 
 import React, { useState, useEffect } from "react";
 import { UserOutlined } from "@ant-design/icons";
-import { Avatar, Input, Button, Popover, Space } from "antd";
+import { Avatar, Input, Button, Popover, Space, notification } from "antd";
 import TaskCard from "./pages/TaskCard";
 import ProfileInfo from "../admin/adminPages/ProfileInfo";
 import MyProjects from "./pages/MyProjects";
@@ -393,9 +393,19 @@ const EvalMainContent = ({ activePage }) => {
     setPopoverOpen(false);
   };
 
+  // const handleLogout = () => {
+  //   localStorage.removeItem("token");
+  //   localStorage.removeItem("user");
+  //   window.location.href = "/role";
+  // };
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    notification.success({
+      message: 'Logout Successful',
+      description: 'You have been logged out successfully.',
+    });
     window.location.href = "/role";
   };
 
