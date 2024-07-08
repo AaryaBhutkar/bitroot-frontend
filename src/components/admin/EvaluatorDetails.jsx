@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { ArrowLeftOutlined } from "@ant-design/icons";
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
+import PropTypes from "prop-types";
 
 const EvaluatorDetails = ({ evaluatorId, onBack }) => {
   const [evaluator, setEvaluator] = useState(null);
@@ -11,11 +11,10 @@ const EvaluatorDetails = ({ evaluatorId, onBack }) => {
     const fetchEvaluatorDetails = async () => {
       try {
         setLoading(true);
-        const response = await axios.post("http://localhost:3001/api/users/completeProfile", {
-        is_fetch: 1,
-        evaluator_id:33
+        const response = await axiosInstance.post("users/completeProfile", {
+          is_fetch: 1,
+          evaluator_id: evaluatorId
         });
-        console.log("gbghjfgvdc",response);
         if (response.data.success) {
           setEvaluator(response.data.data);
         } else {
@@ -32,83 +31,69 @@ const EvaluatorDetails = ({ evaluatorId, onBack }) => {
     fetchEvaluatorDetails();
   }, [evaluatorId]);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return null;
+  if (error) return null;
   if (!evaluator) return null;
 
   return (
-    <div className="flex-1 p-8">
-      <button
-        onClick={onBack}
-        className="mb-4 text-white-500 hover:underline border rounded p-2 bg-blue-300"
-      >
-        <ArrowLeftOutlined />
-        Back
-      </button>
-      <h2 className="text-xl font-bold mb-4">Evaluator Details</h2>
-      <div className="p-4 bg-white rounded shadow-md">
-        <div className="mb-4 border-b pb-4">
-          <label className="block text-gray-700 font-semibold">Name:</label>
-          <p className="text-gray-900 border rounded p-2">{evaluator.name}</p>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+      <div className="bg-white p-8 rounded-md shadow-md w-1/2 max-h-[90vh] overflow-y-auto">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold">Evaluator Details</h2>
+          <button onClick={onBack} className="text-white bg-blue-500 hover:bg-blue-600 focus:ring-2 focus:ring-blue-300 px-3 py-1 rounded-full shadow-md transition-colors duration-200 ease-in-out">
+            &times;
+          </button>
         </div>
-        <div className="mb-4 border-b pb-4">
-          <label className="block text-gray-700 font-semibold">Email:</label>
-          <p className="text-gray-900 border rounded p-2">{evaluator.email}</p>
+
+        <div className="mb-4">
+          <label className="block mb-2 font-bold">Name:</label>
+          <p>{evaluator.name}</p>
         </div>
-        <div className="mb-4 border-b pb-4">
-          <label className="block text-gray-700 font-semibold">LinkedIn:</label>
-          <p>
-            <a
-              href={evaluator.linkedin_url}
-              className="text-blue-500 hover:underline border rounded p-2 block"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {evaluator.linkedin_url}
-            </a>
-          </p>
+
+        <div className="mb-4">
+          <label className="block mb-2 font-bold">Email:</label>
+          <p>{evaluator.email}</p>
         </div>
-        <div className="mb-4 border-b pb-4">
-          <label className="block text-gray-700 font-semibold">
-            Years of Experience:
-          </label>
-          <p className="text-gray-900 border rounded p-2">
-            {evaluator.yoe}
-          </p>
+
+        <div className="mb-4">
+          <label className="block mb-2 font-bold">LinkedIn:</label>
+          <a href={evaluator.linkedin_url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+            {evaluator.linkedin_url}
+          </a>
         </div>
-        <div className="mb-4 border-b pb-4">
-          <label className="block text-gray-700 font-semibold">
-            Price Range:
-          </label>
-          <p className="text-gray-900 border rounded p-2">
-            ${evaluator.lower_price} - ${evaluator.higher_price}
-          </p>
+
+        <div className="mb-4">
+          <label className="block mb-2 font-bold">Years of Experience:</label>
+          <p>{evaluator.yoe}</p>
         </div>
-        <div className="mb-4 border-b pb-4">
-          <label className="block text-gray-700 font-semibold">Tags:</label>
-          <p className="text-gray-900 border rounded p-2">
-            {evaluator.tags}
-          </p>
+
+        <div className="mb-4">
+          <label className="block mb-2 font-bold">Price Range (₹):</label>
+          <p>₹{evaluator.lower_price} - ₹{evaluator.higher_price}</p>
         </div>
-        <div className="mb-4 border-b pb-4">
-          <label className="block text-gray-700 font-semibold">
-            Contact Info:
-          </label>
-          <p className="text-gray-900 border rounded p-2">
-            {evaluator.contact}
-          </p>
+
+        <div className="mb-4">
+          <label className="block mb-2 font-bold">Tags:</label>
+          <p>{evaluator.tags}</p>
         </div>
-        <div>
-          <label className="block text-gray-700 font-semibold">
-            Task Name:
-          </label>
-          <p className="text-gray-900 border rounded p-2">
-            {evaluator.task_name}
-          </p>
+
+        <div className="mb-4">
+          <label className="block mb-2 font-bold">Contact Info:</label>
+          <p>{evaluator.contact}</p>
+        </div>
+
+        <div className="mb-4">
+          <label className="block mb-2 font-bold">Task Name:</label>
+          <p>{evaluator.task_name}</p>
         </div>
       </div>
     </div>
   );
+};
+
+EvaluatorDetails.propTypes = {
+  evaluatorId: PropTypes.string.isRequired,
+  onClose: PropTypes.func.isRequired,
 };
 
 export default EvaluatorDetails;
