@@ -1,14 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../utils/axiosInstance';
 
-const HistoryItem = ({ done_by, action, task_id, action_date }) => (
-  <div className="mb-4 p-4 border rounded-lg shadow-sm">
-    <p className="text-sm">{action}</p>
-    <p className="text-xs text-gray-500 mt-1">
-      Done by: <span className="font-semibold">{done_by}</span> on {new Date(action_date).toLocaleString()}
-    </p>
-  </div>
-);
+// const HistoryItem = ({ done_by, action, task_id, action_date }) => (
+//   <div className="mb-4 p-4 border rounded-lg shadow-sm">
+//     <p className="text-sm">{action}</p>
+//     <p className="text-xs text-gray-500 mt-1">
+//       Done by: <span className="font-semibold">{done_by}</span> on {new Date(action_date).toLocaleString()}
+//     </p>
+//   </div>
+// );
+
+const HistoryItem = ({ done_by, action, task_id, action_date }) => {
+  const formattedDate = new Date(action_date).toLocaleDateString('en-US', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+
+  const formattedTime = new Date(action_date).toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true
+  });
+
+  const formattedDateTime = `${formattedDate} ${formattedTime}`;
+
+  return (
+    <div className="mb-4 p-4 border rounded-lg shadow-sm">
+      <p className="text-sm">{action}</p>
+      <p className="text-xs text-gray-500 mt-1">
+        Done by: <span className="font-semibold">{done_by}</span> on {formattedDateTime}
+      </p>
+    </div>
+  );
+};
+
 
 const AdminHistory = () => {
   const [activeTab, setActiveTab] = useState('TASKS');
