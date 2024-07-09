@@ -364,7 +364,7 @@ const TasksContent = () => {
                 </div>
               </th>
               <th className="pb-4 w-[42%]">TAGS</th>
-              <th className="pb-4 w-[12%]">PRICE RANGE (₹)</th>
+              <th className="pb-4 w-[12%]">PRICE RANGE</th>
               <th className="pb-4 w-[10%]">STATUS</th>
               <th className="pb-4 w-[8%]"></th>
             </tr>
@@ -391,7 +391,7 @@ const TasksContent = () => {
                 </td>
 
                   <td className="py-4">
-                    {task.lower_price} - {task.higher_price}
+                    ₹{task.lower_price} - ₹{task.higher_price}
                   </td>
                   <td className="py-4">
                     <span

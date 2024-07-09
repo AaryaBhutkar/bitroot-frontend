@@ -138,7 +138,7 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
             name="tags"
             value=""
             onChange={handleTagChange}
-            className="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            className="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 p-2"
           >
             <option value="" disabled>Select a tag</option>
             {availableTags.map(tag => (
@@ -149,8 +149,8 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
           </select>
           <div className="mt-2">
             <p className="text-sm text-gray-500">Selected tags:</p>
-            <div className="flex flex-wrap gap-2 mt-1">
-              {taskData.tags.slice(0, 2).map((tag, index) => (
+            <div className="flex flex-wrap gap-2 mt-2">
+              {taskData.tags.slice(0, 6).map((tag, index) => (
                 <span key={index} className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
                   {tag}
                   <button
@@ -198,14 +198,14 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
           <label className="block text-sm font-medium text-gray-700">
             Price Range (₹):
           </label>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 p-1">
             <input
               type="number"
               name="priceRangeMin"
               value={taskData.priceRangeMin}
               onChange={handleChange}
               min="0"
-              className="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+              className="mt-1 block w-full p-1 rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
               placeholder="Min"
             />
             <span className="text-gray-500">TO</span>
@@ -215,7 +215,7 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
               value={taskData.priceRangeMax}
               onChange={handleChange}
               min="0"
-              className="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+              className="mt-1 block w-full p-1 rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
               placeholder="Max"
             />
           </div>
@@ -224,7 +224,7 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
         <div className="flex justify-center">
           <button
             type="submit"
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="px-4 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             Submit
           </button>
