@@ -85,19 +85,20 @@ const MyProjects = () => {
           >
             View
           </button>
-          {activeTab === "inprogress" ? (
+          {activeTab === "inprogress" && (
             <button
               className="bg-white-500 text-blue-500 border border-blue-500 px-4 py-2 rounded hover:bg-blue-600 hover:text-white"
               onClick={() => handleActionButton(project.id, "complete")}
             >
               Complete
             </button>
-          ) : (
+          )}
+          {activeTab === "assigned" && (
             <button
               className="bg-white-500 text-blue-500 border border-blue-500 px-4 py-2 rounded hover:bg-blue-600 hover:text-white"
               onClick={() => handleUnassignProject(project.id)}
             >
-              Delete
+              DELETE
             </button>
           )}
         </div>
