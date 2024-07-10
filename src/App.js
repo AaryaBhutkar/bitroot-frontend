@@ -235,6 +235,7 @@ import ShowTask from "./components/forpublic/ShowTask";
 import ReactGA from "react-ga";
 import EvalMainContent from "./components/evaluator/EvalMainContent"
 import AdminMainContent from "./components/admin/AdminMainContent";
+import TnC from "./components/pages/TnC";
 
 const TRACKING_ID = "G-0R29VR1RYZ";
 ReactGA.initialize(TRACKING_ID, {
@@ -272,6 +273,7 @@ function App() {
         <RouteTracker />
         <Routes>
           <Route path="/" element={<SignUp />} />
+          <Route path="/TnC" element={<TnC/>}/>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/role" element={<RoleSelector />} />
           <Route path="/profile" element={<ProfileForm />} />
