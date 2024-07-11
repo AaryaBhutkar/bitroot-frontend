@@ -6,6 +6,7 @@ import TasksContent from "./adminPages/TaskContent";
 import RequestsList from "./adminPages/RequestsList";
 import EvaluatorDetails from "./EvaluatorDetails";
 import AdminHistory from "./adminPages/AdminHistory";
+import AnalyticsDashboard from "./adminPages/AnalyticsDashboard";
 
 const AdminMainContent = ({ activePage }) => {
   const [showProfileInfo, setShowProfileInfo] = useState(false);
@@ -86,8 +87,11 @@ const AdminMainContent = ({ activePage }) => {
         {currentView === "requests" && (
           <RequestsList onViewRequest={handleViewRequest} />
         )}
-        {currentView === "analytics" && <div><div style={{ position: 'relative', width: '100%', paddingTop: '56.25%' }}>
-        <iframe
+        {/* {currentView === "analytics" && <div><div style={{ position: 'relative', width: '100%', paddingTop: '56.25%' }}> */}
+        {currentView === "analytics" && (
+          <AnalyticsDashboard />
+        )}
+        {/* <iframe
   title="Embedded Looker Report"
   src="https://lookerstudio.google.com/embed/reporting/bdc45f62-dd7b-4381-96d3-c76a8dca12a9/page/FEG5D"
   frameBorder="0"
@@ -101,11 +105,11 @@ const AdminMainContent = ({ activePage }) => {
   }}
   allowFullScreen
   sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
-></iframe>
+></iframe> */}
 
-</div>
+{/* // </div> */}
 
-</div>}
+{/* // </div>} */}
         {currentView === "evaluatorDetails" && selectedRequest && (
           <EvaluatorDetails
             evaluatorId={selectedRequest.evaluator_id}
