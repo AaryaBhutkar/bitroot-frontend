@@ -40,12 +40,12 @@ const EvalMainContent = ({ activePage }) => {
       message: 'Logout Successful',
       description: 'You have been logged out successfully.',
     });
-    window.location.href = "/role";
+    window.location.href = "/login";
   };
 
   useEffect(() => {
     if (!localStorage.getItem("token") || !localStorage.getItem("user")) {
-      window.location.href = "/role";
+      window.location.href = "/login";
     }
   }, []);
 

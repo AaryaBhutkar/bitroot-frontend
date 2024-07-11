@@ -76,18 +76,18 @@ const MyProjects = () => {
 
   const renderProjectItem = (project) => (
     <div key={project.id} className="bg-white shadow-md rounded-lg p-4 mb-4">
-      <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold">{project.name}</h3>
-        <div className="flex space-x-2">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+        <h3 className="text-lg font-semibold mb-2 sm:mb-0">{project.name}</h3>
+        <div className="flex flex-wrap gap-2 w-full sm:w-auto">
           <button
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 flex-grow sm:flex-grow-0"
             onClick={() => setSelectedProject(project)}
           >
             View
           </button>
           {activeTab === "inprogress" && (
             <button
-              className="bg-white-500 text-blue-500 border border-blue-500 px-4 py-2 rounded hover:bg-blue-600 hover:text-white"
+              className="bg-white text-blue-500 border border-blue-500 px-4 py-2 rounded hover:bg-blue-600 hover:text-white flex-grow sm:flex-grow-0"
               onClick={() => handleActionButton(project.id, "complete")}
             >
               Complete
@@ -95,7 +95,7 @@ const MyProjects = () => {
           )}
           {activeTab === "assigned" && (
             <button
-              className="bg-white-500 text-blue-500 border border-blue-500 px-4 py-2 rounded hover:bg-blue-600 hover:text-white"
+              className="bg-white text-blue-500 border border-blue-500 px-4 py-2 rounded hover:bg-blue-600 hover:text-white flex-grow sm:flex-grow-0"
               onClick={() => handleUnassignProject(project.id)}
             >
               DELETE
@@ -104,10 +104,13 @@ const MyProjects = () => {
         </div>
       </div>
       {["inprogress", "assigned"].includes(activeTab) && (
-        <Timer startTime={project.updated_at} />
+        <div className="mt-2">
+          <Timer startTime={project.updated_at} />
+        </div>
       )}
     </div>
   );
+
 
   const renderNoTasksMessage = (tabName) => (
     <div className="bg-gray-100 border-l-4 text-gray-700 p-4 mb-4">
@@ -130,11 +133,11 @@ const MyProjects = () => {
 
   return (
     <div className="p-4">
-      <div className="flex mb-4">
+      <div className="flex flex-wrap gap-2 mb-4">
         {tabs.map(tab => (
           <button
             key={tab.key}
-            className={`mr-2 px-4 py-2 rounded ${
+            className={`px-4 py-2 rounded flex-grow sm:flex-grow-0 text-sm sm:text-base ${
               activeTab === tab.key
                 ? "bg-blue-500 text-white"
                 : "bg-gray-200 text-gray-700"

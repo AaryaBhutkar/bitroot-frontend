@@ -11,6 +11,7 @@ const RoleSelector = () => {
   }, []);
 
   const handleRoleSelection = (role) => {
+    localStorage.setItem("role", role)
     navigate("/login", { state: { role } });
   };
 

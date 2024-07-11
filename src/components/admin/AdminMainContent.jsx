@@ -49,7 +49,7 @@ const AdminMainContent = ({ activePage }) => {
   const handleLogout = () => {
     // Clear local storage and navigate to login or role page
     localStorage.removeItem("token");
-    window.location.href = "/role";
+    window.location.href = "/login";
   };
 
   const content = (
