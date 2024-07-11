@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axiosInstance from "../utils/axiosInstance";
 import PropTypes from "prop-types";
 
-const EvaluatorDetails = ({ evaluatorId, onBack }) => {
+const EvaluatorDetails = ({ evaluatorId, onClose }) => {
   const [evaluator, setEvaluator] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -40,7 +40,7 @@ const EvaluatorDetails = ({ evaluatorId, onBack }) => {
       <div className="bg-white p-8 rounded-md shadow-md w-1/2 max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">Evaluator Details</h2>
-          <button onClick={onBack} className="text-white bg-blue-500 hover:bg-blue-600 focus:ring-2 focus:ring-blue-300 px-3 py-1 rounded-full shadow-md transition-colors duration-200 ease-in-out">
+          <button onClick={onClose} className="text-white bg-blue-500 hover:bg-blue-600 focus:ring-2 focus:ring-blue-300 px-3 py-1 rounded-full shadow-md transition-colors duration-200 ease-in-out">
             &times;
           </button>
         </div>
@@ -74,7 +74,13 @@ const EvaluatorDetails = ({ evaluatorId, onBack }) => {
 
         <div className="mb-4">
           <label className="block mb-2 font-bold">Tags:</label>
-          <p>{evaluator.tags}</p>
+          <div className="flex flex-wrap gap-2">
+            {evaluator.tags.map((tag, index) => (
+              <span key={index} className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                {tag}
+              </span>
+            ))}
+          </div>
         </div>
 
         <div className="mb-4">

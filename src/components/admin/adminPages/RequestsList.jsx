@@ -115,10 +115,18 @@ const EvaluatorDetails = ({ evaluatorId, onClose }) => {
           <p>₹{evaluator.lower_price} - ₹{evaluator.higher_price}</p>
         </div>
 
-        <div className="mb-4">
-          <label className="block mb-2 font-bold">Tags:</label>
-          <p>{evaluator.tags}</p>
+      <div className="mb-4">
+        <label className="block mb-2 font-bold">Tags:</label>
+        <div className="flex flex-wrap space-x-2">
+          {evaluator.tags.map((tag) => (
+            <div key={tag} className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+              {tag}
+            </div>
+          ))}
         </div>
+      </div>
+
+
 
         <div className="mb-4">
           <label className="block mb-2 font-bold">Contact Info:</label>

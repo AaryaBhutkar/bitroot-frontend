@@ -269,7 +269,7 @@ const LoginPage = () => {
       <Content className="flex">
         <div className="w-2/5 bg-blue-50 p-12 flex flex-col justify-between">
           <div>
-            <Title level={2} className="text-gray-800">
+            <Title level={1} className="text-gray-800">
               We are Bitroot
               <br />
               We design zero to one platform.
@@ -280,7 +280,7 @@ const LoginPage = () => {
 
         <div className="w-3/5 p-12 flex items-center justify-center bg-gray-100">
           <Card className="w-full max-w-2xl shadow-lg">
-            <Title level={2} className="text-center mb-8 p-5">Sign-in as {role}</Title>
+            <Title level={3} className="text-center mb-8 p-5">Sign-in as {role}</Title>
             <Form form={form} onFinish={handleLogin} layout="vertical" size="large">
               <Form.Item
                 name="email"

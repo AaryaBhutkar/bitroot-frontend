@@ -1,9 +1,6 @@
-
-
-
 import React from 'react';
-import { Form, Input, Button, Card, Typography, Layout } from 'antd';
-import { UserOutlined, MailOutlined, LockOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Card, Typography, Layout, Checkbox } from 'antd';
+import { UserOutlined, MailOutlined, LockOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -40,7 +37,7 @@ const SignUp = () => {
               <img src="logo.svg" alt="Bitroot Logo" className="w-24" />
             </div>
             <div className="w-1/2 p-8">
-              <Title level={2}>Sign-Up As Evaluator</Title>
+              <Title level={3}>Sign-Up As Evaluator</Title>
               <Form form={form} name="signup" onFinish={onFinish} layout="vertical" size="large">
                 <Form.Item
                   name="name"
@@ -79,6 +76,25 @@ const SignUp = () => {
                     className="h-12 text-lg"
                   />
                 </Form.Item>
+                <Form.Item
+                name="agreeTerms"
+                valuePropName="checked"
+                rules={[
+                  { validator: (_, value) => value ? Promise.resolve() : Promise.reject('Please agree to the terms and conditions') },
+                ]}
+              >
+                <div className="flex items-center">
+                  <Checkbox className="mb-5 mr-2" />
+                  <span className="text-sm">
+                    I Agree to the{' '}
+                    <Link to="/TnC" className="text-blue-500 inline-flex items-center">
+                      Terms and Conditions, Privacy Policy
+                      <ArrowRightOutlined className="ml-1" />
+                    </Link>
+                  </span>
+                </div>
+              </Form.Item>
+
                 <Form.Item>
                   <Button type="primary" htmlType="submit" className="w-full h-12 text-lg">
                     Sign Up
