@@ -423,7 +423,7 @@ const TasksContent = () => {
             </tbody>
           </table>
 
-          <div className="pagination-container fixed bottom-0 w-full bg-white pb-20 flex ">
+          <div className="pagination-container fixed bottom-1 w-full bg-white pb-3 flex ">
             <nav>
               <ul className="flex items-center space-x-2">
                 <li>
