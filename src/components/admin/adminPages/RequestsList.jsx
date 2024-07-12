@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../utils/axiosInstance";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import PropTypes from "prop-types";
 
 const DenyModal = ({ isOpen, onClose, onConfirm }) => {
-  const [reason, setReason] = useState('');
+  const [reason, setReason] = useState("");
 
   const handleSubmit = () => {
     onConfirm(reason.trim());
@@ -18,7 +18,10 @@ const DenyModal = ({ isOpen, onClose, onConfirm }) => {
       <div className="bg-white rounded-lg p-6 w-96 max-w-full">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold">Deny Request</h3>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700"
+          >
             &#x2715;
           </button>
         </div>
@@ -30,10 +33,16 @@ const DenyModal = ({ isOpen, onClose, onConfirm }) => {
           maxLength={100}
         />
         <div className="flex justify-end space-x-2">
-          <button onClick={onClose} className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
+          >
             Cancel
           </button>
-          <button onClick={handleSubmit} className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
+          <button
+            onClick={handleSubmit}
+            className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+          >
             Confirm Deny
           </button>
         </div>
@@ -56,7 +65,7 @@ const EvaluatorDetails = ({ evaluatorId, onClose }) => {
         setLoading(true);
         const response = await axiosInstance.post("users/completeProfile", {
           is_fetch: 1,
-          evaluator_id: evaluatorId
+          evaluator_id: evaluatorId,
         });
         if (response.data.success) {
           setEvaluator(response.data.data);
@@ -79,11 +88,14 @@ const EvaluatorDetails = ({ evaluatorId, onClose }) => {
   if (!evaluator) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-8 rounded-md shadow-md w-1/2 max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+      <div className="bg-white p-8 rounded-md shadow-md w-4/5 max-h-[90vh] overflow-y-auto md:w-1/2">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">Evaluator Details</h2>
-          <button onClick={onClose} className="text-white bg-blue-500 hover:bg-blue-600 focus:ring-2 focus:ring-blue-300 px-3 py-1 rounded-full shadow-md transition-colors duration-200 ease-in-out">
+          <button
+            onClick={onClose}
+            className="text-white bg-blue-500 hover:bg-blue-600 focus:ring-2 focus:ring-blue-300 px-3 py-1 rounded-full shadow-md transition-colors duration-200 ease-in-out"
+          >
             &times;
           </button>
         </div>
@@ -100,7 +112,12 @@ const EvaluatorDetails = ({ evaluatorId, onClose }) => {
 
         <div className="mb-4">
           <label className="block mb-2 font-bold">LinkedIn:</label>
-          <a href={evaluator.linkedin_url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+          <a
+            href={evaluator.linkedin_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 hover:underline"
+          >
             {evaluator.linkedin_url}
           </a>
         </div>
@@ -112,21 +129,24 @@ const EvaluatorDetails = ({ evaluatorId, onClose }) => {
 
         <div className="mb-4">
           <label className="block mb-2 font-bold">Price Range (₹):</label>
-          <p>₹{evaluator.lower_price} - ₹{evaluator.higher_price}</p>
+          <p>
+            ₹{evaluator.lower_price} - ₹{evaluator.higher_price}
+          </p>
         </div>
 
-      <div className="mb-4">
-        <label className="block mb-2 font-bold">Tags:</label>
-        <div className="flex flex-wrap space-x-2">
-          {evaluator.tags.map((tag) => (
-            <div key={tag} className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
-              {tag}
-            </div>
-          ))}
+        <div className="mb-4">
+          <label className="block mb-2 font-bold">Tags:</label>
+          <div className="flex flex-wrap space-x-2">
+            {evaluator.tags.map((tag) => (
+              <div
+                key={tag}
+                className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
+              >
+                {tag}
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-
-
 
         <div className="mb-4">
           <label className="block mb-2 font-bold">Contact Info:</label>
@@ -236,13 +256,13 @@ const RequestsList = () => {
         task_id,
         evaluator_id,
         is_deny: 1,
-        deny_reason: reason
+        deny_reason: reason,
       });
       if (response.data.success) {
         toast.success("Task denied successfully");
         await fetchRequests();
       } else {
-        throw new Error(response.data.message || 'Failed to deny task');
+        throw new Error(response.data.message || "Failed to deny task");
       }
     } catch (error) {
       console.error("Error denying task:", error);

@@ -134,7 +134,7 @@ const EvaluatorDashboard = () => {
       </div>
       <div className="hidden md:block">
         <div className="p-4 border-b">
-          <img src="../logo.png" alt="Bitroot Logo" className="h-8 w-auto" />
+          <img src="../logo.png" alt="Bitroot Logo" className="h-10 w-auto" />
         </div>
         <Sidebar onSidebarClick={handleSidebarClick} activePage={getActivePage()} />
       </div>

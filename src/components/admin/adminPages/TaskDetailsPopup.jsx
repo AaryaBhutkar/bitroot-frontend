@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import axiosInstance from "../../utils/axiosInstance";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
   const [editMode, setEditMode] = useState(false);
@@ -19,7 +19,7 @@ const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
     if (!onUpdate) return;
     setIsUpdating(true);
     try {
-      const response = await axiosInstance.post('tasks/createTask', {
+      const response = await axiosInstance.post("tasks/createTask", {
         id: task.id,
         name: updatedTask.name,
         desc: updatedTask.description,
@@ -36,12 +36,14 @@ const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
         onUpdate(updatedTask);
         onClose();
       } else {
-        console.error('Failed to update task:', response.data);
+        console.error("Failed to update task:", response.data);
         toast.error("Failed to update task. Please try again.");
       }
     } catch (error) {
-      console.error('Error updating task:', error);
-      toast.error("An error occurred while updating the task. Please try again.");
+      console.error("Error updating task:", error);
+      toast.error(
+        "An error occurred while updating the task. Please try again."
+      );
     } finally {
       setIsUpdating(false);
     }
@@ -55,19 +57,24 @@ const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
       onClose();
       window.location.reload();
     } catch (error) {
-      console.error('Error deleting task:', error);
+      console.error("Error deleting task:", error);
       toast.error("Failed to delete task. Please try again.");
     }
   };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white p-8 rounded-md shadow-md w-1/2 max-h-[90vh] overflow-y-auto">
+      <div className="bg-white p-8 rounded-md shadow-md w-4/5 max-h-[90vh] overflow-y-auto md:w-1/2">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">{editMode ? "Edit Task" : task.name}</h2>
-          <button onClick={onClose} className="text-white bg-blue-500 hover:bg-blue-600 focus:ring-2 focus:ring-blue-300 px-3 py-1 rounded-full shadow-md transition-colors duration-200 ease-in-out">
-  &times;
-</button>
+          <h2 className="text-xl font-bold">
+            {editMode ? "Edit Task" : task.name}
+          </h2>
+          <button
+            onClick={onClose}
+            className="text-white bg-blue-500 hover:bg-blue-600 focus:ring-2 focus:ring-blue-300 px-3 py-1 rounded-full shadow-md transition-colors duration-200 ease-in-out"
+          >
+            &times;
+          </button>
         </div>
 
         <div className="mb-4">
@@ -85,10 +92,10 @@ const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
           )}
         </div>
 
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label className="block mb-2 font-bold">Evaluator Name:</label>
           <p>{task.evaluator_name}</p>
-        </div>
+        </div> */}
 
         <div className="mb-4">
           <label className="block mb-2 font-bold">Description:</label>
@@ -126,7 +133,9 @@ const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
               />
             </div>
           ) : (
-            <p>₹{task.lower_price} - ₹{task.higher_price}</p>
+            <p>
+              ₹{task.lower_price} - ₹{task.higher_price}
+            </p>
           )}
         </div>
 
@@ -141,7 +150,12 @@ const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
               className="w-full p-2 border border-gray-300 rounded"
             />
           ) : (
-            <a href={task.github_url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+            <a
+              href={task.github_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:underline"
+            >
               {task.github_url}
             </a>
           )}
@@ -158,30 +172,40 @@ const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
               className="w-full p-2 border border-gray-300 rounded"
             />
           ) : (
-            <a href={task.guideline_url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+            <a
+              href={task.guideline_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:underline"
+            >
               {task.guideline_url}
             </a>
           )}
         </div>
 
         <div className="flex justify-end space-x-4">
-          {onUpdate && (
-            editMode ? (
-              <button 
-                onClick={handleUpdate} 
+          {onUpdate &&
+            (editMode ? (
+              <button
+                onClick={handleUpdate}
                 className="bg-blue-500 text-white px-4 py-2 rounded"
                 disabled={isUpdating}
               >
                 {isUpdating ? "Saving..." : "Save"}
               </button>
             ) : (
-              <button onClick={() => setEditMode(true)} className="bg-blue-500 text-white px-4 py-2 rounded">
+              <button
+                onClick={() => setEditMode(true)}
+                className="bg-blue-500 text-white px-4 py-2 rounded"
+              >
                 Edit
               </button>
-            )
-          )}
+            ))}
           {onDelete && (
-            <button onClick={handleDelete} className="px-4 py-2 bg-white text-blue-500 border border-blue-500 rounded-md hover:bg-blue-50">
+            <button
+              onClick={handleDelete}
+              className="px-4 py-2 bg-white text-blue-500 border border-blue-500 rounded-md hover:bg-blue-50"
+            >
               Delete
             </button>
           )}
