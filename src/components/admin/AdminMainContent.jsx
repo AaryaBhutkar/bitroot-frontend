@@ -6,6 +6,7 @@ import TasksContent from "./adminPages/TaskContent";
 import RequestsList from "./adminPages/RequestsList";
 import EvaluatorDetails from "./EvaluatorDetails";
 import AdminHistory from "./adminPages/AdminHistory";
+import AnalyticsDashboard from "./adminPages/AnalyticsDashboard";
 
 const AdminMainContent = ({ activePage }) => {
   const [showProfileInfo, setShowProfileInfo] = useState(false);
