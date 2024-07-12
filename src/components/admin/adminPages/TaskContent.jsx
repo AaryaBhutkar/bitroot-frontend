@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Filter,ArrowUp, ArrowDown} from "lucide-react";
+import { Filter, ArrowUp, ArrowDown } from "lucide-react";
 import { debounce } from "lodash";
 import { toast } from "react-hot-toast";
 import axiosInstance from "../../utils/axiosInstance";
@@ -23,8 +23,9 @@ const TasksContent = () => {
   });
   const [showFilters, setShowFilters] = useState(false);
   const [pageSize] = useState(5);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
   const [allTags, setAllTags] = useState([]);
   const [tagSearch, setTagSearch] = useState("");
   const [isFiltered, setIsFiltered] = useState(false);
@@ -55,7 +56,37 @@ const TasksContent = () => {
     };
   }, [debouncedGetTasks]);
 
-  const getTasks = async (search=searchTerm) => {
+  const getTasks = useCallback(async () => {
+    try {
+      const response = await axiosInstance.post("tasks/getTasks", {
+        size: pageSize,
+        page: currentPage - 1, // Adjust for 0-based index if your API expects it
+        lower_price: filters.minPrice,
+        higher_price: filters.maxPrice,
+        search: searchTerm,
+        status: filters.status,
+        start_date: filters.startDate,
+        end_date: filters.endDate,
+      });
+      if (response.data.success) {
+        setTasks(response.data.data);
+        setTotalCount(response.data.meta.total);
+        setTotalPages(Math.ceil(response.data.meta.total / pageSize));
+      }
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+      toast.error("Failed to fetch tasks");
+    }
+  }, [currentPage, pageSize, filters, searchTerm]);
+
+  useEffect(() => {
+    getTasks();
+  }, [getTasks]);
+
+  const handleSort = async () => {
+    const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
+    setSortOrder(newSortOrder);
+
     try {
       const response = await axiosInstance.post("tasks/getTasks", {
         size: pageSize,
@@ -66,33 +97,7 @@ const TasksContent = () => {
         status: filters.status,
         start_date: filters.startDate,
         end_date: filters.endDate,
-      });
-      if (response.data.success) {
-        setTasks(response.data.data);
-        const total = response.data.meta.total;
-        const calculatedTotalPages = Math.ceil(total / pageSize);
-        setTotalPages(calculatedTotalPages);
-      }
-    } catch (error) {
-      console.error("Error fetching tasks:", error);
-    }
-  };
-
-  const handleSort = async() => {
-    const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
-    setSortOrder(newSortOrder);
-
-     try {
-      const response = await axiosInstance.post("tasks/getTasks", {
-        size: pageSize,
-        page: currentPage,
-        lower_price: filters.minPrice,
-        higher_price: filters.maxPrice,
-        search: searchTerm,
-        status: filters.status,
-        start_date: filters.startDate,
-        end_date: filters.endDate,
-        sort:newSortOrder
+        sort: newSortOrder,
       });
       if (response.data.success) {
         setTasks(response.data.data);
@@ -107,7 +112,7 @@ const TasksContent = () => {
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       getTasks();
     }
   };
@@ -133,8 +138,8 @@ const TasksContent = () => {
       minPrice: 0,
       maxPrice: 10000,
       tags: [],
-      startDate:"",
-      endDate:""
+      startDate: "",
+      endDate: "",
     });
     getTasks();
     setTagSearch("");
@@ -178,13 +183,45 @@ const TasksContent = () => {
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
-    getTasks();
   };
 
+  const getPageNumbers = () => {
+    const pageNumbers = [];
+    const maxVisiblePages = 5;
+    const halfVisiblePages = Math.floor(maxVisiblePages / 2);
+
+    let startPage = Math.max(currentPage - halfVisiblePages, 1);
+    let endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
+
+    if (endPage - startPage < maxVisiblePages - 1) {
+      startPage = Math.max(endPage - maxVisiblePages + 1, 1);
+    }
+
+    if (startPage > 1) {
+      pageNumbers.push(1);
+      if (startPage > 2) pageNumbers.push("...");
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pageNumbers.push(i);
+    }
+
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) pageNumbers.push("...");
+      pageNumbers.push(totalPages);
+    }
+
+    return pageNumbers;
+  };
+
+  const filteredTags = allTags.filter((tag) =>
+    tag.toLowerCase().includes(tagSearch.toLowerCase())
+  );
+
   return (
-    <div className="p-6">
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold mb-4 sm:mb-0">Tasks</h1>
+    <div className="p-6 md:p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Tasks</h1>
         <button
           className="bg-blue-500 text-white px-4 py-2 rounded-md flex items-center"
           onClick={() => setShowCreateTask(true)}
@@ -243,201 +280,213 @@ const TasksContent = () => {
               </button>
             </div>
             {showFilters && (
-        <div
-          ref={filterRef}
-          className="absolute right-0 mt-2 w-64 bg-white border rounded-md shadow-lg z-10 p-4"
-        >
-          <h3 className="text-lg font-semibold mb-2">Filters</h3>
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Your Budget</label>
-            <div className="flex items-center space-x-2">
-              <span>₹{filters.minPrice}</span>
-              <input
-                type="range"
-                min="0"
-                max="10000"
-                step="100"
-                value={filters.maxPrice}
-                onChange={(e) =>
-                  setFilters((prev) => ({ ...prev, maxPrice: parseInt(e.target.value) }))
-                }
-                className="w-full"
-              />
-              <span>₹{filters.maxPrice}</span>
-            </div>
-          </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Status</label>
-            <select
-              name="status"
-              value={filters.status}
-              onChange={handleFilterChange}
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-            >
-              <option value="">All</option>
-              <option value="open">Open</option>
-              <option value="assigned">Assigned</option>
-              <option value="completed">Completed</option>
-            </select>
-          </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Start Date</label>
-            <input
-              type="date"
-              name="startDate"
-              value={filters.startDate}
-              onChange={handleFilterChange}
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">End Date</label>
-            <input
-              type="date"
-              name="endDate"
-              value={filters.endDate}
-              onChange={handleFilterChange}
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-            />
-          </div>
-          <div className="flex justify-between">
-            <button
-              onClick={handleClearFilters}
-              className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300"
-            >
-              Clear
-            </button>
-            <button
-              onClick={handleApplyFilters}
-              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-            >
-              Apply Filters
-            </button>
-          </div>
-        </div>
-      )}
-          </div>
-
-          <table className="w-full">
-          <thead>
-            <tr className="text-left text-gray-500">
-              <th className="pb-4 w-[19%]">TASK NAME</th>
-              <th className="pb-4 w-[9%]">
-                <div className="flex items-center">
-                  DATE
-                  <button onClick={handleSort} className="ml-2">
-                    {sortOrder === "asc" ? (
-                      <ArrowUp className="w-4 h-4" />
-                    ) : (
-                      <ArrowDown className="w-4 h-4" />
-                    )}
+              <div
+                ref={filterRef}
+                className="absolute right-0 mt-2 w-64 bg-white border rounded-md shadow-lg z-10 p-4"
+              >
+                <h3 className="text-lg font-semibold mb-2">Filters</h3>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Your Budget
+                  </label>
+                  <div className="flex items-center space-x-2">
+                    <span>₹{filters.minPrice}</span>
+                    <input
+                      type="range"
+                      min="0"
+                      max="10000"
+                      step="100"
+                      value={filters.maxPrice}
+                      onChange={(e) =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          maxPrice: parseInt(e.target.value),
+                        }))
+                      }
+                      className="w-full"
+                    />
+                    <span>₹{filters.maxPrice}</span>
+                  </div>
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Status
+                  </label>
+                  <select
+                    name="status"
+                    value={filters.status}
+                    onChange={handleFilterChange}
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                  >
+                    <option value="">All</option>
+                    <option value="open">Open</option>
+                    <option value="assigned">Assigned</option>
+                    <option value="completed">Completed</option>
+                  </select>
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Start Date
+                  </label>
+                  <input
+                    type="date"
+                    name="startDate"
+                    value={filters.startDate}
+                    onChange={handleFilterChange}
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700">
+                    End Date
+                  </label>
+                  <input
+                    type="date"
+                    name="endDate"
+                    value={filters.endDate}
+                    onChange={handleFilterChange}
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                  />
+                </div>
+                <div className="flex justify-between">
+                  <button
+                    onClick={handleClearFilters}
+                    className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300"
+                  >
+                    Clear
+                  </button>
+                  <button
+                    onClick={handleApplyFilters}
+                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                  >
+                    Apply Filters
                   </button>
                 </div>
-              </th>
-              <th className="pb-4 w-[42%]">TAGS</th>
-              <th className="pb-4 w-[12%]">PRICE RANGE</th>
-              <th className="pb-4 w-[10%]">STATUS</th>
-              <th className="pb-4 w-[8%]"></th>
-            </tr>
-          </thead>
-
-            <tbody>
-              {tasks.map((task) => (
-                <tr key={task.id} className="border-t border-gray-200">
-                  <td className="py-4">{task.name}</td>
-                  <td className="py-4">
-                    {new Date(task.created_at).toLocaleDateString()}
-                  </td>
-                  <td className="py-4">
-                  <div className="flex flex-wrap gap-1">
-                    {task.tags.map((tag, index) => (
-                      <span
-                        key={index}
-                        className="bg-blue-100 text-blue-800 px-2 py-1 rounded-md text-sm whitespace-nowrap"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </td>
-
-                  <td className="py-4">
-                    ₹{task.lower_price} - ₹{task.higher_price}
-                  </td>
-                  <td className="py-4">
-                    <span
-                      className={`px-2 py-1 rounded-md ${
-                        task.is_completed
-                          ? "bg-gray-200 text-green-800"
-                          : task.is_assigned
-                          ? "bg-yellow-100 text-yellow-800"
-                          : "bg-green-300 text-black"
-                      }`}
-                    >
-                      {task.is_completed
-                        ? "Completed"
-                        : task.is_assigned
-                        ? "Assigned"
-                        : "Open"}
-                    </span>
-                  </td>
-                  <td className="py-4">
-                    <button
-                      className="bg-blue-100 text-blue-800 px-4 py-1 rounded-md"
-                      onClick={() => handleViewTask(task)}
-                    >
-                      View
-                    </button>
-                  </td>
+              </div>
+            )}
+          </div>
+          <div className="overflow-x-auto overflow-y-auto ">
+            <table className="min-w-full bg-white divide-y divide-gray-200">
+              <thead>
+                <tr className="text-left text-gray-500 ">
+                  <th className="pb-4 w-[19%]">TASK NAME</th>
+                  <th className="pb-4 w-[9%]">
+                    <div className="flex items-center">
+                      DATE
+                      <button onClick={handleSort} className="ml-2">
+                        {sortOrder === "asc" ? (
+                          <ArrowUp className="w-4 h-4" />
+                        ) : (
+                          <ArrowDown className="w-4 h-4" />
+                        )}
+                      </button>
+                    </div>
+                  </th>
+                  <th className="pb-4 w-[38%]">TAGS</th>
+                  <th className="pb-4 w-[16%]">PRICE RANGE</th>
+                  <th className="pb-4 w-[10%]">STATUS</th>
+                  <th className="pb-4 w-[8%]"></th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
 
-          <div className="pagination-container fixed bottom-0 w-full bg-white pb-20 flex ">
-            <nav>
-              <ul className="flex items-center space-x-2">
-                <li>
-                  <button
-                    className={`px-3 py-1 border rounded-md ${
-                      currentPage === 0
-                        ? "cursor-not-allowed opacity-50"
-                        : "hover:bg-gray-200"
-                    }`}
-                    onClick={() => handlePageClick(currentPage - 1)}
-                    disabled={currentPage === 0}
-                  >
-                    &lt;
-                  </button>
-                </li>
-                {getPageNumbers().map((page) => (
-                  <li key={page}>
+              <tbody>
+                {tasks.map((task) => (
+                  <tr key={task.id} className="border-t border-gray-200">
+                    <td className="py-4 md:py-4 text-sm md:text-base">
+                      {task.name}
+                    </td>
+                    <td className="py-4 md:py-4 text-sm md:text-base">
+                      {new Date(task.created_at).toLocaleDateString()}
+                    </td>
+                    <td className="py-4 md:py-4">
+                      <div className="flex flex-wrap gap-1">
+                        {task.tags.map((tag, index) => (
+                          <span
+                            key={index}
+                            className="bg-blue-100 text-blue-800 px-2 py-1 rounded-md text-sm whitespace-nowrap"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </td>
+
+                    <td className="py-2 md:py-4 text-sm md:text-base">
+                      ₹{task.lower_price} - ₹{task.higher_price}
+                    </td>
+                    <td className="py-2 md:py-4">
+                      <span
+                        className={`px-1 py-0.5 md:px-2 md:py-1 rounded-md text-xs md:text-sm ${
+                          task.is_completed
+                            ? "bg-gray-200 text-green-800"
+                            : task.is_assigned
+                            ? "bg-yellow-100 text-yellow-800"
+                            : "bg-green-300 text-black"
+                        }`}
+                      >
+                        {task.is_completed
+                          ? "Completed"
+                          : task.is_assigned
+                          ? "Assigned"
+                          : "Open"}
+                      </span>
+                    </td>
+                    <td className="py-2 md:py-4">
+                      <button
+                        className="bg-blue-100 text-blue-800 px-2 py-1 md:px-4 md:py-1 rounded-md text-xs md:text-sm"
+                        onClick={() => handleViewTask(task)}
+                      >
+                        View
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="pagination-container fixed bottom-0 left-8 w-full bg-white pb-4 pt-2 flex justify-center items-center">
+            <nav className="flex items-center space-x-1 md:space-x-2">
+              <button
+                className={`px-2 py-1 md:px-3 md:py-1 border rounded-md text-sm md:text-base ${
+                  currentPage === 1
+                    ? "cursor-not-allowed opacity-50"
+                    : "hover:bg-gray-200"
+                }`}
+                onClick={() => handlePageClick(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                &lt;
+              </button>
+              {getPageNumbers().map((page, index) => (
+                <React.Fragment key={index}>
+                  {typeof page === "number" ? (
                     <button
-                      className={`px-3 py-1 border rounded-md ${
+                      className={`px-2 py-1 md:px-3 md:py-1 border rounded-md text-sm md:text-base ${
                         currentPage === page
                           ? "bg-blue-500 text-white"
                           : "hover:bg-gray-200"
                       }`}
                       onClick={() => handlePageClick(page)}
                     >
-                      {page + 1}
+                      {page}
                     </button>
-                  </li>
-                ))}
-                <li>
-                  <button
-                    className={`px-3 py-1 border rounded-md ${
-                      currentPage === totalPages - 1
-                        ? "cursor-not-allowed opacity-50"
-                        : "hover:bg-gray-200"
-                    }`}
-                    onClick={() => handlePageClick(currentPage + 1)}
-                    disabled={currentPage === totalPages - 1}
-                  >
-                    &gt;
-                  </button>
-                </li>
-              </ul>
+                  ) : (
+                    <span className="px-1 md:px-2">...</span>
+                  )}
+                </React.Fragment>
+              ))}
+              <button
+                className={`px-2 py-1 md:px-3 md:py-1 border rounded-md text-sm md:text-base ${
+                  currentPage === totalPages
+                    ? "cursor-not-allowed opacity-50"
+                    : "hover:bg-gray-200"
+                }`}
+                onClick={() => handlePageClick(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                &gt;
+              </button>
             </nav>
           </div>
 

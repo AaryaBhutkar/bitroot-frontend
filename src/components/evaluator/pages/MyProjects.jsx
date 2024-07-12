@@ -17,18 +17,18 @@ const MyProjects = () => {
     try {
       const tabs = ["inprogress", "assigned", "interested"];
       const responses = await Promise.all(
-        tabs.map(tab => 
+        tabs.map((tab) =>
           axiosInstance.post("tasks/getEvalTasks", {
             evaluator_id: localStorage.getItem("user"),
             [tab === "inprogress" ? "in_progress" : `is_${tab}`]: 1,
           })
         )
       );
-      
+
       const newProjects = Object.fromEntries(
         tabs.map((tab, index) => [tab, responses[index].data.data])
       );
-      
+
       setProjects(newProjects);
     } catch (error) {
       console.error("Error fetching projects:", error);
@@ -49,7 +49,7 @@ const MyProjects = () => {
           evaluator_id: Number(localStorage.getItem("user")),
         }
       );
-      
+
       await fetchProjects();
       toast.success(`Task ${action}ed successfully`);
       window.dataLayer.push({ event: `${action} Task` });
@@ -76,18 +76,18 @@ const MyProjects = () => {
 
   const renderProjectItem = (project) => (
     <div key={project.id} className="bg-white shadow-md rounded-lg p-4 mb-4">
-      <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold">{project.name}</h3>
-        <div className="flex space-x-2">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+        <h3 className="text-lg font-semibold mb-2 sm:mb-0">{project.name}</h3>
+        <div className="flex flex-wrap gap-2 w-full sm:w-auto">
           <button
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 flex-grow sm:flex-grow-0"
             onClick={() => setSelectedProject(project)}
           >
             View
           </button>
           {activeTab === "inprogress" && (
             <button
-              className="bg-white-500 text-blue-500 border border-blue-500 px-4 py-2 rounded hover:bg-blue-600 hover:text-white"
+              className="bg-white text-blue-500 border border-blue-500 px-4 py-2 rounded hover:bg-blue-600 hover:text-white flex-grow sm:flex-grow-0"
               onClick={() => handleActionButton(project.id, "complete")}
             >
               Complete
@@ -95,7 +95,7 @@ const MyProjects = () => {
           )}
           {activeTab === "assigned" && (
             <button
-              className="bg-white-500 text-blue-500 border border-blue-500 px-4 py-2 rounded hover:bg-blue-600 hover:text-white"
+              className="bg-white text-blue-500 border border-blue-500 px-4 py-2 rounded hover:bg-blue-600 hover:text-white flex-grow sm:flex-grow-0"
               onClick={() => handleUnassignProject(project.id)}
             >
               DELETE
@@ -104,7 +104,12 @@ const MyProjects = () => {
         </div>
       </div>
       {["inprogress", "assigned"].includes(activeTab) && (
-        <Timer startTime={project.updated_at} />
+        <div className="mt-2">
+          <Timer
+            startTime={project.assigned_created_at}
+            turnaroundTime={project.turnaround_time}
+          />
+        </div>
       )}
     </div>
   );
@@ -130,11 +135,11 @@ const MyProjects = () => {
 
   return (
     <div className="p-4">
-      <div className="flex mb-4">
-        {tabs.map(tab => (
+      <div className="flex flex-wrap gap-2 mb-4">
+        {tabs.map((tab) => (
           <button
             key={tab.key}
-            className={`mr-2 px-4 py-2 rounded ${
+            className={`px-4 py-2 rounded flex-grow sm:flex-grow-0 text-sm sm:text-base ${
               activeTab === tab.key
                 ? "bg-blue-500 text-white"
                 : "bg-gray-200 text-gray-700"
@@ -148,7 +153,9 @@ const MyProjects = () => {
       <div>
         {projects[activeTab].length > 0
           ? projects[activeTab].map(renderProjectItem)
-          : renderNoTasksMessage(tabs.find(tab => tab.key === activeTab).label)}
+          : renderNoTasksMessage(
+              tabs.find((tab) => tab.key === activeTab).label
+            )}
       </div>
       {selectedProject && (
         <ProjectDetailsModal
