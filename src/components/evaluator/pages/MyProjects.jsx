@@ -17,18 +17,18 @@ const MyProjects = () => {
     try {
       const tabs = ["inprogress", "assigned", "interested"];
       const responses = await Promise.all(
-        tabs.map(tab => 
+        tabs.map((tab) =>
           axiosInstance.post("tasks/getEvalTasks", {
             evaluator_id: localStorage.getItem("user"),
             [tab === "inprogress" ? "in_progress" : `is_${tab}`]: 1,
           })
         )
       );
-      
+
       const newProjects = Object.fromEntries(
         tabs.map((tab, index) => [tab, responses[index].data.data])
       );
-      
+
       setProjects(newProjects);
     } catch (error) {
       console.error("Error fetching projects:", error);
@@ -49,7 +49,7 @@ const MyProjects = () => {
           evaluator_id: Number(localStorage.getItem("user")),
         }
       );
-      
+
       await fetchProjects();
       toast.success(`Task ${action}ed successfully`);
       window.dataLayer.push({ event: `${action} Task` });
@@ -105,12 +105,14 @@ const MyProjects = () => {
       </div>
       {["inprogress", "assigned"].includes(activeTab) && (
         <div className="mt-2">
-          <Timer startTime={project.updated_at} />
+          <Timer
+            startTime={project.assigned_created_at}
+            turnaroundTime={project.turnaround_time}
+          />
         </div>
       )}
     </div>
   );
-
 
   const renderNoTasksMessage = (tabName) => (
     <div className="bg-gray-100 border-l-4 text-gray-700 p-4 mb-4">
@@ -134,7 +136,7 @@ const MyProjects = () => {
   return (
     <div className="p-4">
       <div className="flex flex-wrap gap-2 mb-4">
-        {tabs.map(tab => (
+        {tabs.map((tab) => (
           <button
             key={tab.key}
             className={`px-4 py-2 rounded flex-grow sm:flex-grow-0 text-sm sm:text-base ${
@@ -151,7 +153,9 @@ const MyProjects = () => {
       <div>
         {projects[activeTab].length > 0
           ? projects[activeTab].map(renderProjectItem)
-          : renderNoTasksMessage(tabs.find(tab => tab.key === activeTab).label)}
+          : renderNoTasksMessage(
+              tabs.find((tab) => tab.key === activeTab).label
+            )}
       </div>
       {selectedProject && (
         <ProjectDetailsModal

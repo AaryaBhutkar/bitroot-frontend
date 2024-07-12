@@ -16,7 +16,7 @@ const LoginPage = () => {
   useEffect(() => {
     if (location.state && location.state.role) {
       setRole(location.state.role);
-    }else{
+    } else {
       setRole(localStorage.getItem("role"));
     }
   }, [location.state]);
@@ -59,8 +59,8 @@ const LoginPage = () => {
 
   return (
     <Layout className="min-h-screen">
-      <Content className="flex">
-        <div className="w-2/5 bg-blue-50 p-12 flex flex-col justify-between">
+      <Content className="flex flex-col md:flex-row">
+        <div className="hidden md:flex w-2/5 bg-blue-50 p-12 flex-col justify-between">
           <div>
             <Title level={1} className="text-gray-800">
               We are Bitroot
@@ -68,10 +68,12 @@ const LoginPage = () => {
               We design zero to one platform.
             </Title>
           </div>
-          <img src="logo.svg" alt="Bitroot" className="h-8" />
+          <div className="mt-auto">
+            <img src="logo.svg" alt="Bitroot" className="h-8" />
+          </div>
         </div>
 
-        <div className="w-3/5 p-12 flex items-center justify-center bg-gray-100">
+        <div className="w-full md:w-3/5 p-12 flex items-center justify-center bg-gray-100 min-h-screen md:min-h-0">
           <Card className="w-full max-w-2xl shadow-lg">
             <Title level={3} className="text-center mb-8 p-5">Sign-in as {role}</Title>
             <Form form={form} onFinish={handleLogin} layout="vertical" size="large">
