@@ -84,10 +84,12 @@ const TasksContent = () => {
     const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
     setSortOrder(newSortOrder);
 
+    console.log("currentpagec:: ", currentPage);
+
     try {
       const response = await axiosInstance.post("tasks/getTasks", {
         size: pageSize,
-        page: currentPage,
+        page: currentPage -1,
         lower_price: filters.minPrice,
         higher_price: filters.maxPrice,
         search: searchTerm,
