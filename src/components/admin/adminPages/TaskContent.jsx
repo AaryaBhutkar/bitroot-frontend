@@ -5,8 +5,6 @@ import { toast } from "react-hot-toast";
 import axiosInstance from "../../utils/axiosInstance";
 import CreateNewTask from "./CreateNewTask";
 import TaskDetailsPopup from "./TaskDetailsPopup";
-import TaskRow from "./TaskRow";
-import Pagination from "./Pagination";
 
 const TasksContent = () => {
   const [tasks, setTasks] = useState([]);
@@ -41,7 +39,6 @@ const TasksContent = () => {
   );
 
   useEffect(() => {
-    getTasks();
     debouncedGetTasks();
 
     const handleClickOutside = (event) => {
@@ -119,7 +116,6 @@ const TasksContent = () => {
 
   const handleSearchClear = () => {
     setSearchTerm("");
-    getTasks("");
     debouncedGetTasks();
   };
 
@@ -128,6 +124,15 @@ const TasksContent = () => {
     setFilters((prevFilters) => ({
       ...prevFilters,
       [name]: value,
+    }));
+  };
+
+  const handleTagFilter = (tag) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      tags: prevFilters.tags.includes(tag)
+        ? prevFilters.tags.filter((t) => t !== tag)
+        : [...prevFilters.tags, tag],
     }));
   };
 
@@ -141,7 +146,6 @@ const TasksContent = () => {
       startDate: "",
       endDate: "",
     });
-    getTasks();
     setTagSearch("");
     setIsFiltered(false);
     debouncedGetTasks();
@@ -181,7 +185,7 @@ const TasksContent = () => {
     }
   };
 
-  const handlePageChange = (page) => {
+  const handlePageClick = (page) => {
     setCurrentPage(page);
   };
 
@@ -489,12 +493,6 @@ const TasksContent = () => {
               </button>
             </nav>
           </div>
-
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
         </>
       )}
 
