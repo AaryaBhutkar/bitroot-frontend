@@ -74,7 +74,6 @@ import {
   PlusCircleOutlined,
   PullRequestOutlined,
   LineChartOutlined,
-  LogoutOutlined,
   ClockCircleOutlined
 } from "@ant-design/icons";
 
@@ -103,9 +102,9 @@ const Sidebar = ({ onSidebarClick, activePage }) => {
   return (
     <aside className="w-64 bg-blue-50 p-4 flex flex-col justify-between min-h-screen">
       <div>
-        <div className="mb-8 ">
+        {/* <div className="mb-8 ">
           <img src="/logo.png" alt="Bitroot" className="h-10 mb-4" />
-        </div>
+        </div> */}
         <nav>
           <ul className="space-y-2">
             {buttons.map((button) => (
@@ -125,17 +124,6 @@ const Sidebar = ({ onSidebarClick, activePage }) => {
             ))}
           </ul>
         </nav>
-      </div>
-      <div className="mt-auto">
-        {/* <Link
-          to="/role"
-          className="flex items-center space-x-2 p-2 rounded transition-colors hover:bg-white/50"
-        >
-          <span className="flex-shrink-0">
-            <LogoutOutlined className="h-6 w-6" />
-          </span>
-          <span className="flex-shrink-0">LOGOUT</span>
-        </Link> */}
       </div>
     </aside>
   );
