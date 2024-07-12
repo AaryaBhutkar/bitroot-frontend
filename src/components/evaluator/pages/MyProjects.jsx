@@ -55,7 +55,7 @@ const MyProjects = () => {
       window.dataLayer.push({ event: `${action} Task` });
     } catch (error) {
       console.error(`Error ${action}ing project:`, error);
-      toast.error(`Failed to ${action} the task. Please try again.`);
+      // toast.error(`Failed to ${action} the task. Please try again.`);
     }
   };
 
