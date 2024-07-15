@@ -210,7 +210,11 @@ const SignUp = () => {
                     <span className="text-sm">
                       I Agree to the{' '}
                       <Link to="/TnC" className="text-blue-500 inline-flex items-center">
-                        Terms and Conditions, Privacy Policy
+                        Terms and Conditions
+                        <ArrowRightOutlined className="ml-1" />
+                      </Link>
+                      <Link to="/Pp" className="text-blue-500 inline-flex items-center">
+                        Privacy Policy
                         <ArrowRightOutlined className="ml-1" />
                       </Link>
                     </span>
