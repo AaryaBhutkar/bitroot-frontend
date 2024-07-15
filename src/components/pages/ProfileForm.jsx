@@ -10,13 +10,25 @@ const ProfileForm = () => {
     tags: [],
   });
   const [errors, setErrors] = useState({});
-  const [availableTags, setAvailableTags] = useState([
-    { id: 1, name: "Frontend Developer" },
-    { id: 2, name: "Backend Developer" },
-    { id: 3, name: "Flutter" },
-  ]);
-  const [newTag, setNewTag] = useState("");
+  const [availableTags, setAvailableTags] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchTags();
+  }, []);
+
+  const fetchTags = async () => {
+    try {
+      const response = await axiosInstance.post('users/getTags', {});
+      if (response.data && response.data.success && Array.isArray(response.data.data)) {
+        setAvailableTags(response.data.data);
+      } else {
+        console.error('Invalid tag data received:', response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching tags:', error);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -24,50 +36,22 @@ const ProfileForm = () => {
     setErrors({ ...errors, [id]: "" });
   };
 
-  const handleTagToggle = (tagId) => {
-    setFormData((prev) => ({
-      ...prev,
-      tags: prev.tags.includes(tagId)
-        ? prev.tags.filter((id) => id !== tagId)
-        : [...prev.tags, tagId],
-    }));
-  };
-
-  const handleAddNewTag = () => {
-    if (newTag.trim() !== "" && formData.tags.length < 5) {
-      const newTagObject = {
-        id: availableTags.length + 1,
-        name: newTag.trim(),
-      };
-      setAvailableTags([...availableTags, newTagObject]);
-      setNewTag("");
-      handleTagToggle(newTagObject.id);
+  const handleTagChange = (e) => {
+    const selectedValue = e.target.value;
+    if (selectedValue && !formData.tags.includes(selectedValue) && formData.tags.length < 6) {
+      setFormData(prevData => ({
+        ...prevData,
+        tags: [...prevData.tags, selectedValue]
+      }));
     }
   };
 
-  const handleTagRemove = (tagId) => {
-    setFormData((prev) => ({
-      ...prev,
-      tags: prev.tags.filter((id) => id !== tagId),
+  const handleTagRemove = (tagToRemove) => {
+    setFormData(prevData => ({
+      ...prevData,
+      tags: prevData.tags.filter(tag => tag !== tagToRemove)
     }));
-    setAvailableTags((prev) => prev.filter((tag) => tag.id !== tagId));
   };
-  // const handleAddNewTag = () => {
-  //   if (newTag.trim() !== "") {
-  //     const newTagObject = {
-  //       id: availableTags.length + 1,
-  //       name: newTag.trim(),
-  //     };
-  //     setAvailableTags([...availableTags, newTagObject]);
-  //     setNewTag("");
-  //     handleTagToggle(newTagObject.id);
-  //   }
-  // };
-
-  const selectedTags = formData.tags.map((tagId) => {
-    const tag = availableTags.find((tag) => tag.id === tagId);
-    return tag ? tag.name : "";
-  });
 
   const validateForm = () => {
     let newErrors = {};
@@ -95,14 +79,15 @@ const ProfileForm = () => {
     }
     try {
       const response = await axiosInstance.post("users/completeProfile", {
-        user_id: localStorage.getItem("user"), // You need to implement this function
-        ...formData,
+        user_id: localStorage.getItem("user"),
+        contact: formData.contact,
+        linkedin_url: formData.linkedin_url,
         yoe: parseInt(formData.yoe, 10),
-        tags: selectedTags,
+        tags: formData.tags,
         is_fetch: 0,
       });
 
-      const data = await response.data;
+      const data = response.data;
 
       if (data.success) {
         navigate("/evaluatorDashboard");
@@ -119,10 +104,7 @@ const ProfileForm = () => {
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label
-              htmlFor="contact"
-              className="block mb-2 text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="contact" className="block mb-2 text-sm font-medium text-gray-700">
               Contact Number:
             </label>
             <input
@@ -137,10 +119,7 @@ const ProfileForm = () => {
           </div>
 
           <div className="mb-4">
-            <label
-              htmlFor="linkedin_url"
-              className="block mb-2 text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="linkedin_url" className="block mb-2 text-sm font-medium text-gray-700">
               LinkedIn:
             </label>
             <input
@@ -153,10 +132,7 @@ const ProfileForm = () => {
           </div>
 
           <div className="mb-4">
-            <label
-              htmlFor="yoe"
-              className="block mb-2 text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="yoe" className="block mb-2 text-sm font-medium text-gray-700">
               Years of Experience:
             </label>
             <input
@@ -168,58 +144,45 @@ const ProfileForm = () => {
               max="50"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            {errors.yoe && (
-              <p className="mt-1 text-sm text-red-600">{errors.yoe}</p>
-            )}
+            {errors.yoe && <p className="mt-1 text-sm text-red-600">{errors.yoe}</p>}
           </div>
 
           <div className="mb-4">
-            <label className="block mb-2 text-sm font-medium text-gray-700">
-              Tags:
+            <label htmlFor="tags" className="block mb-2 text-sm font-medium text-gray-700">
+              Tags (Select up to 6):
             </label>
-            <div className="flex flex-wrap gap-2 mb-2">
-              {availableTags.map((tag) => (
-                <span
-                  key={tag.id}
-                  onClick={() => handleTagToggle(tag.id)}
-                  className={`px-3 py-1 text-sm rounded-full cursor-pointer ${
-                    formData.tags.includes(tag.id)
-                      ? "bg-blue-500 text-white"
-                      : "bg-gray-200"
-                  }`}
-                >
+            <select
+              id="tags"
+              value=""
+              onChange={handleTagChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="" disabled>Select a tag</option>
+              {availableTags.map(tag => (
+                <option key={tag.id} value={tag.name}>
                   {tag.name}
-                  {formData.tags.includes(tag.id) && (
-                    <span
-                      className="ml-1 text-xs text-red-600 cursor-pointer"
-                      onClick={() => handleTagRemove(tag.id)}
-                    >
-                      ×
-                    </span>
-                  )}
-                </span>
+                </option>
               ))}
-            </div>
-            <div className="flex">
-              <input
-                type="text"
-                value={newTag}
-                onChange={(e) => setNewTag(e.target.value)}
-                placeholder="Add a new tag"
-                className="flex-grow px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <button
-                type="button"
-                onClick={handleAddNewTag}
-                className="px-4 py-2 text-white bg-blue-500 rounded-r-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              >
-                Add
-              </button>
-              <span className="ml-2 text-sm text-gray-600">
-                {formData.tags.length} / 5 tags added
-              </span>
+            </select>
+            <div className="mt-2">
+              <p className="text-sm text-gray-500">Selected tags:</p>
+              <div className="flex flex-wrap gap-2 mt-2">
+                {formData.tags.map((tag, index) => (
+                  <span key={index} className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                    {tag}
+                    <button
+                      type="button"
+                      onClick={() => handleTagRemove(tag)}
+                      className="ml-2 text-red-500 hover:text-red-700"
+                    >
+                      ✕
+                    </button>
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
+
           <div className="mt-6">
             <button
               type="submit"
