@@ -932,7 +932,7 @@ const TasksContent = () => {
                       }`}
                       onClick={() => handlePageClick(page)}
                     >
-                      {page}
+                      {page+1}
                     </button>
                   ) : (
                     <span className="px-1 md:px-2">...</span>
