@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
-import axiosInstance from '../../utils/axiosInstance'; // Adjust this import path as needed
+import axiosInstance from '../../utils/axiosInstance';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658', '#8dd1e1'];
 
@@ -12,13 +13,14 @@ const AnalyticsDashboard = () => {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const isMobile = useMediaQuery('(max-width:768px)');
 
   useEffect(() => {
     const fetchAnalyticsData = async () => {
       try {
         const response = await axiosInstance.post('dash/getAnalytics', {});
         setAnalyticsData(response.data.data[0]);
-        console.log('Fetched data:', response.data.data[0]); // Debug log
+        console.log('Fetched data:', response.data.data[0]);
       } catch (error) {
         console.error('Error fetching analytics data:', error);
         setError('Failed to fetch analytics data');
@@ -38,7 +40,7 @@ const AnalyticsDashboard = () => {
     return <div style={{ padding: '1rem', color: 'red' }}>{error}</div>;
   }
 
-  const { task_metrics, rejected, leaderboard,yoe } = analyticsData;
+  const { task_metrics, rejected, leaderboard, yoe } = analyticsData;
 
   const topMetrics = [
     { label: 'EVALUATORS', value: leaderboard.length },
@@ -54,10 +56,10 @@ const AnalyticsDashboard = () => {
     value: item.completed
   }));
 
-  const yearsOfExperienceData = yoe.map(item=>({
-    name:item.yoe||"not given",
-    value:item.count
-  }))
+  const yearsOfExperienceData = yoe.map(item => ({
+    name: item.yoe || "not given",
+    value: item.count
+  }));
 
   const renderPieChart = (data, title) => (
     <div style={{ border: '1px solid #e2e8f0', borderRadius: '0.375rem', padding: '1rem' }}>
@@ -93,7 +95,7 @@ const AnalyticsDashboard = () => {
 
   return (
     <div style={{ padding: '1rem' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '1rem', marginBottom: '1.5rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(6, 1fr)', gap: '1rem', marginBottom: '1.5rem' }}>
         {topMetrics.map((metric, index) => (
           <div key={index} style={{ border: '1px solid #e2e8f0', borderRadius: '0.375rem', padding: '1rem' }}>
             <div style={{ fontWeight: 'bold', fontSize: '0.875rem', marginBottom: '0.5rem' }}>{metric.label}</div>
@@ -101,8 +103,8 @@ const AnalyticsDashboard = () => {
           </div>
         ))}
       </div>
-      
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '1rem' }}>
         {renderPieChart(taskCompletedData, 'MOST TASK COMPLETED')}
         {renderPieChart(yearsOfExperienceData, 'YEARS OF EXPERIENCE')}
       </div>
