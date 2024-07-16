@@ -228,7 +228,7 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
 
           <div>
             <label htmlFor="turnaround_time" className="block text-sm font-medium text-gray-700">
-              Turnaround Time (hours, optional):
+              Turnaround Time (hours):
             </label>
             <div className="flex items-center space-x-2">
               <input
@@ -238,7 +238,7 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
                 value={taskData.turnaround_time}
                 onChange={handleChange}
                 min="1"
-                className="w-20 m-1 pl-1 text-center rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                className="w-20 m-1 pl-0 text-center rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                 placeholder="Optional"
               />
             </div>
