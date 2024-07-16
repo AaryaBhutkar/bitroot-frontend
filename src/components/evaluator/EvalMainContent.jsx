@@ -15,6 +15,18 @@ const EvalMainContent = ({ activePage }) => {
   const [tasks, setTasks] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
 
   const EvaluatorName = localStorage.getItem("name");
 
@@ -40,12 +52,12 @@ const EvalMainContent = ({ activePage }) => {
       message: 'Logout Successful',
       description: 'You have been logged out successfully.',
     });
-    window.location.href = "/role";
+    window.location.href = "/login";
   };
 
   useEffect(() => {
     if (!localStorage.getItem("token") || !localStorage.getItem("user")) {
-      window.location.href = "/role";
+      window.location.href = "/login";
     }
   }, []);
 

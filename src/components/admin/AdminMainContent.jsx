@@ -6,12 +6,23 @@ import TasksContent from "./adminPages/TaskContent";
 import RequestsList from "./adminPages/RequestsList";
 import EvaluatorDetails from "./EvaluatorDetails";
 import AdminHistory from "./adminPages/AdminHistory";
+import AnalyticsDashboard from "./adminPages/AnalyticsDashboard";
 
 const AdminMainContent = ({ activePage }) => {
   const [showProfileInfo, setShowProfileInfo] = useState(false);
   const [currentView, setCurrentView] = useState(activePage);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [tasksKey, setTasksKey] = useState(0); // New state to trigger re-render
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleProfileClick = () => {
     setShowProfileInfo(!showProfileInfo);
@@ -49,13 +60,13 @@ const AdminMainContent = ({ activePage }) => {
   const handleLogout = () => {
     // Clear local storage and navigate to login or role page
     localStorage.removeItem("token");
-    window.location.href = "/role";
+    window.location.href = "/login";
   };
 
   const content = (
     <div>
       <Link
-        to="/role"
+        to="/login"
         onClick={handleLogout}
         className="flex items-center bg-blue-500 space-x-2 p-2 rounded transition-colors "
       >
@@ -86,26 +97,33 @@ const AdminMainContent = ({ activePage }) => {
         {currentView === "requests" && (
           <RequestsList onViewRequest={handleViewRequest} />
         )}
-        {currentView === "analytics" && <div><div style={{ position: 'relative', width: '100%', paddingTop: '56.25%' }}>
-        <iframe
-  title="Embedded Looker Report"
-  src="https://lookerstudio.google.com/embed/reporting/bdc45f62-dd7b-4381-96d3-c76a8dca12a9/page/FEG5D"
-  frameBorder="0"
-  style={{
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    border: 'none'
-  }}
-  allowFullScreen
-  sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
-></iframe>
-
-</div>
-
-</div>}
+        {currentView === "analytics" && (<AnalyticsDashboard/>
+          // <div>
+          //   <div
+          //     style={{
+          //       position: "relative",
+          //       width: "100%",
+          //       paddingTop: "56.25%",
+          //     }}
+          //   >
+          //     <iframe
+          //       title="Embedded Looker Report"
+          //       src="https://lookerstudio.google.com/embed/reporting/bdc45f62-dd7b-4381-96d3-c76a8dca12a9/page/FEG5D"
+          //       frameBorder="0"
+          //       style={{
+          //         position: "absolute",
+          //         top: 0,
+          //         left: 0,
+          //         width: "100%",
+          //         height: "100%",
+          //         border: "none",
+          //       }}
+          //       allowFullScreen
+          //       sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+          //     ></iframe>
+          //   </div>
+          // </div>
+        )}
         {currentView === "evaluatorDetails" && selectedRequest && (
           <EvaluatorDetails
             evaluatorId={selectedRequest.evaluator_id}
