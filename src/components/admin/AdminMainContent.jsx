@@ -33,6 +33,10 @@ const AdminMainContent = ({ activePage }) => {
       // Navigate to role
       window.location.href = "/role";
     }
+    if(localStorage.getItem("user") && parseInt(localStorage.getItem("user"))>0){
+      window.location.href = "/role";
+
+    }
   }, []);
 
   useEffect(() => {
