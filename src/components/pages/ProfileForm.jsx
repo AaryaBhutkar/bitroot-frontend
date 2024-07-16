@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
+import { toast } from "react-toastify";
 
 const ProfileForm = () => {
   const [formData, setFormData] = useState({
@@ -43,6 +44,8 @@ const ProfileForm = () => {
         ...prevData,
         tags: [...prevData.tags, selectedValue]
       }));
+    }if(formData.tags.length >= 6){
+      toast.error('Only 6 tags allowed !');
     }
   };
 

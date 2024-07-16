@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../utils/axiosInstance";
 import { X } from 'lucide-react';
+import { toast } from "react-toastify";
 
 const ProfileInfo = ({ onClose }) => {
   const [profile, setProfile] = useState(null);
@@ -71,6 +72,8 @@ const ProfileInfo = ({ onClose }) => {
         ...prevProfile,
         tags: [...prevProfile.tags, selectedValue]
       }));
+    }if( profile.tags.length >= 6){
+      toast.error('Only 6 tags allowed !')
     }
   };
 
@@ -119,6 +122,8 @@ const ProfileInfo = ({ onClose }) => {
           name={name}
           value={profile[name]}
           onChange={handleInputChange}
+          min="0"
+          max="50"
           className="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         />
       ) : (
