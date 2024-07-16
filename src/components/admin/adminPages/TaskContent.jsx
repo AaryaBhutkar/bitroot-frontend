@@ -477,6 +477,7 @@ import { toast } from "react-hot-toast";
 import axiosInstance from "../../utils/axiosInstance";
 import CreateNewTask from "./CreateNewTask";
 import TaskDetailsPopup from "./TaskDetailsPopup";
+import MobileTaskCard from "./MobileTaskCard";
 
 const TasksContent = () => {
   const [tasks, setTasks] = useState([]);
@@ -497,6 +498,19 @@ const TasksContent = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [isFiltered, setIsFiltered] = useState(false);
   const [sortOrder, setSortOrder] = useState("asc");
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768); // Adjust this breakpoint as needed
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const filterRef = useRef(null);
 
@@ -638,8 +652,8 @@ const TasksContent = () => {
   };
 
   return (
-    <div className="p-6 flex flex-col h-full">
-      <div className="flex justify-between items-center mb-6">
+    <div className="p-4 flex flex-col h-full">
+      <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Tasks</h1>
         <button
           className="bg-blue-500 text-white px-4 py-2 rounded-md flex items-center hover:bg-blue-700"
@@ -655,7 +669,7 @@ const TasksContent = () => {
           onTaskCreated={() => getTasks(0)}
         />
       ) : (
-        <>
+        <div className="flex flex-col h-full">
           <div className="mb-6 relative">
             <div className="relative">
               <input
@@ -770,86 +784,110 @@ const TasksContent = () => {
               </div>
             )}
           </div>
-
-          <div className="overflow-x-auto overflow-y-auto">
-            <table className="min-w-full bg-white divide-y divide-gray-200">
-              <thead>
-                <tr className="text-left text-gray-500">
-                  <th className="pb-4 w-[19%]">TASK NAME</th>
-                  <th className="pb-4 w-[9%]">
-                    <div className="flex items-center">
-                      DATE
-                      <button onClick={handleSort} className="ml-2">
-                        {sortOrder === "asc" ? (
-                          <ArrowUp className="w-4 h-4" />
-                        ) : (
-                          <ArrowDown className="w-4 h-4" />
-                        )}
-                      </button>
-                    </div>
-                  </th>
-                  <th className="pb-4 w-[38%]">TAGS</th>
-                  <th className="pb-4 w-[16%]">PRICE RANGE</th>
-                  <th className="pb-4 w-[10%]">STATUS</th>
-                  <th className="pb-4 w-[8%]"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {tasks.map((task) => (
-                  <tr key={task.id} className="border-t border-gray-200">
-                    <td className="py-4 md:py-4 text-sm md:text-base">
-                      {task.name}
-                    </td>
-                    <td className="py-4 md:py-4 text-sm md:text-base">
-                      {new Date(task.created_at).toLocaleDateString()}
-                    </td>
-                    <td className="py-4 md:py-4">
-                      <div className="flex flex-wrap gap-1">
-                        {task.tags.map((tag, index) => (
-                          <span
-                            key={index}
-                            className="bg-blue-100 text-blue-800 px-2 py-1 rounded-md text-sm whitespace-nowrap"
+          <div className="flex-grow overflow-hidden">
+            <div className="h-full flex flex-col">
+              {isMobile ? (
+                <div className="overflow-y-auto flex-grow">
+                  {tasks.map((task) => (
+                    <MobileTaskCard
+                      key={task.id}
+                      task={task}
+                      onViewTask={handleViewTask}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full bg-white divide-y divide-gray-200">
+                      <thead>
+                        <tr className="text-left text-gray-500">
+                          <th className="pb-4 w-[19%]">TASK NAME</th>
+                          <th className="pb-4 w-[9%]">
+                            <div className="flex items-center">
+                              DATE
+                              <button onClick={handleSort} className="ml-2">
+                                {sortOrder === "asc" ? (
+                                  <ArrowUp className="w-4 h-4" />
+                                ) : (
+                                  <ArrowDown className="w-4 h-4" />
+                                )}
+                              </button>
+                            </div>
+                          </th>
+                          <th className="pb-4 w-[38%]">TAGS</th>
+                          <th className="pb-4 w-[16%]">PRICE RANGE</th>
+                          <th className="pb-4 w-[10%]">STATUS</th>
+                          <th className="pb-4 w-[8%]"></th>
+                        </tr>
+                      </thead>
+                    </table>
+                  </div>
+                  <div className="overflow-y-auto flex-grow">
+                    <table className="min-w-full bg-white divide-y divide-gray-200">
+                      <tbody>
+                        {tasks.map((task) => (
+                          <tr
+                            key={task.id}
+                            className="border-t border-gray-200"
                           >
-                            {tag}
-                          </span>
+                            <td className="py-4 md:py-4 text-sm md:text-base w-[19%]">
+                              {task.name}
+                            </td>
+                            <td className="py-4 md:py-4 text-sm md:text-base w-[9%]">
+                              {new Date(task.created_at).toLocaleDateString()}
+                            </td>
+                            <td className="py-4 md:py-4 w-[38%]">
+                              <div className="flex flex-wrap gap-1">
+                                {task.tags.map((tag, index) => (
+                                  <span
+                                    key={index}
+                                    className="bg-blue-100 text-blue-800 px-2 py-1 rounded-md text-sm whitespace-nowrap"
+                                  >
+                                    {tag}
+                                  </span>
+                                ))}
+                              </div>
+                            </td>
+                            <td className="py-2 md:py-4 text-sm md:text-base w-[16%]">
+                              ₹{task.lower_price} - ₹{task.higher_price}
+                            </td>
+                            <td className="py-2 md:py-4 w-[10%]">
+                              <span
+                                className={`px-1 py-0.5 md:px-2 md:py-1 rounded-md text-xs md:text-sm ${
+                                  task.is_completed
+                                    ? "bg-gray-200 text-green-800"
+                                    : task.is_assigned
+                                    ? "bg-yellow-100 text-yellow-800"
+                                    : "bg-green-300 text-black"
+                                }`}
+                              >
+                                {task.is_completed
+                                  ? "Completed"
+                                  : task.is_assigned
+                                  ? "Assigned"
+                                  : "Open"}
+                              </span>
+                            </td>
+                            <td className="py-2 md:py-4 w-[8%]">
+                              <button
+                                className="bg-blue-100 text-blue-800 px-2 py-1 md:px-4 md:py-1 rounded-md text-xs md:text-sm"
+                                onClick={() => handleViewTask(task)}
+                              >
+                                View
+                              </button>
+                            </td>
+                          </tr>
                         ))}
-                      </div>
-                    </td>
-                    <td className="py-2 md:py-4 text-sm md:text-base">
-                      ₹{task.lower_price} - ₹{task.higher_price}
-                    </td>
-                    <td className="py-2 md:py-4">
-                      <span
-                        className={`px-1 py-0.5 md:px-2 md:py-1 rounded-md text-xs md:text-sm ${
-                          task.is_completed
-                            ? "bg-gray-200 text-green-800"
-                            : task.is_assigned
-                            ? "bg-yellow-100 text-yellow-800"
-                            : "bg-green-300 text-black"
-                        }`}
-                      >
-                        {task.is_completed
-                          ? "Completed"
-                          : task.is_assigned
-                          ? "Assigned"
-                          : "Open"}
-                      </span>
-                    </td>
-                    <td className="py-2 md:py-4">
-                      <button
-                        className="bg-blue-100 text-blue-800 px-2 py-1 md:px-4 md:py-1 rounded-md text-xs md:text-sm"
-                        onClick={() => handleViewTask(task)}
-                      >
-                        View
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                      </tbody>
+                    </table>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
 
-          <div className="pagination-container fixed bottom-0 w-2/3 bg-white pb-4 pt-2 flex justify-start items-center">
+          <div className="pagination-container fixed bottom-0 w-auto bg-white p-2 flex justify-start items-center">
             <nav className="flex items-center space-x-1 md:space-x-2">
               <button
                 className={`px-2 py-1 md:px-3 md:py-1 border rounded-md text-sm md:text-base ${
@@ -888,7 +926,7 @@ const TasksContent = () => {
               </button>
             </nav>
           </div>
-        </>
+        </div>
       )}
 
       {selectedTask && (
