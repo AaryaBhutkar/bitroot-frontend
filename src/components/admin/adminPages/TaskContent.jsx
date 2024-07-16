@@ -687,24 +687,10 @@ const TasksContent = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Tasks</h1>
         <button
-          className="bg-blue-500 text-white px-4 py-2 rounded-md flex items-center"
+          className="bg-blue-500 text-white px-4 py-2 rounded-md flex items-center hover:bg-blue-700"
           onClick={() => setShowCreateTask(true)}
         >
-          Create New Task
-          <svg
-            className="w-5 h-5 ml-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-            />
-          </svg>
+          Create New Task +
         </button>
       </div>
 

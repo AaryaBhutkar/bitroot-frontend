@@ -67,52 +67,56 @@
 // export default Sidebar;
 
 
-
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   PlusCircleOutlined,
   PullRequestOutlined,
   LineChartOutlined,
-  ClockCircleOutlined
+  ClockCircleOutlined,
+  CloseOutlined
 } from "@ant-design/icons";
 
-const Sidebar = ({ onSidebarClick, activePage }) => {
-  const [activeTab, setActiveTab] = useState(activePage || "tasks");
-
-  // const buttons = [
-  //   { name: "TASKS", icon: <PlusCircleOutlined /> },
-  //   { name: "REQUESTS", icon: <PullRequestOutlined /> },
-  //   { name: "ANALYTICS", icon: <LineChartOutlined /> },
-  //   { name: "HISTORY", icon: <ClockCircleOutlined /> },
-  // ];
+const Sidebar = ({ onClose }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const buttons = [
-    { name: "tasks", label: "TASKS", icon: <PlusCircleOutlined /> },
-    { name: "requests", label: "REQUESTS", icon: <PullRequestOutlined /> },
-    { name: "analytics", label: "ANALYTICS", icon: <LineChartOutlined /> },
-    { name: "history", label: "HISTORY", icon: <ClockCircleOutlined /> }
+    { name: "tasks", label: "TASKS", icon: <PlusCircleOutlined />, path: "/adminDashboard/tasks" },
+    { name: "requests", label: "REQUESTS", icon: <PullRequestOutlined />, path: "/adminDashboard/requests" },
+    { name: "analytics", label: "ANALYTICS", icon: <LineChartOutlined />, path: "/adminDashboard/analytics" },
+    { name: "history", label: "HISTORY", icon: <ClockCircleOutlined />, path: "/adminDashboard/history" }
   ];
 
-  const handleSidebarClick = (name) => {
-    setActiveTab(name);
-    onSidebarClick(name);
+  const getActivePage = () => {
+    const path = location.pathname.split('/').pop();
+    return buttons.find(button => button.name === path)?.name || "tasks";
+  };
+
+  const handleSidebarClick = (path) => {
+    navigate(path);
+    if (onClose) onClose();
   };
 
   return (
     <aside className="w-64 bg-blue-50 p-4 flex flex-col justify-between min-h-screen">
       <div>
-        {/* <div className="mb-8 ">
-          <img src="/logo.png" alt="Bitroot" className="h-10 mb-4" />
-        </div> */}
+        <div className="flex justify-between items-center p-3 border-b">
+          <img src="../logo.png" alt="Bitroot Logo" className="h-8 w-auto" />
+          {onClose && (
+            <button onClick={onClose} className="text-2xl md:hidden">
+              <CloseOutlined />
+            </button>
+          )}
+        </div>
         <nav>
           <ul className="space-y-2">
             {buttons.map((button) => (
               <li key={button.name}>
                 <button
-                  onClick={() => handleSidebarClick(button.name)}
-                  className={`w-full flex items-center space-x-2 p-2 rounded transition-colors ${
-                    activeTab === button.name
+                  onClick={() => handleSidebarClick(button.path)}
+                  className={`w-full flex items-center space-x-2 p-3 rounded transition-colors ${
+                    getActivePage() === button.name
                       ? "bg-white text-blue-600"
                       : "hover:bg-white/50"
                   }`}
