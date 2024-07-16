@@ -101,7 +101,7 @@ const ProfileForm = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-blue-200">
-      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
+      <div className=" m-4 w-full max-w-md p-8 bg-white rounded-lg shadow-md">
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="contact" className="block mb-2 text-sm font-medium text-gray-700">

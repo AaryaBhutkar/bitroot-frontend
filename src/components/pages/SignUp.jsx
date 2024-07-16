@@ -141,7 +141,8 @@ const SignUp = () => {
         values
       );
       toast(response.data.data[0].msg);
-      navigate('/role');
+      localStorage.setItem("role", "evaluator")
+      navigate('/login');
     } catch (error) {
       console.error('Error:', error);
       toast.error('Signup failed. Please try again.');

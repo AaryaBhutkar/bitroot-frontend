@@ -488,29 +488,45 @@ const TasksContent = () => {
     minPrice: 0,
     maxPrice: 10000,
     tags: [],
-    // startDate:"",
-    // endDate:""
+    startDate: "",
+    endDate: "",
   });
   const [showFilters, setShowFilters] = useState(false);
   const [pageSize] = useState(5);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const [allTags, setAllTags] = useState([]);
-  const [tagSearch, setTagSearch] = useState("");
   const [isFiltered, setIsFiltered] = useState(false);
   const [sortOrder, setSortOrder] = useState("asc");
 
   const filterRef = useRef(null);
 
-  const debouncedGetTasks = useCallback(
-    debounce(() => {
-      getTasks();
-    }, 300),
-    []
-  );
+  const getTasks = async (page = currentPage) => {
+    try {
+      const response = await axiosInstance.post("tasks/getTasks", {
+        size: pageSize,
+        page: page,
+        lower_price: filters.minPrice,
+        higher_price: filters.maxPrice,
+        search: searchTerm,
+        status: filters.status,
+        start_date: filters.startDate,
+        end_date: filters.endDate,
+        sort: sortOrder,
+      });
+      if (response.data.success) {
+        setTasks(response.data.data);
+        const total = response.data.meta.total;
+        setTotalPages(Math.ceil(total / pageSize));
+        setCurrentPage(page);
+      }
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+      toast.error("Failed to fetch tasks");
+    }
+  };
 
   useEffect(() => {
-    debouncedGetTasks();
+    getTasks(0);
 
     const handleClickOutside = (event) => {
       if (filterRef.current && !filterRef.current.contains(event.target)) {
@@ -522,85 +538,32 @@ const TasksContent = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [debouncedGetTasks]);
+  }, []);
 
-  const getTasks = async () => {
-    try {
-      const response = await axiosInstance.post("tasks/getTasks", {
-        size: pageSize,
-        page: currentPage,
-        lower_price: filters.minPrice,
-        higher_price: filters.maxPrice,
-        search: searchTerm,
-        status: filters.status,
-        start_date: filters.startDate,
-        end_date: filters.endDate,
-      });
-      if (response.data.success) {
-        setTasks(response.data.data);
-        const total = response.data.meta.total;
-        const calculatedTotalPages = Math.ceil(total / pageSize);
-        setTotalPages(calculatedTotalPages);
-      }
-    } catch (error) {
-      console.error("Error fetching tasks:", error);
-    }
-  };
-
-  const handleSort = async () => {
-    const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
-    setSortOrder(newSortOrder);
-
-    try {
-      const response = await axiosInstance.post("tasks/getTasks", {
-        size: pageSize,
-        page: currentPage,
-        lower_price: filters.minPrice,
-        higher_price: filters.maxPrice,
-        search: searchTerm,
-        status: filters.status,
-        start_date: filters.startDate,
-        end_date: filters.endDate,
-        sort: newSortOrder,
-      });
-      if (response.data.success) {
-        setTasks(response.data.data);
-        const total = response.data.meta.total;
-        const calculatedTotalPages = Math.ceil(total / pageSize);
-        setTotalPages(calculatedTotalPages);
-      }
-    } catch (error) {
-      console.error("Error fetching tasks:", error);
-    }
+  const handleSort = () => {
+    setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+    getTasks(0);
   };
 
   const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
     if (e.key === "Enter") {
-      getTasks();
+      e.preventDefault();
+      getTasks(0);
     }
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
   };
 
   const handleSearchClear = () => {
     setSearchTerm("");
-    debouncedGetTasks();
+    getTasks(0);
   };
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      [name]: value,
-    }));
-  };
-
-  const handleTagFilter = (tag) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      tags: prevFilters.tags.includes(tag)
-        ? prevFilters.tags.filter((t) => t !== tag)
-        : [...prevFilters.tags, tag],
-    }));
+    setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleClearFilters = () => {
@@ -613,23 +576,19 @@ const TasksContent = () => {
       startDate: "",
       endDate: "",
     });
-    setTagSearch("");
     setIsFiltered(false);
-    debouncedGetTasks();
+    getTasks(0);
     toast.success("Filters cleared");
   };
 
   const handleApplyFilters = () => {
-    setCurrentPage(0);
     setIsFiltered(true);
-    getTasks();
+    getTasks(0);
     setShowFilters(false);
     toast.success("Filters applied");
   };
 
-  const handleViewTask = (task) => {
-    setSelectedTask(task);
-  };
+  const handleViewTask = (task) => setSelectedTask(task);
 
   const handleDeleteTask = async (taskId) => {
     try {
@@ -638,12 +597,10 @@ const TasksContent = () => {
         id: taskId,
       });
       if (response.data.success) {
-        console.log("Task deleted successfully");
         setSelectedTask(null);
-        getTasks();
+        getTasks(currentPage);
         toast.success("Task deleted successfully");
       } else {
-        console.error("Failed to delete task");
         toast.error("Failed to delete task");
       }
     } catch (error) {
@@ -653,65 +610,49 @@ const TasksContent = () => {
   };
 
   const handlePageClick = (page) => {
-    setCurrentPage(page);
-    getTasks();
+    getTasks(page);
   };
 
   const getPageNumbers = () => {
     const pageNumbers = [];
     const maxVisiblePages = 5;
+    const totalPagesArray = [...Array(totalPages).keys()];
+
     if (totalPages <= maxVisiblePages) {
-      for (let i = 0; i < totalPages; i++) {
-        pageNumbers.push(i);
-      }
-    } else {
-      const halfVisiblePages = Math.floor(maxVisiblePages / 2);
-      let startPage = Math.max(currentPage - halfVisiblePages, 0);
-      let endPage = Math.min(startPage + maxVisiblePages - 1, totalPages - 1);
-      if (endPage - startPage < maxVisiblePages - 1) {
-        startPage = Math.max(endPage - maxVisiblePages + 1, 0);
-      }
-      for (let i = startPage; i <= endPage; i++) {
-        pageNumbers.push(i);
-      }
+      return totalPagesArray;
     }
+
+    const halfVisiblePages = Math.floor(maxVisiblePages / 2);
+    let startPage = Math.max(currentPage - halfVisiblePages, 0);
+    let endPage = Math.min(startPage + maxVisiblePages - 1, totalPages - 1);
+
+    if (endPage - startPage < maxVisiblePages - 1) {
+      startPage = Math.max(endPage - maxVisiblePages + 1, 0);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pageNumbers.push(i);
+    }
+
     return pageNumbers;
   };
 
-  const filteredTags = allTags.filter((tag) =>
-    tag.toLowerCase().includes(tagSearch.toLowerCase())
-  );
-
   return (
-    <div className="p-6">
+    <div className="p-6 flex flex-col h-full">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Tasks</h1>
         <button
-          className="bg-blue-500 text-white px-4 py-2 rounded-md flex items-center"
+          className="bg-blue-500 text-white px-4 py-2 rounded-md flex items-center hover:bg-blue-700"
           onClick={() => setShowCreateTask(true)}
         >
-          Create New Task
-          <svg
-            className="w-5 h-5 ml-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-            />
-          </svg>
+          Create New Task +
         </button>
       </div>
 
       {showCreateTask ? (
         <CreateNewTask
           onClose={() => setShowCreateTask(false)}
-          onTaskCreated={getTasks}
+          onTaskCreated={() => getTasks(0)}
         />
       ) : (
         <>
@@ -719,9 +660,9 @@ const TasksContent = () => {
             <div className="relative">
               <input
                 type="text"
-                placeholder="Search by task name,tags and description"
+                placeholder="Search by task name, tags and description"
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={handleSearchChange}
                 onKeyPress={handleSearch}
                 className="w-full p-2 pr-10 border rounded-md"
               />
@@ -909,44 +850,39 @@ const TasksContent = () => {
           </div>
 
           <div className="pagination-container fixed bottom-0 w-2/3 bg-white pb-4 pt-2 flex justify-start items-center">
-             <nav className="flex items-center space-x-1 md:space-x-2">
-               <button
+            <nav className="flex items-center space-x-1 md:space-x-2">
+              <button
                 className={`px-2 py-1 md:px-3 md:py-1 border rounded-md text-sm md:text-base ${
-                  currentPage === 1
+                  currentPage === 0
                     ? "cursor-not-allowed opacity-50"
                     : "hover:bg-gray-200"
                 }`}
                 onClick={() => handlePageClick(currentPage - 1)}
-                disabled={currentPage === 1}
+                disabled={currentPage === 0}
               >
                 &lt;
               </button>
-              {getPageNumbers().map((page, index) => (
-                <React.Fragment key={index}>
-                  {typeof page === "number" ? (
-                    <button
-                      className={`px-2 py-1 md:px-3 md:py-1 border rounded-md text-sm md:text-base ${
-                        currentPage === page
-                          ? "bg-blue-500 text-white"
-                          : "hover:bg-gray-200"
-                      }`}
-                      onClick={() => handlePageClick(page)}
-                    >
-                      {page+1}
-                    </button>
-                  ) : (
-                    <span className="px-1 md:px-2">...</span>
-                  )}
-                </React.Fragment>
+              {getPageNumbers().map((page) => (
+                <button
+                  key={page}
+                  className={`px-2 py-1 md:px-3 md:py-1 border rounded-md text-sm md:text-base ${
+                    currentPage === page
+                      ? "bg-blue-500 text-white"
+                      : "hover:bg-gray-200"
+                  }`}
+                  onClick={() => handlePageClick(page)}
+                >
+                  {page + 1}
+                </button>
               ))}
               <button
                 className={`px-2 py-1 md:px-3 md:py-1 border rounded-md text-sm md:text-base ${
-                  currentPage === totalPages
+                  currentPage === totalPages - 1
                     ? "cursor-not-allowed opacity-50"
                     : "hover:bg-gray-200"
                 }`}
                 onClick={() => handlePageClick(currentPage + 1)}
-                disabled={currentPage === totalPages}
+                disabled={currentPage === totalPages - 1}
               >
                 &gt;
               </button>
@@ -960,7 +896,7 @@ const TasksContent = () => {
           task={selectedTask}
           onClose={() => setSelectedTask(null)}
           onDelete={() => handleDeleteTask(selectedTask.id)}
-          onUpdate={getTasks}
+          onUpdate={() => getTasks(currentPage)}
         />
       )}
     </div>
