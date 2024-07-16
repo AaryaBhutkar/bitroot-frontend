@@ -97,11 +97,11 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
       <div className="bg-white p-6 rounded-lg shadow-lg relative max-w-2xl w-full m-4">
         <ToastContainer />
         <button
-          onClick={onClose}
-          className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 p-3"
-        >
-          ✕
-        </button>
+            onClick={onClose}
+            className="absolute top-2 right-2  text-white bg-blue-500 hover:bg-blue-600  focus:ring-2 focus:ring-blue-300 px-3 py-1 rounded-full shadow-md transition-colors duration-200 ease-in-out"
+          >
+            &times;
+          </button>
         <form onSubmit={handleSubmit} className="space-y-6 max-h-[80vh] overflow-y-auto pr-4">
           <div>
             <label htmlFor="taskName" className="block text-sm font-medium text-gray-700">
@@ -228,7 +228,7 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
 
           <div>
             <label htmlFor="turnaround_time" className="block text-sm font-medium text-gray-700">
-              Turnaround Time (hours, optional):
+              Turnaround Time (hours):
             </label>
             <div className="flex items-center space-x-2">
               <input
@@ -238,7 +238,7 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
                 value={taskData.turnaround_time}
                 onChange={handleChange}
                 min="1"
-                className="w-20 m-1 pl-1 text-center rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                className="w-20 m-1 pl-0 text-center rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                 placeholder="Optional"
               />
             </div>

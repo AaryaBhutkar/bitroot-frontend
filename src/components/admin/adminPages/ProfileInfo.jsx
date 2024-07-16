@@ -7,6 +7,7 @@ const ProfileInfo = ({ onClose }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [status, setStatus] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [availableTags, setAvailableTags] = useState([]);
 
   const fetchProfileData = async () => {
     try {
@@ -38,8 +39,22 @@ const ProfileInfo = ({ onClose }) => {
     }
   };
 
+  const fetchTags = async () => {
+    try {
+      const response = await axiosInstance.post('users/getTags', {});
+      if (response.data && response.data.success && Array.isArray(response.data.data)) {
+        setAvailableTags(response.data.data);
+      } else {
+        console.error('Invalid tag data received:', response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching tags:', error);
+    }
+  };
+
   useEffect(() => {
     fetchProfileData();
+    fetchTags();
   }, []);
 
   const handleEditToggle = () => setIsEditing(!isEditing);
@@ -47,6 +62,23 @@ const ProfileInfo = ({ onClose }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setProfile((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleTagChange = (e) => {
+    const selectedValue = e.target.value;
+    if (selectedValue && !profile.tags.includes(selectedValue) && profile.tags.length < 6) {
+      setProfile(prevProfile => ({
+        ...prevProfile,
+        tags: [...prevProfile.tags, selectedValue]
+      }));
+    }
+  };
+
+  const handleTagRemove = (tagToRemove) => {
+    setProfile(prevProfile => ({
+      ...prevProfile,
+      tags: prevProfile.tags.filter(tag => tag !== tagToRemove)
+    }));
   };
 
   const handleSaveChanges = async (e) => {
@@ -57,7 +89,7 @@ const ProfileInfo = ({ onClose }) => {
         user_id: localStorage.getItem("user"),
         ...profile,
         yoe: parseInt(profile.yoe, 10),
-        tags: JSON.stringify(profile.tags),
+        tags: profile.tags,
         is_fetch: 0,
       });
 
@@ -98,13 +130,22 @@ const ProfileInfo = ({ onClose }) => {
   );
 
   const renderTags = (tags) => (
-    <div className="flex flex-wrap items-center ">
+    <div className="flex flex-wrap items-center">
       {tags.map((tag, index) => (
         <span
           key={index}
-          className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-2 mb-2"
+          className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-2 mb-2 flex items-center"
         >
           {tag}
+          {isEditing && (
+            <button
+              type="button"
+              onClick={() => handleTagRemove(tag)}
+              className="ml-2 text-red-500 hover:text-red-700"
+            >
+              ✕
+            </button>
+          )}
         </span>
       ))}
     </div>
@@ -154,24 +195,31 @@ const ProfileInfo = ({ onClose }) => {
               </a>
             )}
           </div>
-          {renderField("Years of Experience", "yoe")}
+          {renderField("Years of Experience", "yoe", "number")}
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Tags:
+              Tags (Select up to 6):
             </label>
             {isEditing ? (
-              <input
-                type="text"
-                name="tags"
-                value={profile.tags.join(", ")}
-                onChange={(e) => handleInputChange({
-                  target: {
-                    name: "tags",
-                    value: e.target.value.split(",").map(tag => tag.trim())
-                  }
-                })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
+              <>
+                <select
+                  name="tags"
+                  value=""
+                  onChange={handleTagChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="" disabled>Select a tag</option>
+                  {availableTags.map(tag => (
+                    <option key={tag.id} value={tag.name}>
+                      {tag.name}
+                    </option>
+                  ))}
+                </select>
+                <div className="mt-2">
+                  <p className="text-sm text-gray-500">Selected tags:</p>
+                  {renderTags(profile.tags)}
+                </div>
+              </>
             ) : (
               renderTags(profile.tags)
             )}
