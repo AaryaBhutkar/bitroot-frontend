@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../utils/axiosInstance';
-import { toast, ToastContainer } from 'react-toastify';
+import {  toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
@@ -147,7 +147,8 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
       const response = await axiosInstance.post('tasks/createTask', taskDataToSubmit);
 
       if (response.data.success) {
-        toast.success('Task created successfully!');
+        // toast.success('Task created successfully!');
+        toast.success('Task Created Successfully !');
         console.log('Task created successfully:', response.data.data);
         onClose();
         onTaskCreated();
