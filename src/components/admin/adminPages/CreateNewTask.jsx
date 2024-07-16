@@ -97,11 +97,11 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
       <div className="bg-white p-6 rounded-lg shadow-lg relative max-w-2xl w-full m-4">
         <ToastContainer />
         <button
-          onClick={onClose}
-          className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 p-3"
-        >
-          ✕
-        </button>
+            onClick={onClose}
+            className="absolute top-2 right-2  text-white bg-blue-500 hover:bg-blue-600  focus:ring-2 focus:ring-blue-300 px-3 py-1 rounded-full shadow-md transition-colors duration-200 ease-in-out"
+          >
+            &times;
+          </button>
         <form onSubmit={handleSubmit} className="space-y-6 max-h-[80vh] overflow-y-auto pr-4">
           <div>
             <label htmlFor="taskName" className="block text-sm font-medium text-gray-700">
