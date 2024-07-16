@@ -51,10 +51,10 @@ const MyProjects = () => {
       );
 
       await fetchProjects();
-      toast.success(`Task ${action}ed successfully`);
+      toast.success(`Task ${action} successfully`);
       window.dataLayer.push({ event: `${action} Task` });
     } catch (error) {
-      console.error(`Error ${action}ing project:`, error);
+      console.error(`Error ${action} project:`, error);
       // toast.error(`Failed to ${action} the task. Please try again.`);
     }
   };

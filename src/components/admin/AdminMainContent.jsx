@@ -90,40 +90,14 @@ const AdminMainContent = ({ activePage }) => {
           </Popover>
         </div>
       </header>
-      <>
+      <div className="">
         {currentView === "tasks" && (
           <TasksContent key={tasksKey} onTaskCreated={handleTaskCreated} />
         )}
         {currentView === "requests" && (
           <RequestsList onViewRequest={handleViewRequest} />
         )}
-        {currentView === "analytics" && (<AnalyticsDashboard/>
-          // <div>
-          //   <div
-          //     style={{
-          //       position: "relative",
-          //       width: "100%",
-          //       paddingTop: "56.25%",
-          //     }}
-          //   >
-          //     <iframe
-          //       title="Embedded Looker Report"
-          //       src="https://lookerstudio.google.com/embed/reporting/bdc45f62-dd7b-4381-96d3-c76a8dca12a9/page/FEG5D"
-          //       frameBorder="0"
-          //       style={{
-          //         position: "absolute",
-          //         top: 0,
-          //         left: 0,
-          //         width: "100%",
-          //         height: "100%",
-          //         border: "none",
-          //       }}
-          //       allowFullScreen
-          //       sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
-          //     ></iframe>
-          //   </div>
-          // </div>
-        )}
+        {currentView === "analytics" && <AnalyticsDashboard />}
         {currentView === "evaluatorDetails" && selectedRequest && (
           <EvaluatorDetails
             evaluatorId={selectedRequest.evaluator_id}
@@ -131,7 +105,7 @@ const AdminMainContent = ({ activePage }) => {
           />
         )}
         {currentView === "history" && <AdminHistory />}
-      </>
+      </div>
     </div>
   );
 };
