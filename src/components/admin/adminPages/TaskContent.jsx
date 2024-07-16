@@ -787,7 +787,7 @@ const TasksContent = () => {
           <div className="flex-grow overflow-hidden">
             <div className="h-full flex flex-col">
               {isMobile ? (
-                <div className="overflow-y-auto flex-grow">
+                <div className="overflow-y-auto flex-grow mb-8">
                   {tasks.map((task) => (
                     <MobileTaskCard
                       key={task.id}

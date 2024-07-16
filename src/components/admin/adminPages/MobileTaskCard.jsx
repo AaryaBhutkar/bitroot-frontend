@@ -27,7 +27,7 @@ const MobileTaskCard = ({ task, onViewTask }) => {
       </div>
       {task.assigned_to && (
         <div className="text-sm mb-2">
-          <strong>Assigned To:</strong> {task.assigned_to}
+          <strong>Assigned To:</strong> {task.evaluator_name}
         </div>
       )}
       <div className="flex justify-between items-center mt-4">
