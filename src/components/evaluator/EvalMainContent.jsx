@@ -56,8 +56,14 @@ const EvalMainContent = ({ activePage }) => {
   };
 
   useEffect(() => {
-    if (!localStorage.getItem("token") || !localStorage.getItem("user")) {
+    console.log("check user_id",parseInt(localStorage.getItem("user"))>0);
+    if (!localStorage.getItem("token") || !localStorage.getItem("user") ) {
       window.location.href = "/login";
+    }
+    if(parseInt(localStorage.getItem("user"))>0){
+
+    }else{
+      window.location.href = "/role";
     }
   }, []);
 
