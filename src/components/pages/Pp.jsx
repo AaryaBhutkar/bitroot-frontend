@@ -2,7 +2,7 @@ import React from 'react';
 import { Layout } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import './styles.css'
+// import './Pp.module.css'
 const { Header, Content, Footer } = Layout;
 
 const Pp = () => {
