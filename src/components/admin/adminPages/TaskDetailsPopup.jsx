@@ -12,7 +12,13 @@ const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setUpdatedTask((prevTask) => ({ ...prevTask, [name]: value }));
+    if (name === 'lower_price' || name === 'higher_price') {
+      // Ensure the value is not negative
+      const numValue = Math.max(0, parseInt(value, 10));
+      setUpdatedTask((prevTask) => ({ ...prevTask, [name]: numValue }));
+    } else {
+      setUpdatedTask((prevTask) => ({ ...prevTask, [name]: value }));
+    }
   };
 
   const handleUpdate = async () => {
@@ -92,11 +98,6 @@ const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
           )}
         </div>
 
-        {/* <div className="mb-4">
-          <label className="block mb-2 font-bold">Evaluator Name:</label>
-          <p>{task.evaluator_name}</p>
-        </div> */}
-
         <div className="mb-4">
           <label className="block mb-2 font-bold">Description:</label>
           {editMode ? (
@@ -120,6 +121,7 @@ const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
                 name="lower_price"
                 value={updatedTask.lower_price}
                 onChange={handleInputChange}
+                min="0"
                 className="w-1/2 p-2 border border-gray-300 rounded"
                 placeholder="Lower Price"
               />
@@ -128,6 +130,7 @@ const TaskDetailsPopup = ({ task, onClose, onDelete, onUpdate }) => {
                 name="higher_price"
                 value={updatedTask.higher_price}
                 onChange={handleInputChange}
+                min="0"
                 className="w-1/2 p-2 border border-gray-300 rounded"
                 placeholder="Higher Price"
               />
