@@ -313,7 +313,7 @@ const CreateNewTask = ({ onClose, onSubmit, onTaskCreated }) => {
 
           <div>
             <label htmlFor="turnaround_time" className="block text-sm font-medium text-gray-700">
-              Turnaround Time (hours):{renderAsterisk()}
+              Turnaround Time (hours):
             </label>
             <div className="flex items-center space-x-2">
               <input
