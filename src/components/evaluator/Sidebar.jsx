@@ -98,7 +98,7 @@ const Sidebar = ({ onClose }) => {
     <aside className="w-64 bg-blue-50 p-4 flex flex-col justify-between min-h-screen">
       <div>
         <div className="flex justify-between items-center p-3 border-b">
-          <img src="../logo.png" alt="Bitroot Logo" className="h-8 w-auto" />
+          <img src="../evalme.png" alt="EvalMe Logo" className="h-16 w-auto" />
           {onClose && (
             <button onClick={onClose} className="text-2xl md:hidden">
               <CloseOutlined />

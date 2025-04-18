@@ -64,7 +64,7 @@ const EvaluatorDashboard = () => {
           <MenuOutlined />
         </button>
         <div className="flex items-center">
-          <img src="../logo.png" alt="Bitroot Logo" className="h-8 w-auto mr-2" />
+          <img src="../evalme.png" alt="EvalMe Logo" className="h-16 w-auto mr-2" />
         </div>
       </div>
       <div className={`md:block ${mobileNavOpen ? 'block' : 'hidden'} md:relative fixed inset-0 z-50`}>

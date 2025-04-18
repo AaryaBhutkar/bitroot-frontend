@@ -33,13 +33,13 @@ const SignUp = () => {
         <div className="hidden md:flex w-2/5 bg-blue-50 p-12 flex-col justify-between">
           <div>
             <Title level={1} className="text-gray-800">
-              We are Bitroot
+              Welcome to EvalMe
               <br />
-              We design zero to one platform.
+              The premier platform for freelance evaluators.
             </Title>
           </div>
           <div className="mt-auto">
-            <img src="logo.svg" alt="Bitroot" className="h-8" />
+            <img src="evalme.png" alt="EvalMe" className="h-32" />
           </div>
         </div>
 
@@ -51,9 +51,9 @@ const SignUp = () => {
                 name="name"
                 rules={[{ required: true, message: 'Please input your name!' }]}
               >
-                <Input 
-                  prefix={<UserOutlined className="text-gray-400" />} 
-                  placeholder="Name" 
+                <Input
+                  prefix={<UserOutlined className="text-gray-400" />}
+                  placeholder="Name"
                 />
               </Form.Item>
               <Form.Item
@@ -63,9 +63,9 @@ const SignUp = () => {
                   { type: 'email', message: 'Please enter a valid email address!' }
                 ]}
               >
-                <Input 
-                  prefix={<MailOutlined className="text-gray-400" />} 
-                  placeholder="Email" 
+                <Input
+                  prefix={<MailOutlined className="text-gray-400" />}
+                  placeholder="Email"
                 />
               </Form.Item>
               <Form.Item
@@ -76,9 +76,9 @@ const SignUp = () => {
                   { pattern: /\d/, message: 'Password must contain at least one number!' }
                 ]}
               >
-                <Input.Password 
-                  prefix={<LockOutlined className="text-gray-400" />} 
-                  placeholder="Password" 
+                <Input.Password
+                  prefix={<LockOutlined className="text-gray-400" />}
+                  placeholder="Password"
                   iconRender={(visible) => (visible ? <EyeOutlined /> : <EyeInvisibleOutlined />)}
                 />
               </Form.Item>

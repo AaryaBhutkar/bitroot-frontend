@@ -22,26 +22,26 @@ const TnC = () => {
           display: 'flex',
           alignItems: 'center',
         }}>
-        <img src="logo.svg" alt="Bitroot Logo" className="h-8" />
+        <img src="evalme.png" alt="EvalMe Logo" className="h-20" />
       </Header>
       <main className="flex-grow p-6 max-w-3xl mx-auto bg-white rounded-lg shadow-lg overflow-y-auto mt-6">
         <p className="text-4xl mb-6 text-center">Terms of Service</p>
         <div className="space-y-6">
           <p className="text-md leading-relaxed">
-            <strong className="block mb-2">Bitroot Terms</strong>
+            <strong className="block mb-2">EvalMe Terms</strong>
             Bitroot.org is developed and owned by Bitroot, a technology and cloud services company, hereinafter referred to as the ‘Company’ with its registered office at 149, Avior, Nirmal Galaxy, L B S Marg, Mulund West 400080, Mumbai. MH. The Bitroot Website terms & conditions (“T&C”) apply to your access and use of www.Bitroot.org (the “Site”), including all content, data, images, pricing, reports, software, voice, text and video made available through any portion of the Site (collectively, the “Content”). Content includes all such elements as whole, as well as individual items and portions thereof. All references to the “Site” and “Content” herein shall include your access and use of any and all Bitroot applications for mobile, and all content, data, images, pricing, reports, software, voice, text and video in connection with the foregoing.  <br/><br/>
             Bitroot permits you (“User” or “you” or “your”) referred to as you, your, user or the ‘Client’ to access and use the Site and Content, subject to these T&C. By accessing or using any portion of the Site, you acknowledge that you have read, understood, and agree to be bound by these T&C. If you are entering into an agreement on these T&C on behalf of a company or other legal entity (“User Entity”), you must have the legal authority to contractually bind such User Entity to these T&C, in which case the terms “you” or “your” or “User”, the “Client” will refer to such User Entity. If you lack such legal authority to contractually bind or you do not agree with these T&C, you must refrain from accessing or using the site or content.<br/><br/>
             You may use Bitroot to specify and assign projects to the Company. A Project Assignment will become binding when both parties have signed a separate agreement / contract referred to as the “Contract” for the project and once an the Contract is signed, Company will be obligated to provide the services and to deliver the materials and deliverables as specified in each Project Assignment. The terms of the Contract will govern all Project Assignments and services undertaken by Company for Client.
-          
+
           </p>
-          
+
           <p className="text-md leading-relaxed">
             <strong className="block mb-2">Terms & Conditions updates:</strong>
             Company reserves the right, at its sole discretion, to change or modify portions of the T&C at any time. The Company will post the changes on the Site and will indicate the date these terms were last revised. It is your responsibility to check the T&C periodically for changes. Your continued use of the Site and Content after the date, any such changes become effective constitutes your acceptance of the new or revised T&C.
           </p>
           <p className="text-md leading-relaxed">
             <strong className="block mb-2">General conditions/access and use:</strong>
-            Authorisation to Access and Use Site and Content: Subject to your compliance with these T&C and the provisions hereof, you may access or use the Site and its Content solely for the purpose of your use of Bitroot. You may only link to the Site or Content, or any portion thereof, as expressly permitted by the Company in writing.   
+            Authorisation to Access and Use Site and Content: Subject to your compliance with these T&C and the provisions hereof, you may access or use the Site and its Content solely for the purpose of your use of Bitroot. You may only link to the Site or Content, or any portion thereof, as expressly permitted by the Company in writing.
           </p>
           <p className="text-md leading-relaxed">
             <strong className="block mb-2">Ownership and restrictions:</strong>
@@ -64,7 +64,7 @@ const TnC = () => {
           </p>
           <p className="text-md leading-relaxed">
             <strong className="block mb-2">Reservation of rights:</strong>
-            Bitroot, the Company and its licensors each own and retain their respective rights in and to all logos, company names, marks, trademarks, copyrights, trade secrets, know-how, patents and patent applications that are used or embodied in or otherwise related to the Site and Content. The Company grants no rights or licenses whatsoever to you under these T&C.          
+            Bitroot, the Company and its licensors each own and retain their respective rights in and to all logos, company names, marks, trademarks, copyrights, trade secrets, know-how, patents and patent applications that are used or embodied in or otherwise related to the Site and Content. The Company grants no rights or licenses whatsoever to you under these T&C.
           </p>
           <p className="text-md leading-relaxed">
             <strong className="block mb-2">Confidentiality:</strong>
@@ -133,11 +133,11 @@ const TnC = () => {
 
         </div>
       </main>
-      
+
       <Footer className="bg-transparent text-center">
-        <Button 
-          type="primary" 
-          icon={<ArrowLeftOutlined />} 
+        <Button
+          type="primary"
+          icon={<ArrowLeftOutlined />}
           onClick={handleGoBack}
           size="large"
         >

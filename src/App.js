@@ -279,8 +279,8 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/role" element={<RoleSelector />} />
           <Route path="/profile" element={<ProfileForm />} />
-          
-          
+
+
           <Route path="/evaluatorDashboard" element={<EvaluatorDashboard />}>
             <Route index element={<Navigate to="tasks" replace />} />
             <Route path="tasks" element={<EvalMainContent activePage="tasks" />} />
@@ -312,6 +312,10 @@ function App() {
             <Route
               path="history"
               element={<AdminMainContent activePage="history" />}
+            />
+            <Route
+              path="mydrive"
+              element={<AdminMainContent activePage="mydrive" />}
             />
           </Route>
 

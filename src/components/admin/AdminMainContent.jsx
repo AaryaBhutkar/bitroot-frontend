@@ -7,6 +7,7 @@ import RequestsList from "./adminPages/RequestsList";
 import EvaluatorDetails from "./EvaluatorDetails";
 import AdminHistory from "./adminPages/AdminHistory";
 import AnalyticsDashboard from "./adminPages/AnalyticsDashboard";
+import MyDrive from "./adminPages/MyDrive";
 
 const AdminMainContent = ({ activePage }) => {
   const [showProfileInfo, setShowProfileInfo] = useState(false);
@@ -109,6 +110,7 @@ const AdminMainContent = ({ activePage }) => {
           />
         )}
         {currentView === "history" && <AdminHistory />}
+        {currentView === "mydrive" && <MyDrive />}
       </div>
     </div>
   );

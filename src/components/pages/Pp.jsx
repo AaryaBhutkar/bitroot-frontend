@@ -21,11 +21,11 @@ const Pp = () => {
         display: 'flex',
         alignItems: 'center',
       }}>
-        <img src="logo.svg" alt="Bitroot Logo" className="h-8" />
+        <img src="evalme.png" alt="EvalMe Logo" className="h-20" />
       </Header>
       <Content className="flex-grow p-6 max-w-3xl mx-auto bg-white rounded-lg shadow-lg overflow-y-auto mt-6">
         <h1 className="text-3xl font-bold text-center mb-6">Privacy Policy</h1>
-        
+
   <p id="7ce59a34-eea6-40ff-b976-9589851aad1d" className="">
     Welcome to Bitroot’s privacy policy.
   </p>
@@ -936,7 +936,7 @@ const Pp = () => {
         </div>
       </Content>
       <Footer className="bg-transparent text-center py-4">
-        © 2024 Bitroot. All rights reserved.
+        © 2024 EvalMe. All rights reserved.
       </Footer>
     </Layout>
   );

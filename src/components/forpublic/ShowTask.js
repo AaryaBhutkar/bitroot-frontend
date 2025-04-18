@@ -21,7 +21,7 @@ const ShowTask = () => {
     <div className="bg-gray-100 min-h-screen flex">
       <div className="w-1/4 bg-gray-200 shadow-lg">
         <div className="p-4">
-          <img src="logo.svg" alt="Bitroot" className="w-48" />
+          <img src="evalme.png" alt="EvalMe" className="w-48" />
         </div>
       </div>
       <div className="w-3/4 p-8">
